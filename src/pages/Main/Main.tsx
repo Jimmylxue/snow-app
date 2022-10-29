@@ -1,8 +1,8 @@
-import {View, Text, Button} from 'react-native';
-import {useTestStatus} from '.';
+import { View, Text, Button } from 'react-native';
+import { useTestStatus } from '.';
 
 export default function Main() {
-  const {count, setCount} = useTestStatus();
+  const { count, setCount } = useTestStatus();
   return (
     <View>
       <Text>nowCount: {count}</Text>
