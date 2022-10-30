@@ -1,5 +1,4 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { Text } from 'react-native';
 import Index from '../pages/Index';
 import Mine from '../pages/Mine';
 
@@ -33,6 +32,5 @@ export default function StackScreen() {
         component={Mine}
       />
     </Stack.Navigator>
-    // <Mine />
   );
 }

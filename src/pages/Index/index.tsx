@@ -1,9 +1,12 @@
 import { memo, useEffect, useState } from 'react';
 import { View, Text, Button, SafeAreaView } from 'react-native';
-import navigate from '../../navigation/navigate';
+import { useAppState, useUserState } from '../../hooks/useAppState';
+import { navigates } from '../../navigation/navigate';
 import { getStorage, saveStorage } from '../../utils';
 
 export default memo(() => {
+  const { state, signIn, signOut } = useAppState();
+  const userInfo = useUserState();
   const [count, setCount] = useState<number>(0);
 
   useEffect(() => {
@@ -17,6 +20,26 @@ export default memo(() => {
     <SafeAreaView>
       <View>
         <Text>nowCount: {count}</Text>
+        <Text>APP-state: {JSON.stringify(state)}</Text>
+        <Text>User-state: {JSON.stringify(userInfo)}</Text>
+        <Button
+          onPress={async () => {
+            signIn?.('jimmytoken', {
+              username: 'jimmy',
+            });
+          }}
+          title="Login"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
+        <Button
+          onPress={async () => {
+            signOut?.();
+          }}
+          title="LoginOut"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
         <Button
           onPress={async () => {
             await saveStorage('snow-test-count', String(count + 1));
@@ -28,7 +51,7 @@ export default memo(() => {
         />
         <Button
           onPress={() => {
-            navigate('Mine', {
+            navigates('Mine', {
               userId: 111,
             });
           }}
