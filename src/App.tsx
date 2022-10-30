@@ -1,15 +1,17 @@
 import React from 'react';
-import { useColorScheme } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import StackScreen from './src/navigation';
-import { navigationRef } from './src/navigation/navigate';
+import StackScreen from './navigation';
+import { navigationRef } from './navigation/navigate';
+import { config } from './config/react-query';
+
+const { queryClient, QueryClientProvider } = config();
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
   return (
     <NavigationContainer ref={navigationRef}>
-      <StackScreen />
+      <QueryClientProvider client={queryClient}>
+        <StackScreen />
+      </QueryClientProvider>
     </NavigationContainer>
   );
 };
