@@ -59,6 +59,22 @@ export default memo(() => {
           color="#841584"
           accessibilityLabel="Learn more about this purple button"
         />
+        <Button
+          onPress={() => {
+            navigates('IDPhoto', undefined);
+          }}
+          title="navigate IDPhoto"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
+        <Button
+          onPress={() => {
+            navigates('KnowledgePlanet', undefined);
+          }}
+          title="navigate KnowledgePlanet"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
       </View>
     </SafeAreaView>
   );

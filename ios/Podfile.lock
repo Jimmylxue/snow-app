@@ -302,12 +302,10 @@ PODS:
   - React-jsinspector (0.70.4)
   - React-logger (0.70.4):
     - glog
-  - react-native-safe-area-context (4.4.1):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
+  - react-native-safe-area-context (3.3.2):
     - React-Core
-    - ReactCommon/turbomodule/core
+  - react-native-webview (11.23.1):
+    - React-Core
   - React-perflogger (0.70.4)
   - React-RCTActionSheet (0.70.4):
     - React-Core/RCTActionSheetHeaders (= 0.70.4)
@@ -381,6 +379,8 @@ PODS:
   - RNScreens (3.18.2):
     - React-Core
     - React-RCTImage
+  - RNSVG (12.1.1):
+    - React
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -434,6 +434,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -449,6 +450,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -514,6 +516,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -544,6 +548,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -582,7 +588,8 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 4a893fc8f683b91befcaf56c44ad8be4506b6828
   React-jsinspector: 1d5a9e84e419a57cabc23249aec3d837d1b03a80
   React-logger: f8071ad48248781d5afdb8a07f778758529d3019
-  react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
+  react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
+  react-native-webview: d33e2db8925d090871ffeb232dfa50cb3a727581
   React-perflogger: 5e41b01b35d97cc1b0ea177181eb33b5c77623b6
   React-RCTActionSheet: 48949f30b24200c82f3dd27847513be34e06a3ae
   React-RCTAnimation: 96af42c97966fcd53ed9c31bee6f969c770312b6
@@ -598,6 +605,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
+  RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 1f02ef4ce4469aefc36167138441b27d988282b1
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
