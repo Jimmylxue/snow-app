@@ -6,6 +6,8 @@ import {
 import { useIsFocused } from '@react-navigation/native';
 import RNFetchBlob from 'rn-fetch-blob';
 import RNFS, { downloadFile } from 'react-native-fs';
+import { CameraRoll } from '@react-native-camera-roll/camera-roll';
+import { Alert } from 'react-native';
 
 function WebView(
   props: {
@@ -44,13 +46,34 @@ function WebView(
 
   const download = (url: string) => {
     console.log('url~~', url);
-    downloadFile({
-      fromUrl: 'https://facebook.github.io/react-native/img/header_logo.png',
-      toFile: `${RNFS.DocumentDirectoryPath}/react-native.png`,
-    }).promise.then(r => {
-      console.log('rrr', r);
-      // this.setState({ isDone: true });
-    });
+    RNFetchBlob.config({
+      fileCache: true,
+      appendExt: 'png',
+    })
+      .fetch('GET', url.split('blob:')[1], {})
+      .then(res => {
+        console.log('res~~', res.path());
+        const promise = CameraRoll.saveToCameraRoll(res.path(), 'photo');
+        promise
+          .then(() => {
+            Alert.prompt('', '保存成功!');
+            // DownloadUtil.deleteCacheImage(res.path());
+          })
+          .catch(err => {
+            Alert.alert('', '保存失败!');
+            console.warn(err.toString());
+            // DownloadUtil.deleteCacheImage(res.path());
+          });
+      });
+    // let promise = CameraRoll.saveToCameraRoll(data.uri, 'photo');
+
+    // downloadFile({
+    //   fromUrl: 'https://facebook.github.io/react-native/img/header_logo.png',
+    //   toFile: `${RNFS.DocumentDirectoryPath}/react-native.png`,
+    // }).promise.then(r => {
+    //   console.log('rrr', r);
+    //   // this.setState({ isDone: true });
+    // });
 
     // downloadFile
   };

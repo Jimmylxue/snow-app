@@ -3,6 +3,7 @@ import { View, Text, Button } from 'native-base';
 import { SafeAreaView } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
+import Canvas from 'react-native-canvas';
 
 const TCameraType = RNCamera.Constants.Type;
 
@@ -17,6 +18,7 @@ export default memo(() => {
       const options = { quality: 0.5, base64: true };
       const data = await camera.current.takePictureAsync(options);
       console.log(data.uri);
+      console.log(data);
       let promise = CameraRoll.saveToCameraRoll(data.uri, 'photo');
       promise
         .then(result => {
@@ -32,6 +34,12 @@ export default memo(() => {
     cameraType === TCameraType.back
       ? setCameraType(TCameraType.front)
       : setCameraType(TCameraType.back);
+  };
+
+  const handleCanvas = canvas => {
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'purple';
+    ctx.fillRect(0, 0, 100, 100);
   };
 
   return (
@@ -63,7 +71,9 @@ export default memo(() => {
           ]}
           onBarCodeRead={result => {
             console.log('result~', result);
-          }}></RNCamera>
+          }}
+        />
+        <Canvas ref={handleCanvas} />
         <View
           style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
           <Button mr={1} onPress={takePicture}>
