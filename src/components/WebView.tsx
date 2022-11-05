@@ -1,6 +1,11 @@
 import React, { Ref, useEffect, useImperativeHandle, useRef } from 'react';
-import { WebView as SnowWebView } from 'react-native-webview';
+import {
+  WebView as SnowWebView,
+  WebViewNavigation,
+} from 'react-native-webview';
 import { useIsFocused } from '@react-navigation/native';
+import RNFetchBlob from 'rn-fetch-blob';
+import RNFS, { downloadFile } from 'react-native-fs';
 
 function WebView(
   props: {
@@ -28,6 +33,28 @@ function WebView(
     return { postMessage: webViewRefs.current?.postMessage };
   });
 
+  const handleNavigationStateChange = ({ url }: WebViewNavigation) => {
+    if (!url) return;
+
+    if (url.startsWith('blob')) {
+      // webViewRef.current?.stopLoading();
+      download(url);
+    }
+  };
+
+  const download = (url: string) => {
+    console.log('url~~', url);
+    downloadFile({
+      fromUrl: 'https://facebook.github.io/react-native/img/header_logo.png',
+      toFile: `${RNFS.DocumentDirectoryPath}/react-native.png`,
+    }).promise.then(r => {
+      console.log('rrr', r);
+      // this.setState({ isDone: true });
+    });
+
+    // downloadFile
+  };
+
   const uri = url;
 
   console.log(uri);
@@ -45,6 +72,8 @@ function WebView(
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       injectedJavaScript={injectedJavaScript}
+      originWhitelist={['*']}
+      onNavigationStateChange={handleNavigationStateChange}
       textZoom={100}
       onMessage={(e: any) => {
         onMessage?.(e.nativeEvent.data);
