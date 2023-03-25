@@ -45,14 +45,12 @@ function WebView(
   };
 
   const download = (url: string) => {
-    console.log('url~~', url);
     RNFetchBlob.config({
       fileCache: true,
       appendExt: 'png',
     })
       .fetch('GET', url.split('blob:')[1], {})
       .then(res => {
-        console.log('res~~', res.path());
         const promise = CameraRoll.saveToCameraRoll(res.path(), 'photo');
         promise
           .then(() => {

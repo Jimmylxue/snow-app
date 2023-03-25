@@ -1,6 +1,6 @@
 import { memo, useRef, useState } from 'react';
 import { View, Text, Button } from 'native-base';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, ScrollView } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import Canvas from 'react-native-canvas';
@@ -36,14 +36,18 @@ export default memo(() => {
       : setCameraType(TCameraType.back);
   };
 
-  const handleCanvas = canvas => {
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = 'purple';
-    ctx.fillRect(0, 0, 100, 100);
+  const handleCanvas = (canvas: any) => {
+    if (canvas) {
+      const ctx = canvas?.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = 'purple';
+        ctx.fillRect(0, 0, 100, 100);
+      }
+    }
   };
 
   return (
-    <View>
+    <ScrollView>
       <SafeAreaView>
         <RNCamera
           captureAudio={false}
@@ -86,6 +90,6 @@ export default memo(() => {
           </Button>
         </View>
       </SafeAreaView>
-    </View>
+    </ScrollView>
   );
 });

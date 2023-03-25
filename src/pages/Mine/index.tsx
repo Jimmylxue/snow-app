@@ -1,10 +1,10 @@
 import { memo } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, Box } from 'native-base';
 
 export default memo(() => {
   return (
-    <View>
+    <Box h="full" w="full" backgroundColor="#7171f6">
       <Text>我的页面</Text>
-    </View>
+    </Box>
   );
 });

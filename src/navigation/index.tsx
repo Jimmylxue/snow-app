@@ -3,6 +3,7 @@ import Index from '../pages/Index';
 import Mine from '../pages/Mine';
 import IDPhoto from '../pages/IDPhoto';
 import KnowledgePlanet from '../pages/KnowledgePlanet';
+import LuckDraw from '../pages/LuckDraw';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
@@ -42,6 +43,11 @@ export default function StackScreen() {
         name="KnowledgePlanet"
         options={{ title: 'KnowledgePlanet' }}
         component={KnowledgePlanet}
+      />
+      <Stack.Screen
+        name="LuckDraw"
+        options={{ title: '今天吃啥' }}
+        component={LuckDraw}
       />
     </Stack.Navigator>
   );

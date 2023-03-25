@@ -4,12 +4,11 @@ import StackScreen from './navigation';
 import { navigationRef } from './navigation/navigate';
 import { config } from './config/react-query';
 import { APPContext, useInitApp } from './hooks/useAppState';
-import { NativeBaseProvider, Box } from 'native-base';
+import { NativeBaseProvider } from 'native-base';
 const { queryClient, QueryClientProvider } = config();
 
 const App = () => {
   const { state, ...authContext } = useInitApp();
-
   return (
     <NativeBaseProvider>
       <NavigationContainer ref={navigationRef}>
@@ -26,24 +25,5 @@ const App = () => {
     </NativeBaseProvider>
   );
 };
-
-// const styles = StyleSheet.create({
-//   sectionContainer: {
-//     marginTop: 32,
-//     paddingHorizontal: 24,
-//   },
-//   sectionTitle: {
-//     fontSize: 24,
-//     fontWeight: '600',
-//   },
-//   sectionDescription: {
-//     marginTop: 8,
-//     fontSize: 18,
-//     fontWeight: '400',
-//   },
-//   highlight: {
-//     fontWeight: '700',
-//   },
-// });
 
 export default App;
