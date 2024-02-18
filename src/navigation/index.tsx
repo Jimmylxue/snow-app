@@ -4,6 +4,7 @@ import Mine from '../pages/Mine';
 import IDPhoto from '../pages/IDPhoto';
 import KnowledgePlanet from '../pages/KnowledgePlanet';
 import LuckDraw from '../pages/LuckDraw';
+import Watermelon from '../pages/Watermelon';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
@@ -48,6 +49,11 @@ export default function StackScreen() {
         name="LuckDraw"
         options={{ title: '今天吃啥' }}
         component={LuckDraw}
+      />
+      <Stack.Screen
+        name="Watermelon"
+        options={{ title: '西瓜成熟' }}
+        component={Watermelon}
       />
     </Stack.Navigator>
   );

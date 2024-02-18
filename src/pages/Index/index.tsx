@@ -86,6 +86,14 @@ export default memo(() => {
           color="#841584"
           accessibilityLabel="Learn more about this purple button"
         />
+        <Button
+          onPress={() => {
+            navigates('Watermelon', undefined);
+          }}
+          title="navigate Watermelon"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
       </View>
     </SafeAreaView>
   );

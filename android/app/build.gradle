@@ -280,6 +280,8 @@ dependencies {
     }
 
     implementation project(':@react-native-camera-roll_camera-roll')
+
+    implementation project(':react-native-audio-recorder-player')
 }
 
 if (isNewArchitectureEnabled()) {

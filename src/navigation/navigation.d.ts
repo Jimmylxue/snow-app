@@ -4,4 +4,5 @@ export type RootStackParamList = {
   IDPhoto: undefined;
   KnowledgePlanet: undefined;
   LuckDraw: undefined;
+  Watermelon: undefined;
 };
