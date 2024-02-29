@@ -5,6 +5,7 @@ import IDPhoto from '../pages/IDPhoto';
 import KnowledgePlanet from '../pages/KnowledgePlanet';
 import LuckDraw from '../pages/LuckDraw';
 import Watermelon from '../pages/Watermelon';
+import StaticWebview from '../pages/StaticWebview';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
@@ -54,6 +55,11 @@ export default function StackScreen() {
         name="Watermelon"
         options={{ title: '西瓜成熟' }}
         component={Watermelon}
+      />
+      <Stack.Screen
+        name="StaticWebview"
+        options={{ title: 'StaticWebview' }}
+        component={StaticWebview}
       />
     </Stack.Navigator>
   );

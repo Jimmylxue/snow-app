@@ -94,6 +94,14 @@ export default memo(() => {
           color="#841584"
           accessibilityLabel="Learn more about this purple button"
         />
+        <Button
+          onPress={() => {
+            navigates('StaticWebview', undefined);
+          }}
+          title="navigate StaticWebview"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
       </View>
     </SafeAreaView>
   );

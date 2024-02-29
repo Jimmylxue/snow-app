@@ -5,4 +5,5 @@ export type RootStackParamList = {
   KnowledgePlanet: undefined;
   LuckDraw: undefined;
   Watermelon: undefined;
+  StaticWebview: undefined;
 };
