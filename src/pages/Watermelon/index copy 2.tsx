@@ -1,152 +1,404 @@
-import { memo, useRef, useState } from 'react';
-import { View, Text } from 'native-base';
-import { SafeAreaView, ScrollView, Button } from 'react-native';
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import AudioRecorderPlayer, {
+  AVEncoderAudioQualityIOSType,
+  AVEncodingOption,
+  AudioEncoderAndroidType,
+  AudioSourceAndroidType,
+  OutputFormatAndroidType,
+} from 'react-native-audio-recorder-player';
+import type {
+  AudioSet,
+  PlayBackType,
+  RecordBackType,
+} from 'react-native-audio-recorder-player';
+import {
+  Dimensions,
+  PermissionsAndroid,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { Component } from 'react';
+
 import RNFetchBlob from 'rn-fetch-blob';
-import { Buffer } from 'buffer';
-import { FFT } from 'fft-js';
-var fft = require('fft-js').fft;
+import type { ReactElement } from 'react';
+import { Button } from 'native-base';
 
-const audioRecorderPlayer = new AudioRecorderPlayer();
+const styles: any = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#455A64',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  titleTxt: {
+    marginTop: 100,
+    color: 'white',
+    fontSize: 28,
+  },
+  viewRecorder: {
+    marginTop: 40,
+    width: '100%',
+    alignItems: 'center',
+  },
+  recordBtnWrapper: {
+    flexDirection: 'row',
+  },
+  viewPlayer: {
+    marginTop: 60,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+  },
+  viewBarWrapper: {
+    marginTop: 28,
+    marginHorizontal: 28,
+    alignSelf: 'stretch',
+  },
+  viewBar: {
+    backgroundColor: '#ccc',
+    height: 4,
+    alignSelf: 'stretch',
+  },
+  viewBarPlay: {
+    backgroundColor: 'white',
+    height: 4,
+    width: 0,
+  },
+  playStatusTxt: {
+    marginTop: 8,
+    color: '#ccc',
+  },
+  playBtnWrapper: {
+    flexDirection: 'row',
+    marginTop: 40,
+  },
+  btn: {
+    borderColor: 'white',
+    borderWidth: 1,
+  },
+  txt: {
+    color: 'white',
+    fontSize: 14,
+    marginHorizontal: 8,
+    marginVertical: 4,
+  },
+  txtRecordCounter: {
+    marginTop: 32,
+    color: 'white',
+    fontSize: 20,
+    textAlignVertical: 'center',
+    fontWeight: '200',
+    fontFamily: 'Helvetica Neue',
+    letterSpacing: 3,
+  },
+  txtCounter: {
+    marginTop: 12,
+    color: 'white',
+    fontSize: 20,
+    textAlignVertical: 'center',
+    fontWeight: '200',
+    fontFamily: 'Helvetica Neue',
+    letterSpacing: 3,
+  },
+});
 
-const url = 'file:////data/user/0/com.awesometsproject/cache/sound.mp4';
+interface State {
+  isLoggingIn: boolean;
+  recordSecs: number;
+  recordTime: string;
+  currentPositionSec: number;
+  currentDurationSec: number;
+  playTime: string;
+  duration: string;
+}
 
-export default memo(() => {
-  const path = useRef<string>();
-  const [audioData, setAudioData] = useState<any[]>([]);
-  const [recordInfo, setRecordInfo] = useState({});
+const screenWidth = Dimensions.get('screen').width;
 
-  const intervalId = useRef<any>();
+class Page extends Component<any, State> {
+  private dirs = RNFetchBlob.fs.dirs;
+  private path = Platform.select({
+    ios: undefined,
+    android: undefined,
 
-  // 解码 base64 音频数据为字节数组
-  const base64ToByteArray = base64 => {
-    const binaryStr = Buffer.from(base64, 'base64').toString('binary');
-    const bytes = new Uint8Array(binaryStr.length);
-    for (let i = 0; i < binaryStr.length; i++) {
-      bytes[i] = binaryStr.charCodeAt(i);
+    // Discussion: https://github.com/hyochan/react-native-audio-recorder-player/discussions/479
+    // ios: 'https://firebasestorage.googleapis.com/v0/b/cooni-ebee8.appspot.com/o/test-audio.mp3?alt=media&token=d05a2150-2e52-4a2e-9c8c-d906450be20b',
+    // ios: 'https://staging.media.ensembl.fr/original/uploads/26403543-c7d0-4d44-82c2-eb8364c614d0',
+    // ios: 'hello.m4a',
+    // android: `${this.dirs.CacheDir}/hello.mp3`,
+  });
+
+  private audioRecorderPlayer: AudioRecorderPlayer;
+
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      isLoggingIn: false,
+      recordSecs: 0,
+      recordTime: '00:00:00',
+      currentPositionSec: 0,
+      currentDurationSec: 0,
+      playTime: '00:00:00',
+      duration: '00:00:00',
+    };
+
+    this.audioRecorderPlayer = new AudioRecorderPlayer();
+    this.audioRecorderPlayer.setSubscriptionDuration(0.1); // optional. Default is 0.5
+  }
+
+  public render(): ReactElement {
+    let playWidth =
+      (this.state.currentPositionSec / this.state.currentDurationSec) *
+      (screenWidth - 56);
+
+    if (!playWidth) {
+      playWidth = 0;
     }
-    // console.log('bytes', bytes);
-    var phasors = fft(bytes);
-    console.log(phasors);
-    return bytes;
+
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.titleTxt}>Audio Recorder Player</Text>
+        <Text style={styles.txtRecordCounter}>{this.state.recordTime}</Text>
+        <View style={styles.viewRecorder}>
+          <View style={styles.recordBtnWrapper}>
+            <Button
+              style={styles.btn}
+              onPress={this.onStartRecord}
+              textStyle={styles.txt}>
+              Record
+            </Button>
+            <Button
+              style={[
+                styles.btn,
+                {
+                  marginLeft: 12,
+                },
+              ]}
+              onPress={this.onPauseRecord}
+              textStyle={styles.txt}>
+              Pause
+            </Button>
+            <Button
+              style={[
+                styles.btn,
+                {
+                  marginLeft: 12,
+                },
+              ]}
+              onPress={this.onResumeRecord}
+              textStyle={styles.txt}>
+              Resume
+            </Button>
+            <Button
+              style={[styles.btn, { marginLeft: 12 }]}
+              onPress={this.onStopRecord}
+              textStyle={styles.txt}>
+              Stop
+            </Button>
+          </View>
+        </View>
+        <View style={styles.viewPlayer}>
+          <TouchableOpacity
+            style={styles.viewBarWrapper}
+            onPress={this.onStatusPress}>
+            <View style={styles.viewBar}>
+              <View style={[styles.viewBarPlay, { width: playWidth }]} />
+            </View>
+          </TouchableOpacity>
+          <Text style={styles.txtCounter}>
+            {this.state.playTime} / {this.state.duration}
+          </Text>
+          <View style={styles.playBtnWrapper}>
+            <Button
+              style={styles.btn}
+              onPress={this.onStartPlay}
+              textStyle={styles.txt}>
+              Play
+            </Button>
+            <Button
+              style={[
+                styles.btn,
+                {
+                  marginLeft: 12,
+                },
+              ]}
+              onPress={this.onPausePlay}
+              textStyle={styles.txt}>
+              Pause
+            </Button>
+            <Button
+              style={[
+                styles.btn,
+                {
+                  marginLeft: 12,
+                },
+              ]}
+              onPress={this.onResumePlay}
+              textStyle={styles.txt}>
+              Resume
+            </Button>
+            <Button
+              style={[
+                styles.btn,
+                {
+                  marginLeft: 12,
+                },
+              ]}
+              onPress={this.onStopPlay}
+              textStyle={styles.txt}>
+              Stop
+            </Button>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  private onStatusPress = (e: any): void => {
+    const touchX = e.nativeEvent.locationX;
+    console.log(`touchX: ${touchX}`);
+
+    const playWidth =
+      (this.state.currentPositionSec / this.state.currentDurationSec) *
+      (screenWidth - 56);
+    console.log(`currentPlayWidth: ${playWidth}`);
+
+    const currentPosition = Math.round(this.state.currentPositionSec);
+
+    if (playWidth && playWidth < touchX) {
+      const addSecs = Math.round(currentPosition + 1000);
+      this.audioRecorderPlayer.seekToPlayer(addSecs);
+      console.log(`addSecs: ${addSecs}`);
+    } else {
+      const subSecs = Math.round(currentPosition - 1000);
+      this.audioRecorderPlayer.seekToPlayer(subSecs);
+      console.log(`subSecs: ${subSecs}`);
+    }
   };
 
-  // 处理音频数据的函数
-  const processAudioData = data => {
-    // 在这里可以添加音频数据处理逻辑，比如频谱分析等操作
-    // 解码 base64 音频数据为原始数据
-    const audioData = Buffer.from(data, 'base64').toString('binary');
-    const fft = new FFT(audioData.length);
-    console.log('audioData', audioData.length);
-    return data; // 这里示例直接返回原始数据
-  };
+  private onStartRecord = async (): Promise<void> => {
+    if (Platform.OS === 'android') {
+      try {
+        const grants = await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        ]);
 
-  const onStartRecord = async () => {
-    const result = await audioRecorderPlayer.startRecorder();
+        console.log('write external stroage', grants);
 
-    intervalId.current = setInterval(async () => {
-      const audioFileUri = result;
-      const response = await RNFetchBlob.fs.readStream(audioFileUri, 'base64');
+        if (
+          grants['android.permission.WRITE_EXTERNAL_STORAGE'] ===
+            PermissionsAndroid.RESULTS.GRANTED &&
+          grants['android.permission.READ_EXTERNAL_STORAGE'] ===
+            PermissionsAndroid.RESULTS.GRANTED &&
+          grants['android.permission.RECORD_AUDIO'] ===
+            PermissionsAndroid.RESULTS.GRANTED
+        ) {
+          console.log('permissions granted');
+        } else {
+          console.log('All required permissions not granted');
 
-      response.open();
-      const chunkSize = 4096;
-      let data = '';
-
-      response.onData(chunk => {
-        data += chunk;
-        if (data.length >= chunkSize) {
-          // 处理音频数据，这里可以进行频谱分析等操作
-          // console.log('Audio Data:', data);
-
-          const processedData = base64ToByteArray(data);
-
-          setAudioData(prevData => [...prevData, processedData]);
-          // 清空数据
-          data = '';
+          return;
         }
+      } catch (err) {
+        console.warn(err);
+
+        return;
+      }
+    }
+
+    const audioSet: AudioSet = {
+      AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
+      AudioSourceAndroid: AudioSourceAndroidType.MIC,
+      AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
+      AVNumberOfChannelsKeyIOS: 2,
+      AVFormatIDKeyIOS: AVEncodingOption.aac,
+      OutputFormatAndroid: OutputFormatAndroidType.AAC_ADTS,
+    };
+
+    console.log('audioSet', audioSet);
+
+    const uri = await this.audioRecorderPlayer.startRecorder(
+      this.path,
+      audioSet,
+    );
+
+    this.audioRecorderPlayer.addRecordBackListener((e: RecordBackType) => {
+      // console.log('record-back', e);
+      this.setState({
+        recordSecs: e.currentPosition,
+        recordTime: this.audioRecorderPlayer.mmssss(
+          Math.floor(e.currentPosition),
+        ),
       });
-
-      response.onError(err => {
-        console.log('Error reading audio data:', err);
-      });
-    }, 1000);
-
-    // audioRecorderPlayer.addRecordBackListener(async e => {
-    //   // 在这里处理音频数据，可以进行频谱分析等操作
-    //   console.log('Audio Data:', audioData);
-
-    //   setRecordInfo({
-    //     recordSecs: e.currentPosition,
-    //     recordTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
-    //   });
-    //   return;
-    // });
-    // path.current = result;
-    console.log('sss', result);
+    });
+    console.log(`uri: ${uri}`);
   };
 
-  const onStopRecord = async () => {
-    const result = await audioRecorderPlayer.stopRecorder();
-    clearInterval(intervalId.current);
-    audioRecorderPlayer.removeRecordBackListener();
-    setRecordInfo({
+  private onPauseRecord = async (): Promise<void> => {
+    try {
+      const r = await this.audioRecorderPlayer.pauseRecorder();
+      console.log(r);
+    } catch (err) {
+      console.log('pauseRecord', err);
+    }
+  };
+
+  private onResumeRecord = async (): Promise<void> => {
+    await this.audioRecorderPlayer.resumeRecorder();
+  };
+
+  private onStopRecord = async (): Promise<void> => {
+    const result = await this.audioRecorderPlayer.stopRecorder();
+    this.audioRecorderPlayer.removeRecordBackListener();
+    this.setState({
       recordSecs: 0,
     });
-    console.log('结束啦~', result);
+    console.log(result);
   };
 
-  const onStartPlay = async () => {
-    const msg = await audioRecorderPlayer.startPlayer();
-    audioRecorderPlayer.addPlayBackListener(e => {
-      setRecordInfo({
-        currentPositionSec: e.currentPosition,
-        currentDurationSec: e.duration,
-        playTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
-        duration: audioRecorderPlayer.mmssss(Math.floor(e.duration)),
+  private onStartPlay = async (): Promise<void> => {
+    console.log('onStartPlay', this.path);
+
+    try {
+      const msg = await this.audioRecorderPlayer.startPlayer(this.path);
+
+      //? Default path
+      // const msg = await this.audioRecorderPlayer.startPlayer();
+      const volume = await this.audioRecorderPlayer.setVolume(1.0);
+      console.log(`path: ${msg}`, `volume: ${volume}`);
+
+      this.audioRecorderPlayer.addPlayBackListener((e: PlayBackType) => {
+        console.log('playBackListener', e);
+        this.setState({
+          currentPositionSec: e.currentPosition,
+          currentDurationSec: e.duration,
+          playTime: this.audioRecorderPlayer.mmssss(
+            Math.floor(e.currentPosition),
+          ),
+          duration: this.audioRecorderPlayer.mmssss(Math.floor(e.duration)),
+        });
       });
-      return;
-    });
+    } catch (err) {
+      console.log('startPlayer error', err);
+    }
   };
 
-  const onPausePlay = async () => {
-    await audioRecorderPlayer.pausePlayer();
+  private onPausePlay = async (): Promise<void> => {
+    await this.audioRecorderPlayer.pausePlayer();
   };
 
-  const onStopPlay = async () => {
-    audioRecorderPlayer.stopPlayer();
-    audioRecorderPlayer.removePlayBackListener();
+  private onResumePlay = async (): Promise<void> => {
+    await this.audioRecorderPlayer.resumePlayer();
   };
 
-  const onPlay2 = () => {
-    // const player = new Player(url);
-    // player.play();
-    // player.addPlayBackListener(e => {
-    //   // 获取音频数据
-    //   const audioData = e.audioData;
-    //   console.log('音频数据', audioData);
-    //   // 计算频率信息（这里是一个简单的示例，实际应用中需要使用 FFT 等算法）
-    //   // const frequencyInfo = calculateFrequencyInfo(audioData);
-    //   // 打印频率信息
-    //   // console.log(frequencyInfo);
-    // });
+  private onStopPlay = async (): Promise<void> => {
+    console.log('onStopPlay');
+    this.audioRecorderPlayer.stopPlayer();
+    this.audioRecorderPlayer.removePlayBackListener();
   };
+}
 
-  return (
-    <ScrollView>
-      <SafeAreaView>
-        <View>
-          {/* <Text>Audio Path: {audioPath}</Text> */}
-          {/* <Text>Audio Duration: {audioDuration}</Text> */}
-          <Button title="开始记录" onPress={onStartRecord} />
-          <Button title="结束记录" onPress={onStopRecord} />
-          <Button title="开始播放" onPress={onStartPlay} />
-          <Button title="暂停播放" onPress={onPausePlay} />
-          <Button title="结束播放" onPress={onStopPlay} />
-          <Button title="播放2" onPress={onPlay2} />
-        </View>
-
-        <View>{/* <SpectrumVisualizer /> */}</View>
-      </SafeAreaView>
-    </ScrollView>
-  );
-});
+export default Page;

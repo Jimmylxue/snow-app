@@ -30,7 +30,7 @@ export default memo(() => {
   };
 
   const onStartPlay = async () => {
-    // const msg = await audioRecorderPlayer.startPlayer();
+    const msg = await audioRecorderPlayer.startPlayer();
     audioRecorderPlayer.addPlayBackListener(e => {
       setRecordInfo({
         currentPositionSec: e.currentPosition,
