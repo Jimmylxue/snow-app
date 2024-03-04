@@ -1,4 +1,3 @@
-import { useToast } from 'native-base';
 import { Alert } from 'react-native';
 
 type TAlertType = {

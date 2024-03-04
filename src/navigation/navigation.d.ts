@@ -6,4 +6,5 @@ export type RootStackParamList = {
   LuckDraw: undefined;
   Watermelon: undefined;
   StaticWebview: undefined;
+  NativeModule: undefined;
 };

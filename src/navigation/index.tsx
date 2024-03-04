@@ -6,6 +6,7 @@ import KnowledgePlanet from '../pages/KnowledgePlanet';
 import LuckDraw from '../pages/LuckDraw';
 import Watermelon from '../pages/Watermelon';
 import StaticWebview from '../pages/StaticWebview';
+import NativeModule from '../pages/NativeModule';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
@@ -60,6 +61,11 @@ export default function StackScreen() {
         name="StaticWebview"
         options={{ title: 'StaticWebview' }}
         component={StaticWebview}
+      />
+      <Stack.Screen
+        name="NativeModule"
+        options={{ title: 'NativeModule' }}
+        component={NativeModule}
       />
     </Stack.Navigator>
   );

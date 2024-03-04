@@ -1,15 +1,14 @@
-import { useToast } from 'native-base';
 import { memo, useEffect, useState } from 'react';
 import { View, Text, Button, SafeAreaView } from 'react-native';
 import { useAppState, useUserState } from '../../hooks/useAppState';
 import { navigates } from '../../navigation/navigate';
 import { getStorage, saveStorage } from '../../utils';
+import SnowToast from '../../utils/snowToast';
 
 export default memo(() => {
   const { state, signIn, signOut } = useAppState();
   const userInfo = useUserState();
   const [count, setCount] = useState<number>(0);
-  const toast = useToast();
 
   useEffect(() => {
     (async () => {
@@ -29,7 +28,7 @@ export default memo(() => {
             signIn?.('jimmytoken', {
               username: 'jimmy',
             });
-            toast.show({ description: 'hello world' });
+            SnowToast.show('hello', true);
           }}
           title="Login"
           color="#841584"
@@ -99,6 +98,14 @@ export default memo(() => {
             navigates('StaticWebview', undefined);
           }}
           title="navigate StaticWebview"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
+        <Button
+          onPress={() => {
+            navigates('NativeModule', undefined);
+          }}
+          title="navigate NativeModule"
           color="#841584"
           accessibilityLabel="Learn more about this purple button"
         />
