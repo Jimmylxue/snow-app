@@ -1,9 +1,23 @@
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import SnowToast from '../../utils/snowToast';
-import { Button, SafeAreaView } from 'react-native';
+import {
+  Button,
+  NativeEventEmitter,
+  NativeModules,
+  SafeAreaView,
+} from 'react-native';
 import { View } from 'native-base';
 
+const eventEmitter = new NativeEventEmitter(NativeModules.SnowToast);
+
 export default memo(() => {
+  useEffect(() => {
+    const eventListener = eventEmitter.addListener('ToastClose', str => {
+      console.log('event emit str', str);
+    });
+    return () => eventListener.remove();
+  }, []);
+
   return (
     <SafeAreaView>
       <View>
@@ -27,10 +41,18 @@ export default memo(() => {
         />
         <Button
           onPress={async () => {
-            const res = await SnowToast.promiseShow('hello callBack', false);
+            const res = await SnowToast.promiseShow('hello promise', false);
             console.log('Promise res', res);
           }}
           title="promise show"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
+        <Button
+          onPress={async () => {
+            const res = await SnowToast.eventShow('hello event', false);
+          }}
+          title="event show"
           color="#841584"
           accessibilityLabel="Learn more about this purple button"
         />

@@ -10,6 +10,7 @@ interface TSnowToast {
     onClose: (res?: string) => void,
   ): void;
   promiseShow(text: string, isLongShort: boolean): Promise<string>;
+  eventShow(text: string, isLongShort: boolean): void;
 }
 
 // const { SnowToast } = NativeModules as {
