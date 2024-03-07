@@ -1,4 +1,5 @@
-import { NativeModules } from 'react-native';
+import { NativeEventEmitter, NativeModules } from 'react-native';
+import { isAndroid } from './util';
 
 interface TSnowToast {
   show(text: string, duration?: boolean): void;
@@ -20,3 +21,7 @@ interface TSnowToast {
 const { SnowToast } = NativeModules;
 
 export default SnowToast as TSnowToast;
+
+export const snowToastEventEmitter = isAndroid
+  ? new NativeEventEmitter(NativeModules.SnowToast)
+  : undefined;

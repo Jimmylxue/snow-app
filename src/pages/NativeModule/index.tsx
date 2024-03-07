@@ -1,21 +1,17 @@
 import { memo, useEffect } from 'react';
-import SnowToast from '../../utils/snowToast';
-import {
-  Button,
-  NativeEventEmitter,
-  NativeModules,
-  SafeAreaView,
-} from 'react-native';
+import SnowToast, { snowToastEventEmitter } from '../../utils/snowToast';
+import { Button, SafeAreaView } from 'react-native';
 import { View } from 'native-base';
-
-const eventEmitter = new NativeEventEmitter(NativeModules.SnowToast);
 
 export default memo(() => {
   useEffect(() => {
-    const eventListener = eventEmitter.addListener('ToastClose', str => {
-      console.log('event emit str', str);
-    });
-    return () => eventListener.remove();
+    const eventListener = snowToastEventEmitter?.addListener(
+      'ToastClose',
+      str => {
+        console.log('event emit str', str);
+      },
+    );
+    return () => eventListener?.remove();
   }, []);
 
   return (

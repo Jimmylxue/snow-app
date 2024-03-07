@@ -7,6 +7,7 @@ import LuckDraw from '../pages/LuckDraw';
 import Watermelon from '../pages/Watermelon';
 import StaticWebview from '../pages/StaticWebview';
 import NativeModule from '../pages/NativeModule';
+import { MainStack } from '../pages/Home';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
@@ -27,6 +28,11 @@ export default function StackScreen() {
           elevation: 0.5,
         },
       }}>
+      <Stack.Screen
+        name="MainStack"
+        options={{ headerShown: false }}
+        component={MainStack}
+      />
       <Stack.Screen
         name="Index"
         options={{ headerShown: false }}
