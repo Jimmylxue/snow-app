@@ -53,6 +53,8 @@ export function useInitApp() {
         setState({
           token: '',
         });
+        await setAuthToken('');
+        await setAuthUser(JSON.stringify(''));
       },
     };
   }, []);

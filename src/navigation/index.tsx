@@ -8,9 +8,32 @@ import Watermelon from '../pages/Watermelon';
 import StaticWebview from '../pages/StaticWebview';
 import NativeModule from '../pages/NativeModule';
 import { MainStack } from '../pages/Home';
+import { Login } from '../pages/Login';
+import { useEffect } from 'react';
+import { resetNavigate } from './navigate';
+import { useAppState } from '../hooks/useAppState';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
+  const { state } = useAppState();
+
+  useEffect(() => {
+    if (state?.token) {
+      resetNavigate({
+        index: 0,
+        routes: [{ name: 'MainStack' }],
+      });
+      return;
+    }
+
+    if (!state?.token) {
+      resetNavigate({
+        index: 0,
+        routes: [{ name: 'Login' }],
+      });
+      return;
+    }
+  }, [state]);
 
   return (
     <Stack.Navigator
@@ -28,6 +51,11 @@ export default function StackScreen() {
           elevation: 0.5,
         },
       }}>
+      <Stack.Screen
+        name="Login"
+        options={{ headerShown: false }}
+        component={Login}
+      />
       <Stack.Screen
         name="MainStack"
         options={{ headerShown: false }}

@@ -15,3 +15,16 @@ export function navigates<T extends keyof RootStackParamList>(
 export function goBack() {
   navigationRef.current?.goBack();
 }
+
+export function resetNavigate({
+  index,
+  routes,
+}: {
+  index: number;
+  routes: { name: keyof RootStackParamList }[];
+}) {
+  return navigationRef.current?.reset({
+    index,
+    routes,
+  });
+}

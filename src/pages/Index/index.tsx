@@ -25,7 +25,7 @@ export default memo(() => {
         <Text>User-state: {JSON.stringify(userInfo)}</Text>
         <Button
           onPress={async () => {
-            signIn?.('jimmytoken', {
+            await signIn?.('jimmytoken', {
               username: 'jimmy',
             });
             SnowToast.show('hello', true);

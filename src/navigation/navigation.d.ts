@@ -7,4 +7,7 @@ export type RootStackParamList = {
   Watermelon: undefined;
   StaticWebview: undefined;
   NativeModule: undefined;
+  Index: undefined;
+  Login: undefined;
+  MainStack: undefined;
 };
