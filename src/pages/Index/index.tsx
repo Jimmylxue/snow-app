@@ -3,12 +3,13 @@ import { View, Text, Button, SafeAreaView } from 'react-native';
 import { useAppState, useUserState } from '../../hooks/useAppState';
 import { navigates } from '../../navigation/navigate';
 import { getStorage, saveStorage } from '../../utils';
-import SnowToast from '../../utils/snowToast';
+import { useLocation } from '../../hooks/useLocation';
 
 export default memo(() => {
   const { state, signIn, signOut } = useAppState();
   const userInfo = useUserState();
   const [count, setCount] = useState<number>(0);
+  const { info, getLocation } = useLocation();
 
   useEffect(() => {
     (async () => {
@@ -23,14 +24,12 @@ export default memo(() => {
         <Text>nowCount: {count}</Text>
         <Text>APP-state: {JSON.stringify(state)}</Text>
         <Text>User-state: {JSON.stringify(userInfo)}</Text>
+        <Text>当前定位信息: {JSON.stringify(info)}</Text>
         <Button
-          onPress={async () => {
-            await signIn?.('jimmytoken', {
-              username: 'jimmy',
-            });
-            SnowToast.show('hello', true);
+          onPress={() => {
+            getLocation?.();
           }}
-          title="Login"
+          title="获取当前定位"
           color="#841584"
           accessibilityLabel="Learn more about this purple button"
         />

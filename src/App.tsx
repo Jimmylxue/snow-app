@@ -5,6 +5,7 @@ import { navigationRef } from './navigation/navigate';
 import { config } from './config/react-query';
 import { APPContext, useInitApp } from './hooks/useAppState';
 import { NativeBaseProvider } from 'native-base';
+import { LocationContextProvider } from './hooks/useLocation';
 const { queryClient, QueryClientProvider } = config();
 
 const App = () => {
@@ -13,13 +14,15 @@ const App = () => {
     <NativeBaseProvider>
       <NavigationContainer ref={navigationRef}>
         <QueryClientProvider client={queryClient}>
-          <APPContext.Provider
-            value={{
-              state: state!,
-              ...authContext,
-            }}>
-            <StackScreen />
-          </APPContext.Provider>
+          <LocationContextProvider>
+            <APPContext.Provider
+              value={{
+                state: state!,
+                ...authContext,
+              }}>
+              <StackScreen />
+            </APPContext.Provider>
+          </LocationContextProvider>
         </QueryClientProvider>
       </NavigationContainer>
     </NativeBaseProvider>
