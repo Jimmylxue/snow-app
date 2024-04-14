@@ -1,4 +1,12 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  FC,
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { getAuthToken, getAuthUser, setAuthToken, setAuthUser } from '../utils';
 
 type TState = {
@@ -19,6 +27,21 @@ export const APPContext = createContext<TAppContext>({
   signIn: () => {},
   signOut: () => {},
 } as TAppContext);
+
+export const AppContextProvider: FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const { state, ...authContext } = useInitApp();
+  return (
+    <APPContext.Provider
+      value={{
+        state: state!,
+        ...authContext,
+      }}>
+      {children}
+    </APPContext.Provider>
+  );
+};
 
 export function useInitApp() {
   const [state, setState] = useState<TState>();
