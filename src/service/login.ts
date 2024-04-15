@@ -7,6 +7,15 @@ enum ESex {
   女,
 }
 
+export type TUserLoginParams = {
+  phone: string;
+  password: string;
+};
+
+export type TUserRegisterParams = TUserLoginParams & {
+  username: string;
+};
+
 export type TUser = {
   avatar: string;
   createTime: string;
@@ -21,19 +30,13 @@ export function useLogin(
   options?: UseMutationOptions<
     { token: string; user: TUser },
     ClientError,
-    {
-      phone: string;
-      password: string;
-    }
+    TUserLoginParams
   >,
 ) {
   return useMutation<
     { token: string; user: TUser },
     ClientError,
-    {
-      phone: string;
-      password: string;
-    }
+    TUserLoginParams
   >(data => post('/user/login', data), options);
 }
 
@@ -49,4 +52,24 @@ export function useUpdateUser(
     ClientError,
     Pick<TUser, 'id' | 'avatar' | 'username'>
   >(data => post('/user/update', data), options);
+}
+
+export function useUserRegister(
+  options?: UseMutationOptions<
+    {
+      code: number;
+      result: string;
+    },
+    ClientError,
+    TUserRegisterParams
+  >,
+) {
+  return useMutation<
+    {
+      code: number;
+      result: string;
+    },
+    ClientError,
+    TUserRegisterParams
+  >(data => post('/user/register', data), options);
 }
