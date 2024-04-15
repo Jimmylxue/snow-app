@@ -13,6 +13,7 @@ import { TUser } from '../service';
 type TState = {
   userInfo?: TUser;
   token?: string;
+  isLoading?: boolean;
 };
 
 type TAppContext = {
@@ -23,6 +24,7 @@ type TAppContext = {
 
 export const APPContext = createContext<TAppContext>({
   state: {},
+  isLoading: true,
   signIn: () => {},
   signOut: () => {},
 } as TAppContext);
@@ -43,7 +45,9 @@ export const AppContextProvider: FC<{ children: ReactNode }> = ({
 };
 
 export function useInitApp() {
-  const [state, setState] = useState<TState>();
+  const [state, setState] = useState<TState>({
+    isLoading: true,
+  });
 
   useEffect(() => {
     const initState = async () => {
@@ -55,6 +59,7 @@ export function useInitApp() {
       setState({
         userInfo: JSON.parse(user!),
         token: token!,
+        isLoading: false,
       });
     };
 
@@ -69,11 +74,13 @@ export function useInitApp() {
         setState({
           userInfo: userInfo!,
           token,
+          isLoading: false,
         });
       },
       signOut: async () => {
         setState({
           token: '',
+          isLoading: false,
         });
         await setAuthToken('');
         await setAuthUser(JSON.stringify(''));

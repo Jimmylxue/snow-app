@@ -12,12 +12,16 @@ import { Login } from '../pages/Login';
 import { useEffect } from 'react';
 import { resetNavigate } from './navigate';
 import { useAppState } from '../hooks/useAppState';
+import Splash from '../pages/Splash';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
   const { state } = useAppState();
 
   useEffect(() => {
+    if (state.isLoading) {
+      return;
+    }
     if (state?.token) {
       resetNavigate({
         index: 0,
@@ -51,6 +55,11 @@ export default function StackScreen() {
           elevation: 0.5,
         },
       }}>
+      <Stack.Screen
+        name="Splash"
+        options={{ headerShown: false }}
+        component={Splash}
+      />
       <Stack.Screen
         name="Login"
         options={{ headerShown: false }}
