@@ -12,6 +12,10 @@ export async function setAuthToken(token: string) {
   return await AsyncStorage.setItem(AUTH_TOKEN_NAME, token);
 }
 
+export async function removeAuthToken() {
+  return await AsyncStorage.removeItem(AUTH_TOKEN_NAME);
+}
+
 export async function getAuthUser(): Promise<string | null> {
   const token = await AsyncStorage.getItem(AUTH_USER);
   return token;

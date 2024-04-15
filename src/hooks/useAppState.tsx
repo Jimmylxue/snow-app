@@ -8,11 +8,10 @@ import {
   useState,
 } from 'react';
 import { getAuthToken, getAuthUser, setAuthToken, setAuthUser } from '../utils';
+import { TUser } from '../service';
 
 type TState = {
-  userInfo?: {
-    username: string;
-  };
+  userInfo?: TUser;
   token?: string;
 };
 

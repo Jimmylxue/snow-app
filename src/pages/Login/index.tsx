@@ -1,25 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { View, Text } from 'native-base';
 import { useAppState } from '../../hooks/useAppState';
-import SnowToast from '../../utils/snowToast';
-import { resetNavigate } from '../../navigation/navigate';
+import { useLogin } from '../../service';
+import { encrypt } from '../../utils/encrypt';
 
 export const Login = () => {
-  const { state, signIn, signOut } = useAppState();
-
+  const { signIn } = useAppState();
   const [isLogin, setIsLogin] = useState(true);
-  const [username, setUsername] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
 
+  const { mutateAsync } = useLogin({
+    onSuccess: async res => {
+      console.log('res', res);
+      await signIn?.(res.token, res.user);
+    },
+  });
+
   const handleAuthAction = async () => {
+    const params = { phone, password };
     if (isLogin) {
-      // 登录逻辑
-      console.log('执行登录操作');
-      signIn?.('jimmytoken', {
-        username: 'jimmy',
-      });
-      // SnowToast.show('hello', true);
+      params.password = await encrypt(params.password);
+      await mutateAsync(params);
     } else {
       // 注册逻辑
       console.log('执行注册操作');
@@ -37,9 +40,9 @@ export const Login = () => {
       </Text>
       <TextInput
         style={styles.input}
-        placeholder="请输入用户名"
-        value={username}
-        onChangeText={setUsername}
+        placeholder="请输入手机号"
+        value={phone}
+        onChangeText={setPhone}
       />
       <TextInput
         style={styles.input}

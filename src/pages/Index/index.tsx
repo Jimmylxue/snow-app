@@ -6,7 +6,7 @@ import { getStorage, saveStorage } from '../../utils';
 import { useLocation } from '../../hooks/useLocation';
 
 export default memo(() => {
-  const { state, signIn, signOut } = useAppState();
+  const { state, signOut } = useAppState();
   const userInfo = useUserState();
   const [count, setCount] = useState<number>(0);
   const { info, getLocation } = useLocation();

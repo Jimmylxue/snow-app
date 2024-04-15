@@ -14,3 +14,8 @@ export function config() {
     QueryClientProvider,
   };
 }
+
+export type ClientError = {
+  code: number;
+  message: string;
+};
