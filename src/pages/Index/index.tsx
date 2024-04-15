@@ -1,113 +1,87 @@
-import { memo, useEffect, useState } from 'react';
-import { View, Text, Button, SafeAreaView } from 'react-native';
-import { useAppState, useUserState } from '../../hooks/useAppState';
-import { navigates } from '../../navigation/navigate';
-import { getStorage, saveStorage } from '../../utils';
-import { useLocation } from '../../hooks/useLocation';
+import { memo } from 'react';
+import { SafeAreaView } from 'react-native';
+import { Input, View, Button, Toast, Text } from 'native-base';
+import { useAppState } from '../../hooks/useAppState';
 
 export default memo(() => {
   const { state, signOut } = useAppState();
-  const userInfo = useUserState();
-  const [count, setCount] = useState<number>(0);
-  const { info, getLocation } = useLocation();
-
-  useEffect(() => {
-    (async () => {
-      const storageCount = await getStorage('snow-test-count');
-      setCount(+storageCount || 0);
-    })();
-  }, []);
-
   return (
     <SafeAreaView>
-      <View>
-        <Text>nowCount: {count}</Text>
-        <Text>APP-state: {JSON.stringify(state)}</Text>
-        <Text>User-state: {JSON.stringify(userInfo)}</Text>
-        <Text>当前定位信息: {JSON.stringify(info)}</Text>
+      <View
+        w="full"
+        h="full"
+        justifyContent="center"
+        alignItems="center"
+        position="relative">
+        <View position="absolute" right={2} top={2} flexDir="row">
+          <Text>您好，{state.userInfo?.phone}</Text>
+          <Text
+            color="#418faf"
+            ml="2"
+            onPress={() => {
+              signOut?.();
+            }}>
+            登出
+          </Text>
+        </View>
+        <Input
+          w="2/3"
+          shadow={2}
+          _light={{
+            bg: 'coolGray.100',
+            _hover: {
+              bg: 'coolGray.200',
+            },
+            _focus: {
+              bg: 'coolGray.200:alpha.70',
+            },
+          }}
+          _dark={{
+            bg: 'coolGray.800',
+            _hover: {
+              bg: 'coolGray.900',
+            },
+            _focus: {
+              bg: 'coolGray.900:alpha.70',
+            },
+          }}
+          placeholder="Enter your name"
+          value="浓度"
+          isReadOnly
+        />
+        <Input
+          mt={4}
+          w="2/3"
+          shadow={2}
+          _light={{
+            bg: 'coolGray.100',
+            _hover: {
+              bg: 'coolGray.200',
+            },
+            _focus: {
+              bg: 'coolGray.200:alpha.70',
+            },
+          }}
+          _dark={{
+            bg: 'coolGray.800',
+            _hover: {
+              bg: 'coolGray.900',
+            },
+            _focus: {
+              bg: 'coolGray.900:alpha.70',
+            },
+          }}
+          placeholder="请输入浓度"
+        />
         <Button
+          w="2/3"
+          mt="4"
+          shadow={2}
           onPress={() => {
-            getLocation?.();
-          }}
-          title="获取当前定位"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
-        <Button
-          onPress={async () => {
-            signOut?.();
-          }}
-          title="LoginOut"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
-        <Button
-          onPress={async () => {
-            await saveStorage('snow-test-count', String(count + 1));
-            setCount(count + 1);
-          }}
-          title="add one"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
-        <Button
-          onPress={() => {
-            navigates('Mine', {
-              userId: 111,
-            });
-          }}
-          title="navigate to Mine"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
-        <Button
-          onPress={() => {
-            navigates('IDPhoto', undefined);
-          }}
-          title="navigate IDPhoto"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
-        <Button
-          onPress={() => {
-            navigates('KnowledgePlanet', undefined);
-          }}
-          title="navigate KnowledgePlanet"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
-        <Button
-          onPress={() => {
-            navigates('LuckDraw', undefined);
-          }}
-          title="navigate LuckDraw"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
-        <Button
-          onPress={() => {
-            navigates('Watermelon', undefined);
-          }}
-          title="navigate Watermelon"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
-        <Button
-          onPress={() => {
-            navigates('StaticWebview', undefined);
-          }}
-          title="navigate StaticWebview"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
-        <Button
-          onPress={() => {
-            navigates('NativeModule', undefined);
-          }}
-          title="navigate NativeModule"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
+            Toast.show({ title: '浓度已超标' });
+          }}>
+          检测
+        </Button>
       </View>
     </SafeAreaView>
   );
