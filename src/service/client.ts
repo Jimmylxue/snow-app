@@ -2,6 +2,7 @@ import { Toast } from 'native-base';
 import { removeAuthToken } from '../utils';
 
 const serverUrl = 'http:127.0.0.1:9999';
+// const serverUrl = 'https://api.jimmyxuexue.top';
 
 type CustomrHeader = {
   Authorization?: string | null;
