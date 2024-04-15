@@ -1,5 +1,15 @@
-import Geolocation from '@react-native-community/geolocation';
-import { FC, ReactNode, createContext, useContext, useState } from 'react';
+import Geolocation, {
+  GeolocationOptions,
+} from '@react-native-community/geolocation';
+import {
+  FC,
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { Alert } from 'react-native';
 
 type TInfo = {
   latitude: number;
@@ -12,16 +22,40 @@ type TInfo = {
 
 type TLocation = {
   info?: TInfo;
+  /**
+   * 获取当前定位
+   */
   getLocation?: () => void;
+  /**
+   * 监控定位
+   */
+  watchPosition?: (option?: GeolocationOptions) => void;
+  /**
+   * 取消监控定位
+   */
+  clearWatch?: () => void;
+  historyPosition: string[];
 };
 
-const LocationContext = createContext<TLocation>({});
+const LocationContext = createContext<TLocation>({ historyPosition: [] });
 
 export const LocationContextProvider: FC<{
   children: ReactNode;
 }> = ({ children }) => {
   const [location, setLocation] = useState<TInfo>();
 
+  /**
+   * 历史位置信息
+   */
+  const [historyPosition, setHistoryPosition] = useState<string[]>([]);
+  /**
+   *
+   */
+  const [subscriptionId, setSubscriptionId] = useState<number | null>(null);
+
+  /**
+   * 获取当前定位
+   */
   const getLocation = () => {
     Geolocation.requestAuthorization(
       () => {
@@ -40,11 +74,49 @@ export const LocationContextProvider: FC<{
     );
   };
 
+  /**
+   * 监控位置
+   */
+  const watchPosition = (option?: GeolocationOptions) => {
+    try {
+      const watchID = Geolocation.watchPosition(
+        position => {
+          console.log('watchPosition', JSON.stringify(position));
+          setHistoryPosition(cur => [...(cur || []), JSON.stringify(position)]);
+        },
+        error => Alert.alert('WatchPosition Error', JSON.stringify(error)),
+        option,
+      );
+      setSubscriptionId(watchID);
+    } catch (error) {
+      Alert.alert('WatchPosition Error', JSON.stringify(error));
+    }
+  };
+
+  /**
+   * 停止监控
+   */
+  const clearWatch = () => {
+    subscriptionId !== null && Geolocation.clearWatch(subscriptionId);
+    setSubscriptionId(null);
+    setHistoryPosition([]);
+  };
+
+  useEffect(() => {
+    return () => {
+      clearWatch();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <LocationContext.Provider
       value={{
         info: location,
         getLocation,
+        watchPosition,
+        clearWatch,
+        historyPosition,
       }}>
       {children}
     </LocationContext.Provider>

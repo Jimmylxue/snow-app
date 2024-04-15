@@ -9,7 +9,8 @@ export default memo(() => {
   const { state, signOut } = useAppState();
   const userInfo = useUserState();
   const [count, setCount] = useState<number>(0);
-  const { info, getLocation } = useLocation();
+  const { info, getLocation, watchPosition, clearWatch, historyPosition } =
+    useLocation();
 
   useEffect(() => {
     (async () => {
@@ -25,11 +26,33 @@ export default memo(() => {
         <Text>APP-state: {JSON.stringify(state)}</Text>
         <Text>User-state: {JSON.stringify(userInfo)}</Text>
         <Text>当前定位信息: {JSON.stringify(info)}</Text>
+        <Text>历史位置信息: {JSON.stringify(historyPosition)}</Text>
         <Button
           onPress={() => {
             getLocation?.();
           }}
           title="获取当前定位"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
+        <Button
+          onPress={() => {
+            watchPosition?.({
+              // enableHighAccuracy: true,
+              // timeout: 20000,
+              // maximumAge: 1000,
+              // distanceFilter: 0,
+            });
+          }}
+          title="开始记录定位"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
+        <Button
+          onPress={() => {
+            clearWatch?.();
+          }}
+          title="结束定位"
           color="#841584"
           accessibilityLabel="Learn more about this purple button"
         />
