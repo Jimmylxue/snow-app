@@ -16,6 +16,12 @@ export type TUserRegisterParams = TUserLoginParams & {
   username: string;
 };
 
+export type TChangeUserPassword = {
+  phone: string;
+  originPassword: string;
+  newPassword: string;
+};
+
 export type TUser = {
   avatar: string;
   createTime: string;
@@ -72,4 +78,24 @@ export function useUserRegister(
     ClientError,
     TUserRegisterParams
   >(data => post('/user/register', data), options);
+}
+
+export function useUserChangePassword(
+  options?: UseMutationOptions<
+    {
+      code: number;
+      result: string;
+    },
+    ClientError,
+    TChangeUserPassword
+  >,
+) {
+  return useMutation<
+    {
+      code: number;
+      result: string;
+    },
+    ClientError,
+    TChangeUserPassword
+  >(data => post('/user/changePassword', data), options);
 }
