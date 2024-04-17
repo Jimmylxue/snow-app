@@ -2,24 +2,13 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { View, Text, Button } from 'native-base';
 import { navigates } from '../../../navigation/navigate';
-import { baseFormatTime } from '../../../utils';
 type TProps = {
   name: string;
   desc: string;
   isMine?: boolean;
-  joinTime?: string;
-  clubId: number;
-  onJoinClub?: () => void;
 };
 
-const ClubCard = ({
-  name,
-  desc,
-  isMine = false,
-  joinTime,
-  clubId,
-  onJoinClub,
-}: TProps) => {
+const VoteCard = ({ name, desc, isMine = false }: TProps) => {
   return (
     <View style={styles.card} mx={3} mt={3}>
       <View
@@ -28,32 +17,19 @@ const ClubCard = ({
         alignItems="center">
         <Text style={styles.name}>{name}</Text>
         <TouchableOpacity>
-          <Text fontSize="sm">查看历史活动</Text>
+          <Text>2024-03-14 18:56:03</Text>
         </TouchableOpacity>
       </View>
 
       <Text style={styles.description}>{desc}</Text>
-      {joinTime && (
-        <Text style={styles.description} color="gray.500">
-          {baseFormatTime(joinTime)} 加入社团
-        </Text>
-      )}
-      {isMine ? (
-        <Button
-          mt="2"
-          onPress={() => {
-            navigates('ClubDetail', {
-              clubId,
-              clubName: '篮球社',
-            });
-          }}>
-          进入社团
+      <View flexDirection="row" justifyContent="space-between">
+        <Button w="2/5" mt="2">
+          我同意
         </Button>
-      ) : (
-        <Button mt="2" onPress={onJoinClub}>
-          立即加入
+        <Button w="2/5" mt="2">
+          我反对
         </Button>
-      )}
+      </View>
     </View>
   );
 };
@@ -73,4 +49,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ClubCard;
+export default VoteCard;

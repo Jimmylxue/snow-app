@@ -11,4 +11,10 @@ export type RootStackParamList = {
   Login: undefined;
   MainStack: undefined;
   Splash: undefined;
+  Notice: undefined;
+  ClubDetail: { clubId: number; clubName: string };
+  ClubPosts: { clubId: number; clubName: string };
+  ClubVote: { clubId: number; clubName: string };
+  ClubWritePosts: { clubId: number; clubName: string };
+  ClubPostsDetail: { clubId: number; postId: number };
 };

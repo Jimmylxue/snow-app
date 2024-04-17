@@ -1,10 +1,9 @@
 import { memo } from 'react';
 import { Box } from 'native-base';
-import { Dimensions, SafeAreaView, ScrollView } from 'react-native';
-import ClubCard from './components/ClubCard';
+import { Dimensions, SafeAreaView } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { AllClub } from './All';
-import { MineClub } from './Mine';
+import { AllClub } from './View/All';
+import { MineClub } from './View/Mine';
 
 const tabItemWidth = Dimensions.get('window').width / 2;
 const Tab = createMaterialTopTabNavigator();

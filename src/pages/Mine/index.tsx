@@ -2,9 +2,11 @@ import { memo } from 'react';
 import { Text, Box, View, Avatar, Button, Image } from 'native-base';
 import { InfoLine } from '../../components/InfoLine';
 import { useAppState } from '../../hooks/useAppState';
+import { TouchableOpacity } from 'react-native';
+import { navigates } from '../../navigation/navigate';
 
 export default memo(() => {
-  const { state } = useAppState();
+  const { state, signOut } = useAppState();
   return (
     <Box h="full" w="full">
       <View
@@ -16,15 +18,20 @@ export default memo(() => {
         px="2"
         position="relative"
         alignItems="center">
-        <Image
-          position="absolute"
-          right={2}
-          top={12}
-          source={require('../../images/entry-message.png')}
-          alt="Alternate Text"
-          width={7}
-          height={7}
-        />
+        <View position="absolute" right={2} top={12}>
+          <TouchableOpacity
+            onPress={() => {
+              navigates('Notice', undefined);
+            }}>
+            <Image
+              source={require('../../images/entry-message.png')}
+              alt="Alternate Text"
+              width={7}
+              height={7}
+            />
+          </TouchableOpacity>
+        </View>
+
         <View>
           <View flexDir="row" alignItems="center">
             <Avatar
@@ -55,7 +62,12 @@ export default memo(() => {
           />
         </View>
 
-        <Button shadow={2} onPress={() => console.log('hello world')} mt="4">
+        <Button
+          shadow={2}
+          onPress={() => {
+            signOut?.();
+          }}
+          mt="4">
           退出登录
         </Button>
       </View>

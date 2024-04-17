@@ -1,5 +1,6 @@
 import { Toast } from 'native-base';
 import { removeAuthToken } from '../utils';
+import { logoutEmitter } from './event';
 
 // const serverUrl = 'https://api.jimmyxuexue.top';
 const serverUrl = 'http://127.0.0.1:9999';
@@ -89,6 +90,8 @@ class Client {
       body = Object.keys(data).length > 0 ? JSON.stringify(data) : null;
     }
 
+    console.log('rrraa', this.makeAuthHeader());
+
     return fetch(getRequestUrl(url) + params, {
       method,
       body,
@@ -98,13 +101,16 @@ class Client {
       },
     })
       .then(response => {
+        console.log('rrr', response.status);
         if (response.status == 401) {
           removeAuthToken();
+          return response.json();
         } else {
           return response.json();
         }
       })
       .then(result => {
+        console.log('resu2', result);
         if (result.code != 200) {
           throw new FetchError(result.message || result.result, result.code);
         }
@@ -139,6 +145,7 @@ class Client {
       },
     })
       .then(response => {
+        console.log('resp', response);
         if (response.status == 401) {
           removeAuthToken();
         } else {
@@ -146,6 +153,7 @@ class Client {
         }
       })
       .then(result => {
+        console.log('resu1', result);
         if (result.code != 200) {
           throw new FetchError(result.message || result.result, result.code);
         }
@@ -195,6 +203,9 @@ class FetchError extends Error {
   constructor(public message: string, public statusCode: number) {
     super(message);
     this.show(message);
+    if (statusCode === 401) {
+      logoutEmitter.emit('app-logout');
+    }
   }
 
   show(message: string) {

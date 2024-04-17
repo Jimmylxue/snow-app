@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Index from '../Index';
 import Mine from '../Mine';
 import Club from '../Club';
+import { ManagerAllClub } from '../Club/View/ManagerAll';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,6 +33,31 @@ export function MainStack() {
           ),
         }}
         component={Index}
+      />
+      <Tab.Screen
+        name="ManagerIndex"
+        options={{
+          headerTransparent: true,
+          tabBarLabel: '社团管理',
+          title: '社团管理',
+          headerShown: true,
+          headerBackgroundContainerStyle: {
+            backgroundColor: '#fff',
+          },
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={
+                focused
+                  ? require('../../images/home-active.png')
+                  : require('../../images/home.png')
+              }
+              w="25px"
+              h="25px"
+              alt="图片"
+            />
+          ),
+        }}
+        component={ManagerAllClub}
       />
       <Tab.Screen
         name="Club"

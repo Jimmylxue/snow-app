@@ -396,6 +396,8 @@ PODS:
     - React-Core
   - RNCAsyncStorage (1.17.10):
     - React-Core
+  - RNDateTimePicker (7.6.4):
+    - React-Core
   - RNFS (2.20.0):
     - React-Core
   - RNGestureHandler (2.15.0):
@@ -506,6 +508,7 @@ DEPENDENCIES:
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - RNAudioRecorderPlayer (from `../node_modules/react-native-audio-recorder-player`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -619,6 +622,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-audio-recorder-player"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -690,6 +695,7 @@ SPEC CHECKSUMS:
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNAudioRecorderPlayer: 0f385cefff3f36b0f853c254b6ece7b76059d0fb
   RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
+  RNDateTimePicker: 08f00a2c341bf96e4b30da15799fbdd4c5fa48a3
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 0cba6c7c51a90cd793cf2475cf7fdca613ede300
   RNReanimated: bec7736122a268883bdede07f1bf9cf4b40158db

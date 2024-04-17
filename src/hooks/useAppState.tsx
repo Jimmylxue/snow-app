@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { getAuthToken, getAuthUser, setAuthToken, setAuthUser } from '../utils';
 import { TUser } from '../service';
+import { authHeader } from '../service/client';
 
 type TState = {
   userInfo?: TUser;
@@ -56,6 +57,8 @@ export function useInitApp() {
         await getAuthUser(),
       ]);
 
+      authHeader.setToken(token || '');
+
       setState({
         userInfo: JSON.parse(user!),
         token: token!,
@@ -69,6 +72,7 @@ export function useInitApp() {
   const appContext = useMemo(() => {
     return {
       signIn: async (token: string, userInfo: TState['userInfo']) => {
+        authHeader.setToken(token);
         await setAuthToken(token);
         await setAuthUser(JSON.stringify(userInfo));
         setState({
