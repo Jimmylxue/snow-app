@@ -10,6 +10,8 @@ type TProps = {
   hideShowLove?: boolean;
   withOutMargin?: boolean;
   createTime?: string;
+  onLikePost?: () => void;
+  loveCount?: number;
 };
 
 const PostCard = ({
@@ -18,6 +20,8 @@ const PostCard = ({
   createTime,
   hideShowLove = false,
   withOutMargin = false,
+  onLikePost,
+  loveCount,
 }: TProps) => {
   return (
     <View
@@ -37,10 +41,16 @@ const PostCard = ({
           <Text color="gray.400">{baseFormatTime(createTime)} 发布</Text>
         )}
         {!hideShowLove && (
-          <View flexDirection="row" alignItems="center">
-            <FavouriteIcon />
-            <Text ml="2">0</Text>
-          </View>
+          <TouchableOpacity
+            onPress={e => {
+              e.stopPropagation();
+              onLikePost?.();
+            }}>
+            <View flexDirection="row" alignItems="center">
+              <FavouriteIcon />
+              <Text ml="2">{loveCount}</Text>
+            </View>
+          </TouchableOpacity>
         )}
       </View>
     </View>

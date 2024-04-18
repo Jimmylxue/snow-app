@@ -31,7 +31,7 @@ export default memo(() => {
 
   return (
     <SafeAreaView>
-      <View flexDirection="column" position="relative" pb="12">
+      <View flexDirection="column" position="relative" pb="12" h="full">
         <ScrollView>
           {data?.map(item => (
             <TouchableOpacity
@@ -39,13 +39,15 @@ export default memo(() => {
               onPress={() => {
                 navigates('ClubPostsDetail', {
                   clubId: params.clubId,
-                  postId: 1,
+                  postId: item.id,
+                  postFather: item,
                 });
               }}>
               <PostCard
-                name={item.content}
+                name={item.title}
                 desc={item.content}
                 createTime={item.createdTime}
+                hideShowLove
               />
             </TouchableOpacity>
           ))}

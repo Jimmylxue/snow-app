@@ -10,7 +10,7 @@ type TProps = {
   onSeeDetail?: () => void;
 };
 
-const ActivityCard = ({
+const ActivityDetailCard = ({
   name,
   desc,
   createTime,
@@ -37,7 +37,15 @@ const ActivityCard = ({
             e.stopPropagation();
             onJoinActivity();
           }}>
-          立即报名
+          我要反馈
+        </Button>
+        <Button
+          mt="2"
+          onPress={e => {
+            e.stopPropagation();
+            onJoinActivity();
+          }}>
+          立即签到
         </Button>
       </View>
     </TouchableOpacity>
@@ -59,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ActivityCard;
+export default ActivityDetailCard;

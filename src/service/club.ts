@@ -6,6 +6,8 @@ import {
   useQuery,
 } from 'react-query';
 import { ClientError, post } from './client';
+import { TUser } from './login';
+import { TActivityItem } from '../navigation/navigation';
 
 type TClub = {
   clubId: number;
@@ -97,16 +99,6 @@ export function useJoinClub(
   >(data => post('/club/signUp', data), options);
 }
 
-type TActivityItem = {
-  clubActivityId: number;
-  clubId: number;
-  name: string;
-  desc: string;
-  signStartTime: number;
-  signEndTime: number;
-  createdTime: string;
-};
-
 /**
  * 查看社团活动
  */
@@ -143,6 +135,78 @@ export function useJoinActivity(
       clubActivityId: number;
     }
   >(data => post('/cactivity/signUp', data), options);
+}
+
+export type TSignInItem = {
+  id: number;
+  activityId: number;
+  createTime: string;
+  user: TUser;
+};
+
+/**
+ * 查看签到记录
+ */
+export function useActivitySignInRecord(
+  queryKey: QueryKey,
+  variable: {
+    clubActivityId: number;
+  },
+  config?: UseQueryOptions<TSignInItem[], ClientError>,
+) {
+  return useQuery<TSignInItem[], ClientError>(
+    queryKey,
+    () => post('/cactivity/signInRecord', variable),
+    config,
+  );
+}
+
+export type TFeedbackItem = {
+  id: number;
+  content: string;
+  activityId: number;
+  createTime: string;
+  user: TUser;
+};
+
+/**
+ * 查看社团反馈记录
+ */
+export function useActivityFeedbackRecord(
+  queryKey: QueryKey,
+  variable: {
+    clubActivityId: number;
+  },
+  config?: UseQueryOptions<TSignInItem[], ClientError>,
+) {
+  return useQuery<TSignInItem[], ClientError>(
+    queryKey,
+    () => post('/cactivity/feedbackRecord', variable),
+    config,
+  );
+}
+
+/**
+ * 社团活动签到
+ */
+export function useSignInActivity(
+  options?: UseMutationOptions<
+    boolean,
+    ClientError,
+    {
+      clubId: number;
+      clubActivityId: number;
+    }
+  >,
+) {
+  return useMutation<
+    boolean,
+    ClientError,
+    {
+      clubId: number;
+      clubActivityId: number;
+    }
+  >(data => post('/cactivity/signIn', data), options);
 }
 
 /**
@@ -272,4 +336,97 @@ export function useWritePosts(
       content: string;
     }
   >(data => post('/posts/send', data), options);
+}
+
+export type TPostComment = {
+  clubId: number;
+  clubPostId: number;
+  commentId: number;
+  content: string;
+  createTime: string;
+  user: TUser;
+};
+
+/**
+ * 查看社团帖子的评论信息
+ */
+export function usePostsCommentList(
+  queryKey: QueryKey,
+  variable: {
+    clubId: number;
+    postId: number;
+  },
+  config?: UseQueryOptions<TPostComment[], ClientError>,
+) {
+  return useQuery<TPostComment[], ClientError>(
+    queryKey,
+    () => post('/posts/postCommentList', variable),
+    config,
+  );
+}
+
+/**
+ * 写帖子评论
+ */
+export function useWritePostsComment(
+  options?: UseMutationOptions<
+    boolean,
+    ClientError,
+    {
+      clubId: number;
+      postsId: number;
+      content: string;
+    }
+  >,
+) {
+  return useMutation<
+    boolean,
+    ClientError,
+    {
+      clubId: number;
+      postsId: number;
+      content: string;
+    }
+  >(data => post('/posts/comment', data), options);
+}
+
+/**
+ * 点赞帖子
+ */
+export function useLikePost(
+  options?: UseMutationOptions<
+    boolean,
+    ClientError,
+    {
+      clubId: number;
+      postsId: number;
+    }
+  >,
+) {
+  return useMutation<
+    boolean,
+    ClientError,
+    {
+      clubId: number;
+      postsId: number;
+    }
+  >(data => post('/posts/like', data), options);
+}
+
+/**
+ * 查看某个帖子点赞的数量
+ */
+export function usePostLikeCount(
+  queryKey: QueryKey,
+  variable: {
+    clubId: number;
+    postId: number;
+  },
+  config?: UseQueryOptions<TPostComment[], ClientError>,
+) {
+  return useQuery<TPostComment[], ClientError>(
+    queryKey,
+    () => post('/posts/likePostUser', variable),
+    config,
+  );
 }

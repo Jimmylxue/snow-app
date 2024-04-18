@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import Index from '../pages/Index';
 import Mine from '../pages/Mine';
-import IDPhoto from '../pages/IDPhoto';
+// import IDPhoto from '../pages/IDPhoto';
 import KnowledgePlanet from '../pages/KnowledgePlanet';
 import LuckDraw from '../pages/LuckDraw';
 import Watermelon from '../pages/Watermelon';
@@ -20,6 +20,9 @@ import ClubWritePosts from '../pages/Club/writePosts';
 import ClubPostsDetail from '../pages/Club/postDetail';
 import Notice from '../pages/Notice';
 import { logoutEmitter } from '../service/event';
+import ActivityDetail from '../pages/Club/ActivityDetail';
+import signInRecord from '../pages/Club/signInRecord';
+import feedbackRecord from '../pages/Club/feedbackRecord';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
@@ -97,11 +100,11 @@ export default function StackScreen() {
         options={{ headerShown: true }}
         component={Mine}
       />
-      <Stack.Screen
+      {/* // <Stack.Screen
         name="IDPhoto"
         options={{ title: 'IDPhoto' }}
         component={IDPhoto}
-      />
+      /> */}
       <Stack.Screen
         name="KnowledgePlanet"
         options={{ title: 'KnowledgePlanet' }}
@@ -131,6 +134,21 @@ export default function StackScreen() {
         name="ClubDetail"
         options={{ title: '社团详情' }}
         component={ClubDetail}
+      />
+      <Stack.Screen
+        name="ClubActivityDetail"
+        options={{ title: '活动详情' }}
+        component={ActivityDetail}
+      />
+      <Stack.Screen
+        name="SignInRecord"
+        options={{ title: '签到记录' }}
+        component={signInRecord}
+      />
+      <Stack.Screen
+        name="FeedbackRecord"
+        options={{ title: '反馈记录' }}
+        component={feedbackRecord}
       />
       <Stack.Screen
         name="ClubVote"

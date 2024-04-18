@@ -1,69 +1,50 @@
 import { memo, useEffect } from 'react';
-import { Box, Divider, ScrollView, Text, Toast, View } from 'native-base';
+import { Divider, Text, Toast, View } from 'native-base';
 import { SafeAreaView } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/navigation';
-import ActivityCard from './components/ActivityCard';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { navigates } from '../../navigation/navigate';
-import { useClubActivity, useJoinActivity } from '../../service/club';
+import { useSignInActivity } from '../../service/club';
+import ActivityDetailCard from './components/ActivityDetailCard';
 
-type RouterParams = RouteProp<RootStackParamList, 'ClubDetail'>;
+type RouterParams = RouteProp<RootStackParamList, 'ClubActivityDetail'>;
 
 /**
- * 社团详情
+ * 社团活动详情
  */
 export default memo(() => {
   const { params } = useRoute<RouterParams>();
   const navigation = useNavigation();
-  const { data } = useClubActivity(
-    ['clubActivity'],
-    {
-      clubId: params.clubId,
-    },
-    {
-      enabled: !!params.clubId,
-    },
-  );
 
-  const { mutateAsync } = useJoinActivity({
+  const { mutateAsync } = useSignInActivity({
     onSuccess() {
       Toast.show({
-        title: '你已成功加入该活动',
+        title: '你已成功签到',
       });
     },
   });
 
   useEffect(() => {
     navigation.setOptions({
-      title: params.clubName,
+      title: params.activity.name,
     });
   }, [params, navigation]);
 
   return (
     <SafeAreaView>
       <View flexDirection="column" position="relative" pb="12" h="full">
-        <ScrollView>
-          {data?.map(activity => (
-            <ActivityCard
-              key={activity.clubActivityId}
-              name={activity.name}
-              desc={activity.desc}
-              createTime={activity.createdTime}
-              onJoinActivity={async () => {
-                await mutateAsync({
-                  clubActivityId: activity.clubActivityId,
-                });
-              }}
-              onSeeDetail={() => {
-                navigates('ClubActivityDetail', {
-                  clubId: activity.clubId,
-                  activity,
-                });
-              }}
-            />
-          ))}
-        </ScrollView>
+        <ActivityDetailCard
+          name={params.activity.name}
+          desc={params.activity.desc}
+          createTime={params.activity.createdTime}
+          onJoinActivity={async () => {
+            await mutateAsync({
+              clubActivityId: params.activity.clubActivityId,
+              clubId: params.activity.clubId,
+            });
+          }}
+        />
 
         <View position="absolute" bottom="0" h="12">
           <Divider />
@@ -74,14 +55,17 @@ export default memo(() => {
                   width: '100%',
                 }}
                 onPress={() => {
-                  navigates('ClubVote', params);
+                  navigates('SignInRecord', {
+                    clubId: params.clubId,
+                    activity: params.activity,
+                  });
                 }}>
                 <View
                   w="full"
                   h="full"
                   justifyContent="center"
                   alignItems="center">
-                  <Text>投票记录</Text>
+                  <Text>签到记录</Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -91,14 +75,17 @@ export default memo(() => {
                   width: '100%',
                 }}
                 onPress={() => {
-                  navigates('ClubPosts', params);
+                  navigates('FeedbackRecord', {
+                    clubId: params.clubId,
+                    activity: params.activity,
+                  });
                 }}>
                 <View
                   w="full"
                   h="full"
                   justifyContent="center"
                   alignItems="center">
-                  <Text>交流平台</Text>
+                  <Text>反馈记录</Text>
                 </View>
               </TouchableOpacity>
             </View>

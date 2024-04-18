@@ -44,7 +44,7 @@ const ClubCard = ({
           onPress={() => {
             navigates('ClubDetail', {
               clubId,
-              clubName: '篮球社',
+              clubName: name,
             });
           }}>
           进入社团

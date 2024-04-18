@@ -2,20 +2,14 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { View, Text, Button, FavouriteIcon, Avatar } from 'native-base';
 import { navigates } from '../../../navigation/navigate';
+import { TPostComment } from '../../../service/club';
+import { baseFormatTime } from '../../../utils';
 type TProps = {
-  name: string;
-  desc: string;
-  isMine?: boolean;
-  hideShowLove?: boolean;
+  comment: TPostComment;
   withOutMargin?: boolean;
 };
 
-const PostComment = ({
-  name,
-  desc,
-  hideShowLove = false,
-  withOutMargin = false,
-}: TProps) => {
+const PostComment = ({ comment, withOutMargin = false }: TProps) => {
   return (
     <View
       style={styles.card}
@@ -25,18 +19,18 @@ const PostComment = ({
         <Avatar
           size="sm"
           source={{
-            uri: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+            uri: comment?.user?.avatar,
           }}></Avatar>
         <View>
           <Text fontSize="sm" ml="2">
-            吉米 ：
+            {comment?.user?.username} ：
           </Text>
         </View>
       </View>
 
-      <Text style={styles.description}>{desc}</Text>
+      <Text style={styles.description}>{comment.content}</Text>
       <View flexDirection="row" justifyContent="flex-end" mt="2">
-        <Text color="gray.400">2024-03-14 18:56:03</Text>
+        <Text color="gray.400">{baseFormatTime(comment.createTime)}</Text>
       </View>
     </View>
   );

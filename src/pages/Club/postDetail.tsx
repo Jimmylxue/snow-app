@@ -1,44 +1,90 @@
-import { memo, useEffect, useState } from 'react';
+import { memo, useState } from 'react';
 import {
   Button,
   Divider,
   FormControl,
-  Input,
   Modal,
   ScrollView,
   TextArea,
+  Toast,
   View,
 } from 'native-base';
 import { SafeAreaView } from 'react-native';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/navigation';
 import PostCard from './components/PostCard';
-import { navigates } from '../../navigation/navigate';
 import PostComment from './components/PostComment';
+import {
+  useLikePost,
+  usePostLikeCount,
+  usePostsCommentList,
+  useWritePostsComment,
+} from '../../service/club';
 
-type RouterParams = RouteProp<RootStackParamList, 'ClubDetail'>;
+type RouterParams = RouteProp<RootStackParamList, 'ClubPostsDetail'>;
 
 export default memo(() => {
   const { params } = useRoute<RouterParams>();
   const [showModal, setShowModal] = useState(false);
   const [content, setContent] = useState<string>('');
 
+  const { data, refetch } = usePostsCommentList(
+    ['postComment'],
+    {
+      postId: params.postId,
+      clubId: params.clubId,
+    },
+    {
+      enabled: !!params.clubId && !!params.postId,
+    },
+  );
+
+  const { data: likePostData, refetch: LRefetch } = usePostLikeCount(
+    ['postLikeCount'],
+    {
+      postId: params.postId,
+      clubId: params.clubId,
+    },
+    {
+      enabled: !!params.clubId && !!params.postId,
+    },
+  );
+
+  const { mutateAsync: likePost } = useLikePost({
+    onSuccess() {
+      Toast.show({
+        title: '点赞成功',
+      });
+      LRefetch();
+    },
+  });
+
+  const { mutateAsync } = useWritePostsComment({
+    onSuccess() {
+      Toast.show({ title: '评论成功' });
+      refetch();
+    },
+  });
+
   return (
     <SafeAreaView>
       <View flexDirection="column" position="relative" pb="12" h="full">
         <PostCard
-          name="友谊赛"
-          desc="和隔壁学校的同学组织一场友谊赛"
-          hideShowLove
+          name={params?.postFather?.title}
+          desc={params?.postFather?.content}
           withOutMargin
+          onLikePost={async () => {
+            await likePost({
+              clubId: params.clubId,
+              postsId: params?.postFather?.id,
+            });
+          }}
+          loveCount={likePostData?.length || 0}
         />
         <ScrollView>
-          <PostComment name="友谊赛" desc="和隔壁学校的同学组织一场友谊赛" />
-          <PostComment name="友谊赛" desc="和隔壁学校的同学组织一场友谊赛" />
-          <PostComment name="友谊赛" desc="和隔壁学校的同学组织一场友谊赛" />
-          <PostComment name="友谊赛" desc="和隔壁学校的同学组织一场友谊赛" />
-          <PostComment name="友谊赛" desc="和隔壁学校的同学组织一场友谊赛" />
-          <PostComment name="友谊赛" desc="和隔壁学校的同学组织一场友谊赛" />
+          {data?.map(item => (
+            <PostComment comment={item} key={item.commentId} />
+          ))}
         </ScrollView>
 
         <View position="absolute" bottom="0" h="12" w="full" px="3">
@@ -85,7 +131,16 @@ export default memo(() => {
                 取消
               </Button>
               <Button
-                onPress={() => {
+                onPress={async () => {
+                  if (!content) {
+                    Toast.show({ title: '请输入内容' });
+                    return;
+                  }
+                  await mutateAsync({
+                    postsId: params.postId,
+                    clubId: params.clubId,
+                    content,
+                  });
                   setShowModal(false);
                 }}>
                 发布
