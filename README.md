@@ -17,3 +17,7 @@
 ## 安卓打包指令
 
 `./gradlew assembleRelease`
+
+`./gradlew clean`
+
+`npx react-native config` 检查是否有配置错误
