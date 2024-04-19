@@ -50,6 +50,14 @@ export default memo(() => {
         />
         <Button
           onPress={() => {
+            navigates('SmsList', undefined);
+          }}
+          title="短信功能"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
+        <Button
+          onPress={() => {
             clearWatch?.();
           }}
           title="结束定位"

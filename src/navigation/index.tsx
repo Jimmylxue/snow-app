@@ -24,6 +24,8 @@ import ActivityDetail from '../pages/Club/ActivityDetail';
 import signInRecord from '../pages/Club/signInRecord';
 import feedbackRecord from '../pages/Club/feedbackRecord';
 import NoticeDetail from '../pages/Notice/detail';
+import Sms from '../pages/Sms';
+import SmsDetail from '../pages/Sms/detail';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
@@ -180,6 +182,16 @@ export default function StackScreen() {
         name="NoticeDetail"
         options={{ title: '消息详情' }}
         component={NoticeDetail}
+      />
+      <Stack.Screen
+        name="SmsList"
+        options={{ title: '短信列表' }}
+        component={Sms}
+      />
+      <Stack.Screen
+        name="SmsDetail"
+        options={{ title: '短信详情' }}
+        component={SmsDetail}
       />
     </Stack.Navigator>
   );

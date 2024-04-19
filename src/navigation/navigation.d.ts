@@ -13,6 +13,11 @@ export type TUserLetter = {
   letter: TLetter;
 };
 
+export type TSmsItem = {
+  address: string;
+  body: string;
+};
+
 export type RootStackParamList = {
   Mine: { userId: number };
   Main: undefined;
@@ -46,4 +51,6 @@ export type RootStackParamList = {
     isManager?: boolean;
   };
   NoticeDetail: { letter: TUserLetter };
+  SmsList: undefined;
+  SmsDetail: { message: TSmsItem };
 };

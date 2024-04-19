@@ -19,6 +19,7 @@ public class CustomPackage implements ReactPackage{
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext){
         List<NativeModule> modules = new ArrayList<>();
         modules.add(new SnowToast(reactContext));
+        modules.add(new Sms(reactContext));
         return modules;
     }
 }
