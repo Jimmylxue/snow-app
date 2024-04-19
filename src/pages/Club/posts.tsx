@@ -7,7 +7,7 @@ import PostCard from './components/PostCard';
 import { navigates } from '../../navigation/navigate';
 import { usePostsList } from '../../service/club';
 
-type RouterParams = RouteProp<RootStackParamList, 'ClubDetail'>;
+type RouterParams = RouteProp<RootStackParamList, 'ClubPosts'>;
 
 export default memo(() => {
   const { params } = useRoute<RouterParams>();
@@ -41,6 +41,7 @@ export default memo(() => {
                   clubId: params.clubId,
                   postId: item.id,
                   postFather: item,
+                  isManager: params.isManager,
                 });
               }}>
               <PostCard
@@ -53,15 +54,17 @@ export default memo(() => {
           ))}
         </ScrollView>
 
-        <View position="absolute" bottom="0" h="12" w="full" px="3">
-          <Divider />
-          <Button
-            onPress={() => {
-              navigates('ClubWritePosts', params);
-            }}>
-            我也说说
-          </Button>
-        </View>
+        {!params.isManager && (
+          <View position="absolute" bottom="0" h="12" w="full" px="3">
+            <Divider />
+            <Button
+              onPress={() => {
+                navigates('ClubWritePosts', params);
+              }}>
+              我也说说
+            </Button>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );

@@ -8,6 +8,7 @@ type TProps = {
   createTime: string;
   onJoinActivity: () => void;
   onSeeDetail?: () => void;
+  isManager: boolean;
 };
 
 const ActivityCard = ({
@@ -16,6 +17,7 @@ const ActivityCard = ({
   createTime,
   onJoinActivity,
   onSeeDetail,
+  isManager,
 }: TProps) => {
   return (
     <TouchableOpacity onPress={onSeeDetail}>
@@ -31,14 +33,16 @@ const ActivityCard = ({
         </View>
 
         <Text style={styles.description}>{desc}</Text>
-        <Button
-          mt="2"
-          onPress={e => {
-            e.stopPropagation();
-            onJoinActivity();
-          }}>
-          立即报名
-        </Button>
+        {!isManager && (
+          <Button
+            mt="2"
+            onPress={e => {
+              e.stopPropagation();
+              onJoinActivity();
+            }}>
+            立即报名
+          </Button>
+        )}
       </View>
     </TouchableOpacity>
   );

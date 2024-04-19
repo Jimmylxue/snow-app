@@ -7,7 +7,16 @@ import {
 } from 'react-query';
 import { ClientError, post } from './client';
 import { TUser } from './login';
-import { TActivityItem } from '../navigation/navigation';
+
+export type TActivityItem = {
+  clubActivityId: number;
+  clubId: number;
+  name: string;
+  desc: string;
+  signStartTime: number;
+  signEndTime: number;
+  createdTime: string;
+};
 
 type TClub = {
   clubId: number;
@@ -187,6 +196,31 @@ export function useActivityFeedbackRecord(
 }
 
 /**
+ * 提交社团活动反馈
+ */
+export function useSendFeedback(
+  options?: UseMutationOptions<
+    boolean,
+    ClientError,
+    {
+      clubId: number;
+      clubActivityId: number;
+      content: string;
+    }
+  >,
+) {
+  return useMutation<
+    boolean,
+    ClientError,
+    {
+      clubId: number;
+      clubActivityId: number;
+      content: string;
+    }
+  >(data => post('/cactivity/feedback', data), options);
+}
+
+/**
  * 社团活动签到
  */
 export function useSignInActivity(
@@ -210,7 +244,7 @@ export function useSignInActivity(
 }
 
 /**
- * 发起投票
+ * 管理员发起投票
  */
 export function useLaunchVote(
   options?: UseMutationOptions<
@@ -220,6 +254,8 @@ export function useLaunchVote(
       clubId: number;
       name: string;
       desc: string;
+      voteStartTime: number;
+      voteEndTime: number;
     }
   >,
 ) {
@@ -230,8 +266,35 @@ export function useLaunchVote(
       clubId: number;
       name: string;
       desc: string;
+      voteStartTime: number;
+      voteEndTime: number;
     }
   >(data => post('/vote/launch', data), options);
+}
+
+/**
+ * 用户投票
+ */
+export function useChoiceVote(
+  options?: UseMutationOptions<
+    boolean,
+    ClientError,
+    {
+      clubId: number;
+      voteId: number;
+      choose: 1 | 2;
+    }
+  >,
+) {
+  return useMutation<
+    boolean,
+    ClientError,
+    {
+      clubId: number;
+      voteId: number;
+      choose: 1 | 2;
+    }
+  >(data => post('/vote/choice', data), options);
 }
 
 /**
@@ -263,12 +326,23 @@ export function useAddActivity(
   >(data => post('/cactivity/add', data), options);
 }
 
-type TVoteItem = {
+export type TVoteItem = {
   id: number;
   name: string;
   desc: string;
   createTime: string;
   clubId: number;
+  voteStatus: 1 | 2 | 3;
+  voteStartTime: number;
+  voteEndTime: number;
+  recordItems: {
+    choose: number;
+    clubId: number;
+    createTime: string;
+    user: TUser;
+    userId: number;
+  }[];
+  myVote: -1 | 1 | 2;
 };
 
 /**
@@ -429,4 +503,31 @@ export function usePostLikeCount(
     () => post('/posts/likePostUser', variable),
     config,
   );
+}
+
+/**
+ * 管理员发送消息
+ */
+export function useSendLetter(
+  options?: UseMutationOptions<
+    string,
+    ClientError,
+    {
+      clubId: number;
+      title: string;
+      content: string;
+      platform: number;
+    }
+  >,
+) {
+  return useMutation<
+    string,
+    ClientError,
+    {
+      clubId: number;
+      title: string;
+      content: string;
+      platform: number;
+    }
+  >(data => post('/club/sendNotice', data), options);
 }

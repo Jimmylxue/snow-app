@@ -13,6 +13,7 @@ import {
   useAddActivity,
   useAddClub,
   useLaunchVote,
+  useSendLetter,
 } from '../../../service/club';
 import { useReactQuery } from '../../../config/react-query';
 import dayjs from 'dayjs';
@@ -70,31 +71,58 @@ export function CreateNotifyClub({
     },
   });
 
+  const { mutateAsync: sendLetter } = useSendLetter({
+    onSuccess(data) {
+      Toast.show({ title: data });
+    },
+  });
+
   const isCreateClub = modalType === 'createClub';
   const isCreateActivity = modalType === 'createActivity';
   const isCreateAnnounce = modalType === 'createAnnouncement';
   const isCreateVote = modalType === 'createVote';
 
   const onConfirm = async () => {
+    const startTime = dayjs(startDate).startOf('day').valueOf() / 1000;
+    const endTime = dayjs(endDate).endOf('day').valueOf() / 1000;
     if (isCreateClub) {
       await addClub({ name: title, desc: content });
       return;
     }
     if (isCreateVote) {
+      if (endTime < startTime) {
+        Toast.show({ title: '请选择正确的时间' });
+        return;
+      }
       await launchVote({
         name: title,
         desc: content,
+        voteStartTime: dayjs(startDate).startOf('day').valueOf() / 1000,
+        voteEndTime: dayjs(endDate).endOf('day').valueOf() / 1000,
         clubId,
       });
       return;
     }
     if (isCreateActivity) {
+      if (endTime < startTime) {
+        Toast.show({ title: '请选择正确的时间' });
+        return;
+      }
       await addActivity({
         name: title,
         desc: content,
         clubId,
         signStartTime: dayjs(startDate).startOf('day').valueOf() / 1000,
         signEndTime: dayjs(endDate).endOf('day').valueOf() / 1000,
+      });
+      return;
+    }
+    if (isCreateAnnounce) {
+      await sendLetter({
+        clubId,
+        title,
+        content,
+        platform: 2,
       });
       return;
     }
@@ -260,6 +288,41 @@ export function CreateNotifyClub({
                   value={content}
                   onChangeText={val => setContent(val)}
                 />
+              </FormControl>
+              <FormControl>
+                <View
+                  flexDirection="row"
+                  alignItems="center"
+                  justifyContent="space-between">
+                  <FormControl.Label>{'开始时间'}</FormControl.Label>
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={startDate}
+                    mode={'date'}
+                    is24Hour={true}
+                    onChange={(_, selectedDate: any) => {
+                      const currentDate = selectedDate;
+                      setStartDate(currentDate);
+                    }}
+                  />
+                </View>
+                <View
+                  flexDirection="row"
+                  alignItems="center"
+                  mt="2"
+                  justifyContent="space-between">
+                  <FormControl.Label>{'结束时间'}</FormControl.Label>
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={endDate}
+                    mode={'date'}
+                    is24Hour={true}
+                    onChange={(_, selectedDate: any) => {
+                      const currentDate = selectedDate;
+                      setEndDate(currentDate);
+                    }}
+                  />
+                </View>
               </FormControl>
             </>
           )}

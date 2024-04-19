@@ -7,44 +7,47 @@ type TProps = {
   desc: string;
   isMine?: boolean;
   onHandlePush?: (modalType: THandleType) => void;
+  onSeeDetail: () => void;
 };
 
-const ManagerClubCard = ({ name, desc, onHandlePush }: TProps) => {
+const ManagerClubCard = ({ name, desc, onHandlePush, onSeeDetail }: TProps) => {
   return (
-    <View style={styles.card} mx={3} mt={3}>
-      <View
-        flexDirection="row"
-        justifyContent="space-between"
-        alignItems="center">
-        <Text style={styles.name}>{name}</Text>
-        <TouchableOpacity>
-          <Text fontSize="sm">查看历史活动</Text>
-        </TouchableOpacity>
-      </View>
+    <TouchableOpacity onPress={onSeeDetail}>
+      <View style={styles.card} mx={3} mt={3}>
+        <View
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center">
+          <Text style={styles.name}>{name}</Text>
+        </View>
 
-      <Text style={styles.description}>{desc}</Text>
-      <Button
-        mt="2"
-        onPress={() => {
-          onHandlePush?.('createAnnouncement');
-        }}>
-        发布通知
-      </Button>
-      <Button
-        mt="2"
-        onPress={() => {
-          onHandlePush?.('createVote');
-        }}>
-        发起投票
-      </Button>
-      <Button
-        mt="2"
-        onPress={() => {
-          onHandlePush?.('createActivity');
-        }}>
-        发布活动
-      </Button>
-    </View>
+        <Text style={styles.description}>{desc}</Text>
+        <Button
+          mt="2"
+          onPress={e => {
+            e.stopPropagation();
+            onHandlePush?.('createAnnouncement');
+          }}>
+          发布通知
+        </Button>
+        <Button
+          mt="2"
+          onPress={e => {
+            e.stopPropagation();
+            onHandlePush?.('createVote');
+          }}>
+          发起投票
+        </Button>
+        <Button
+          mt="2"
+          onPress={e => {
+            e.stopPropagation();
+            onHandlePush?.('createActivity');
+          }}>
+          发布活动
+        </Button>
+      </View>
+    </TouchableOpacity>
   );
 };
 

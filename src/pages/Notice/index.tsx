@@ -1,23 +1,39 @@
 import { memo } from 'react';
-import { Text, Box, View, Avatar, Button, Image } from 'native-base';
-import { InfoLine } from '../../components/InfoLine';
-import { useAppState } from '../../hooks/useAppState';
 import { ScrollView } from 'react-native-gesture-handler';
 import NoticeCard from './component/NoticeCard';
+import {
+  EReadStatus,
+  useReadLetter,
+  useUserLetter,
+} from '../../service/letter';
+import { navigates } from '../../navigation/navigate';
 
 export default memo(() => {
-  const { state } = useAppState();
+  const { data, refetch } = useUserLetter(['userLetter'], { platform: 1 });
+
+  const { mutateAsync } = useReadLetter({
+    onSuccess() {
+      refetch();
+    },
+  });
+
   return (
     <ScrollView>
-      <NoticeCard name="篮球社" desc="篮球" />
-      <NoticeCard name="街舞社" desc="这就是街舞！" />
-      <NoticeCard name="街舞社" desc="这就是街舞！" />
-      <NoticeCard name="街舞社" desc="这就是街舞！" />
-      <NoticeCard name="街舞社" desc="这就是街舞！" />
-      <NoticeCard name="街舞社" desc="这就是街舞！" />
-      <NoticeCard name="街舞社" desc="这就是街舞！" />
-      <NoticeCard name="街舞社" desc="这就是街舞！" />
-      <NoticeCard name="街舞社" desc="这就是街舞！" />
+      {data?.map((item, index) => (
+        <NoticeCard
+          key={index}
+          info={item}
+          onSeeDetail={async () => {
+            await mutateAsync({
+              recordId: item.recordId,
+              status: EReadStatus.已读,
+            });
+            navigates('NoticeDetail', {
+              letter: item,
+            });
+          }}
+        />
+      ))}
     </ScrollView>
   );
 });

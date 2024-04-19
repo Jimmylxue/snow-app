@@ -1,18 +1,18 @@
 import { memo, useEffect } from 'react';
-import { ScrollView, View } from 'native-base';
+import { ScrollView, Toast, View } from 'native-base';
 import { SafeAreaView } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/navigation';
 import VoteCard from './components/VoteCard';
-import { useVoteRecord } from '../../service/club';
+import { useChoiceVote, useVoteRecord } from '../../service/club';
 
-type RouterParams = RouteProp<RootStackParamList, 'ClubDetail'>;
+type RouterParams = RouteProp<RootStackParamList, 'ClubVote'>;
 
 export default memo(() => {
   const { params } = useRoute<RouterParams>();
   const navigation = useNavigation();
 
-  const { data } = useVoteRecord(
+  const { data, refetch } = useVoteRecord(
     ['voteList'],
     {
       clubId: params.clubId,
@@ -22,9 +22,18 @@ export default memo(() => {
     },
   );
 
+  const { mutateAsync } = useChoiceVote({
+    onSuccess() {
+      Toast.show({
+        title: '投票成功',
+      });
+      refetch();
+    },
+  });
+
   useEffect(() => {
     navigation.setOptions({
-      title: params.clubName + ' - 投票记录',
+      title: params.clubName + ' - 历史投票',
     });
   }, [params, navigation]);
 
@@ -33,7 +42,18 @@ export default memo(() => {
       <View flexDirection="column" position="relative">
         <ScrollView>
           {data?.map(item => (
-            <VoteCard key={item.id} name={item.name} desc={item.desc} />
+            <VoteCard
+              info={item}
+              key={item.id}
+              onVote={async (status: 1 | 2) => {
+                await mutateAsync({
+                  clubId: params.clubId,
+                  voteId: item.id,
+                  choose: status,
+                });
+              }}
+              isManager={!!params.isManager}
+            />
           ))}
         </ScrollView>
       </View>

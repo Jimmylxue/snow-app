@@ -59,8 +59,10 @@ export default memo(() => {
                 navigates('ClubActivityDetail', {
                   clubId: activity.clubId,
                   activity,
+                  isManager: params.isManager,
                 });
               }}
+              isManager={!!params.isManager}
             />
           ))}
         </ScrollView>
@@ -81,7 +83,7 @@ export default memo(() => {
                   h="full"
                   justifyContent="center"
                   alignItems="center">
-                  <Text>投票记录</Text>
+                  <Text>投票中心</Text>
                 </View>
               </TouchableOpacity>
             </View>

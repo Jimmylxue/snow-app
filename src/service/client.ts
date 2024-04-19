@@ -90,8 +90,6 @@ class Client {
       body = Object.keys(data).length > 0 ? JSON.stringify(data) : null;
     }
 
-    console.log('rrraa', this.makeAuthHeader());
-
     return fetch(getRequestUrl(url) + params, {
       method,
       body,
@@ -101,7 +99,6 @@ class Client {
       },
     })
       .then(response => {
-        console.log('rrr', response.status);
         if (response.status == 401) {
           removeAuthToken();
           return response.json();
@@ -110,7 +107,6 @@ class Client {
         }
       })
       .then(result => {
-        console.log('resu2', result);
         if (result.code != 200) {
           throw new FetchError(result.message || result.result, result.code);
         }

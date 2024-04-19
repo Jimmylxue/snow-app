@@ -4,6 +4,7 @@ import ManagerClubCard from '../components/ManagerClubCard';
 import { useRef, useState } from 'react';
 import { CreateNotifyClub, THandleType } from '../components/CreateNotifyClub';
 import { useAllClub } from '../../../service/club';
+import { navigates } from '../../../navigation/navigate';
 
 export function ManagerAllClub() {
   const [showModal, setShowModal] = useState(false);
@@ -32,6 +33,13 @@ export function ManagerAllClub() {
                 modalType.current = type;
                 clubId.current = club.clubId;
                 setShowModal(true);
+              }}
+              onSeeDetail={() => {
+                navigates('ClubDetail', {
+                  clubId: club.clubId,
+                  clubName: club.name,
+                  isManager: true,
+                });
               }}
             />
           ))}

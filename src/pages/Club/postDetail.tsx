@@ -87,15 +87,17 @@ export default memo(() => {
           ))}
         </ScrollView>
 
-        <View position="absolute" bottom="0" h="12" w="full" px="3">
-          <Divider />
-          <Button
-            onPress={() => {
-              setShowModal(true);
-            }}>
-            我也说说
-          </Button>
-        </View>
+        {!params.isManager && (
+          <View position="absolute" bottom="0" h="12" w="full" px="3">
+            <Divider />
+            <Button
+              onPress={() => {
+                setShowModal(true);
+              }}>
+              我也说说
+            </Button>
+          </View>
+        )}
       </View>
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>

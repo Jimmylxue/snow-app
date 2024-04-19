@@ -4,10 +4,16 @@ import Index from '../Index';
 import Mine from '../Mine';
 import Club from '../Club';
 import { ManagerAllClub } from '../Club/View/ManagerAll';
+import { useAppState } from '../../hooks/useAppState';
+import { ERoleType } from '../../service';
 
 const Tab = createBottomTabNavigator();
 
 export function MainStack() {
+  const { state } = useAppState();
+
+  const isManager = state.userInfo?.role === ERoleType.管理员;
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -23,8 +29,8 @@ export function MainStack() {
             <Image
               source={
                 focused
-                  ? require('../../images/home-active.png')
-                  : require('../../images/home.png')
+                  ? require('../../images/home-selected.png')
+                  : require('../../images/home-default.png')
               }
               w="25px"
               h="25px"
@@ -38,8 +44,8 @@ export function MainStack() {
         name="ManagerIndex"
         options={{
           headerTransparent: true,
-          tabBarLabel: '社团管理',
-          title: '社团管理',
+          tabBarLabel: isManager ? '管理' : '社团',
+          title: isManager ? '管理' : '社团',
           headerShown: true,
           headerBackgroundContainerStyle: {
             backgroundColor: '#fff',
@@ -48,8 +54,8 @@ export function MainStack() {
             <Image
               source={
                 focused
-                  ? require('../../images/home-active.png')
-                  : require('../../images/home.png')
+                  ? require('../../images/pic-selected.png')
+                  : require('../../images/pic-default.png')
               }
               w="25px"
               h="25px"
@@ -57,33 +63,7 @@ export function MainStack() {
             />
           ),
         }}
-        component={ManagerAllClub}
-      />
-      <Tab.Screen
-        name="Club"
-        options={{
-          headerTransparent: true,
-          tabBarLabel: '社团',
-          title: '社团',
-          headerShown: true,
-          // headerTitleAlign: 'left',
-          headerBackgroundContainerStyle: {
-            backgroundColor: '#fff',
-          },
-          tabBarIcon: ({ focused }) => (
-            <Image
-              source={
-                focused
-                  ? require('../../images/home-active.png')
-                  : require('../../images/home.png')
-              }
-              w="25px"
-              h="25px"
-              alt="图片"
-            />
-          ),
-        }}
-        component={Club}
+        component={isManager ? ManagerAllClub : Club}
       />
       <Tab.Screen
         name="Mine"
@@ -94,8 +74,8 @@ export function MainStack() {
             <Image
               source={
                 focused
-                  ? require('../../images/home-active.png')
-                  : require('../../images/home.png')
+                  ? require('../../images/person-selected.png')
+                  : require('../../images/person-default.png')
               }
               w="25px"
               h="25px"

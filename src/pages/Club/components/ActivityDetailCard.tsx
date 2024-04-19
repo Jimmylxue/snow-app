@@ -8,6 +8,8 @@ type TProps = {
   createTime: string;
   onJoinActivity: () => void;
   onSeeDetail?: () => void;
+  isManager: boolean;
+  onRefund: () => void;
 };
 
 const ActivityDetailCard = ({
@@ -16,6 +18,8 @@ const ActivityDetailCard = ({
   createTime,
   onJoinActivity,
   onSeeDetail,
+  isManager,
+  onRefund,
 }: TProps) => {
   return (
     <TouchableOpacity onPress={onSeeDetail}>
@@ -31,22 +35,26 @@ const ActivityDetailCard = ({
         </View>
 
         <Text style={styles.description}>{desc}</Text>
-        <Button
-          mt="2"
-          onPress={e => {
-            e.stopPropagation();
-            onJoinActivity();
-          }}>
-          我要反馈
-        </Button>
-        <Button
-          mt="2"
-          onPress={e => {
-            e.stopPropagation();
-            onJoinActivity();
-          }}>
-          立即签到
-        </Button>
+        {!isManager && (
+          <>
+            <Button
+              mt="2"
+              onPress={e => {
+                e.stopPropagation();
+                onRefund();
+              }}>
+              我要反馈
+            </Button>
+            <Button
+              mt="2"
+              onPress={e => {
+                e.stopPropagation();
+                onJoinActivity();
+              }}>
+              立即签到
+            </Button>
+          </>
+        )}
       </View>
     </TouchableOpacity>
   );

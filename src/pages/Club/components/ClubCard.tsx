@@ -27,9 +27,9 @@ const ClubCard = ({
         justifyContent="space-between"
         alignItems="center">
         <Text style={styles.name}>{name}</Text>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Text fontSize="sm">查看历史活动</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <Text style={styles.description}>{desc}</Text>

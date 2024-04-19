@@ -1,25 +1,28 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { View, Text } from 'native-base';
+import { TUserLetter } from '../../../navigation/navigation';
+import { EReadStatus } from '../../../service/letter';
 type TProps = {
-  name: string;
-  desc: string;
-  isMine?: boolean;
+  info: TUserLetter;
+  onSeeDetail: () => void;
 };
 
-const NoticeCard = ({ name, desc }: TProps) => {
+const NoticeCard = ({ info, onSeeDetail }: TProps) => {
   return (
     <View style={styles.card} mx={3} mt={3}>
       <View
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center">
-        <Text style={styles.name}>{name}</Text>
-        <TouchableOpacity>
+        <Text style={styles.name}>{info.letter.title}</Text>
+        {info.status === EReadStatus.未读 && (
           <View w="2" h="2" bg="red.500" rounded="full"></View>
-        </TouchableOpacity>
+        )}
       </View>
-      <Text style={styles.description}>{desc}</Text>
+      <TouchableOpacity onPress={onSeeDetail}>
+        <Text style={styles.description}>点击查看详情</Text>
+      </TouchableOpacity>
     </View>
   );
 };

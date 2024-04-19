@@ -1,11 +1,20 @@
-import { memo, useEffect } from 'react';
-import { Divider, Text, Toast, View } from 'native-base';
+import { memo, useEffect, useState } from 'react';
+import {
+  Button,
+  Divider,
+  FormControl,
+  Modal,
+  Text,
+  TextArea,
+  Toast,
+  View,
+} from 'native-base';
 import { SafeAreaView } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/navigation';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { navigates } from '../../navigation/navigate';
-import { useSignInActivity } from '../../service/club';
+import { useSendFeedback, useSignInActivity } from '../../service/club';
 import ActivityDetailCard from './components/ActivityDetailCard';
 
 type RouterParams = RouteProp<RootStackParamList, 'ClubActivityDetail'>;
@@ -16,11 +25,21 @@ type RouterParams = RouteProp<RootStackParamList, 'ClubActivityDetail'>;
 export default memo(() => {
   const { params } = useRoute<RouterParams>();
   const navigation = useNavigation();
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [content, setContent] = useState<string>('');
 
   const { mutateAsync } = useSignInActivity({
     onSuccess() {
       Toast.show({
         title: '你已成功签到',
+      });
+    },
+  });
+
+  const { mutateAsync: sendFeedback } = useSendFeedback({
+    onSuccess() {
+      Toast.show({
+        title: '反馈提交成功',
       });
     },
   });
@@ -43,6 +62,10 @@ export default memo(() => {
               clubActivityId: params.activity.clubActivityId,
               clubId: params.activity.clubId,
             });
+          }}
+          isManager={!!params.isManager}
+          onRefund={() => {
+            setShowModal(true);
           }}
         />
 
@@ -92,6 +115,59 @@ export default memo(() => {
           </View>
         </View>
       </View>
+      <Modal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+        }}>
+        <Modal.Content maxWidth="400px">
+          <Modal.CloseButton />
+          <Modal.Header>提交反馈</Modal.Header>
+          <Modal.Body>
+            <FormControl>
+              <FormControl.Label>{'反馈内容'}</FormControl.Label>
+              {/* @ts-ignore */}
+              <TextArea
+                aria-label="t1"
+                numberOfLines={4}
+                placeholder={'请输入反馈内容'}
+                // isInvalid
+                _dark={{
+                  placeholderTextColor: 'gray.300',
+                }}
+                mb="5"
+                value={content}
+                onChangeText={val => setContent(val)}
+              />
+            </FormControl>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button.Group space={2}>
+              <Button
+                variant="ghost"
+                colorScheme="blueGray"
+                onPress={() => {
+                  setContent('');
+                  setShowModal(false);
+                }}>
+                取消
+              </Button>
+              <Button
+                onPress={async () => {
+                  await sendFeedback({
+                    clubActivityId: params.activity.clubActivityId,
+                    clubId: params.activity.clubId,
+                    content,
+                  });
+                  setContent('');
+                  setShowModal(false);
+                }}>
+                确定
+              </Button>
+            </Button.Group>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
     </SafeAreaView>
   );
 });

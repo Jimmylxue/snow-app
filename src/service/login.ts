@@ -22,6 +22,11 @@ export type TChangeUserPassword = {
   newPassword: string;
 };
 
+export enum ERoleType {
+  普通用户,
+  管理员,
+}
+
 export type TUser = {
   avatar: string;
   createTime: string;
@@ -30,6 +35,7 @@ export type TUser = {
   phone?: string;
   sex: ESex;
   username: string;
+  role: ERoleType;
 };
 
 export function useLogin(

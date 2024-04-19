@@ -23,6 +23,7 @@ import { logoutEmitter } from '../service/event';
 import ActivityDetail from '../pages/Club/ActivityDetail';
 import signInRecord from '../pages/Club/signInRecord';
 import feedbackRecord from '../pages/Club/feedbackRecord';
+import NoticeDetail from '../pages/Notice/detail';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
@@ -174,6 +175,11 @@ export default function StackScreen() {
         name="Notice"
         options={{ title: '消息中心' }}
         component={Notice}
+      />
+      <Stack.Screen
+        name="NoticeDetail"
+        options={{ title: '消息详情' }}
+        component={NoticeDetail}
       />
     </Stack.Navigator>
   );
