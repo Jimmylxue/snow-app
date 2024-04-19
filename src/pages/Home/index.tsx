@@ -1,6 +1,5 @@
 import { Image } from 'native-base';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Index from '../Index';
 import Mine from '../Mine';
 import Club from '../Club';
 import { ManagerAllClub } from '../Club/View/ManagerAll';
@@ -20,26 +19,6 @@ export function MainStack() {
         headerShown: false,
         tabBarActiveTintColor: '#3498db',
       }}>
-      <Tab.Screen
-        name="Home"
-        options={{
-          headerTransparent: true,
-          tabBarLabel: '首页',
-          tabBarIcon: ({ focused }) => (
-            <Image
-              source={
-                focused
-                  ? require('../../images/home-selected.png')
-                  : require('../../images/home-default.png')
-              }
-              w="25px"
-              h="25px"
-              alt="图片"
-            />
-          ),
-        }}
-        component={Index}
-      />
       <Tab.Screen
         name="ManagerIndex"
         options={{
