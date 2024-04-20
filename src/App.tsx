@@ -3,9 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import StackScreen from './navigation';
 import { navigationRef } from './navigation/navigate';
 import { useReactQuery } from './config/react-query';
-import { AppContextProvider } from './hooks/useAppState';
 import { NativeBaseProvider } from 'native-base';
-import { LocationContextProvider } from './hooks/useLocation';
 const { queryClient, QueryClientProvider } = useReactQuery();
 
 const App = () => {
@@ -13,11 +11,7 @@ const App = () => {
     <NativeBaseProvider>
       <NavigationContainer ref={navigationRef}>
         <QueryClientProvider client={queryClient}>
-          <LocationContextProvider>
-            <AppContextProvider>
-              <StackScreen />
-            </AppContextProvider>
-          </LocationContextProvider>
+          <StackScreen />
         </QueryClientProvider>
       </NavigationContainer>
     </NativeBaseProvider>
