@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { resetNavigate } from './navigate';
 import { useAppState } from '../hooks/useAppState';
 import Splash from '../pages/Splash';
+import Main from '../pages/Main';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
@@ -60,8 +61,13 @@ export default function StackScreen() {
       />
       <Stack.Screen
         name="Index"
-        options={{ headerShown: true, title: '浓度检测' }}
+        options={{ headerShown: false }}
         component={Index}
+      />
+      <Stack.Screen
+        name="Main"
+        options={{ headerShown: true, title: '浓度检测' }}
+        component={Main}
       />
     </Stack.Navigator>
   );

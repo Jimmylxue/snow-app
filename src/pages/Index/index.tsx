@@ -1,8 +1,8 @@
 import { memo, useState } from 'react';
 import { SafeAreaView } from 'react-native';
-import { Input, View, Button, Toast, Text } from 'native-base';
+import { View, Button, Text } from 'native-base';
 import { useAppState } from '../../hooks/useAppState';
-import { checkOver } from '../../utils/util';
+import { navigates } from '../../navigation/navigate';
 
 export default memo(() => {
   const { state, signOut } = useAppState();
@@ -19,11 +19,12 @@ export default memo(() => {
         h="full"
         justifyContent="center"
         alignItems="center"
+        backgroundColor="#3498db"
         position="relative">
-        <View position="absolute" right={2} top={2} flexDir="row">
+        <View position="absolute" right={2} top={4} flexDir="row">
           <Text>您好，{state.userInfo?.phone}</Text>
           <Text
-            color="#418faf"
+            color="#fff"
             ml="2"
             onPress={() => {
               signOut?.();
@@ -31,166 +32,17 @@ export default memo(() => {
             登出
           </Text>
         </View>
-        <Input
-          w="2/3"
-          shadow={2}
-          _light={{
-            bg: 'coolGray.100',
-            _hover: {
-              bg: 'coolGray.200',
-            },
-            _focus: {
-              bg: 'coolGray.200:alpha.70',
-            },
-          }}
-          _dark={{
-            bg: 'coolGray.800',
-            _hover: {
-              bg: 'coolGray.900',
-            },
-            _focus: {
-              bg: 'coolGray.900:alpha.70',
-            },
-          }}
-          placeholder="Enter your name"
-          value="浓度"
-          isReadOnly
-        />
-        <Input
-          mt={4}
-          w="2/3"
-          shadow={2}
-          _light={{
-            bg: 'coolGray.100',
-            _hover: {
-              bg: 'coolGray.200',
-            },
-            _focus: {
-              bg: 'coolGray.200:alpha.70',
-            },
-          }}
-          _dark={{
-            bg: 'coolGray.800',
-            _hover: {
-              bg: 'coolGray.900',
-            },
-            _focus: {
-              bg: 'coolGray.900:alpha.70',
-            },
-          }}
-          placeholder="请输入甲烷体积"
-          value={jia}
-          onChangeText={val => {
-            setJia(val);
-          }}
-        />
-        <Input
-          mt={4}
-          w="2/3"
-          shadow={2}
-          _light={{
-            bg: 'coolGray.100',
-            _hover: {
-              bg: 'coolGray.200',
-            },
-            _focus: {
-              bg: 'coolGray.200:alpha.70',
-            },
-          }}
-          _dark={{
-            bg: 'coolGray.800',
-            _hover: {
-              bg: 'coolGray.900',
-            },
-            _focus: {
-              bg: 'coolGray.900:alpha.70',
-            },
-          }}
-          placeholder="请输入乙烷体积"
-          value={yi}
-          onChangeText={val => {
-            setYi(val);
-          }}
-        />
-        <Input
-          mt={4}
-          w="2/3"
-          shadow={2}
-          _light={{
-            bg: 'coolGray.100',
-            _hover: {
-              bg: 'coolGray.200',
-            },
-            _focus: {
-              bg: 'coolGray.200:alpha.70',
-            },
-          }}
-          _dark={{
-            bg: 'coolGray.800',
-            _hover: {
-              bg: 'coolGray.900',
-            },
-            _focus: {
-              bg: 'coolGray.900:alpha.70',
-            },
-          }}
-          placeholder="请输入丙烷体积"
-          value={bing}
-          onChangeText={val => {
-            setBing(val);
-          }}
-        />
-        <Input
-          mt={4}
-          w="2/3"
-          shadow={2}
-          _light={{
-            bg: 'coolGray.100',
-            _hover: {
-              bg: 'coolGray.200',
-            },
-            _focus: {
-              bg: 'coolGray.200:alpha.70',
-            },
-          }}
-          _dark={{
-            bg: 'coolGray.800',
-            _hover: {
-              bg: 'coolGray.900',
-            },
-            _focus: {
-              bg: 'coolGray.900:alpha.70',
-            },
-          }}
-          placeholder="请输入总混合气体体积"
-          value={all}
-          onChangeText={val => setAll(val)}
-        />
+        <Text color="#fff" fontSize="2xl">
+          可燃气体浓度检查
+        </Text>
         <Button
           w="2/3"
-          mt="4"
+          mt="8"
           shadow={2}
           onPress={() => {
-            if (!/^-?\d+(\.\d+)?$/.test(jia) || !jia) {
-              Toast.show({ title: '请输入正确的数值类型' });
-              return;
-            }
-            if (!/^-?\d+(\.\d+)?$/.test(yi) || !yi) {
-              Toast.show({ title: '请输入正确的数值类型' });
-              return;
-            }
-            if (!/^-?\d+(\.\d+)?$/.test(bing) || !bing) {
-              Toast.show({ title: '请输入正确的数值类型' });
-              return;
-            }
-            if (!/^-?\d+(\.\d+)?$/.test(all) || !all) {
-              Toast.show({ title: '请输入正确的数值类型' });
-              return;
-            }
-
-            checkOver(jia, yi, bing, all);
+            navigates('Main', undefined);
           }}>
-          检测
+          进入检测
         </Button>
       </View>
     </SafeAreaView>
