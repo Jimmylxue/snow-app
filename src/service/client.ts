@@ -2,8 +2,13 @@ import { Toast } from 'native-base';
 import { removeAuthToken } from '../utils';
 import { logoutEmitter } from './event';
 
-const serverUrl = 'https://api.jimmyxuexue.top';
+export let serverUrl = 'https://sms.stof.top';
+// const serverUrl = 'https://api.jimmyxuexue.top';
 // const serverUrl = 'http://127.0.0.1:9999';
+
+export function setServerUrl(url: string) {
+  serverUrl = url;
+}
 
 type CustomrHeader = {
   Authorization?: string | null;
@@ -67,7 +72,7 @@ class Client {
   makeAuthHeader() {
     return {
       ...authHeader.header,
-      channel: this.channel,
+      // channel: this.channel,
     } as any;
   }
 
@@ -85,7 +90,7 @@ class Client {
 
     if (method == 'GET') {
       const search = new URLSearchParams(data);
-      params = search ? '?' + search : '';
+      params = data ? '?' + search : '';
     } else if (method == 'POST' && data) {
       body = Object.keys(data).length > 0 ? JSON.stringify(data) : null;
     }
@@ -99,6 +104,7 @@ class Client {
       },
     })
       .then(response => {
+        console.log('response', response);
         if (response.status == 401) {
           removeAuthToken();
           return response.json();
@@ -107,10 +113,10 @@ class Client {
         }
       })
       .then(result => {
-        if (result.code != 200) {
-          throw new FetchError(result.message || result.result, result.code);
-        }
-        return result.result;
+        // if (result.code != 200) {
+        //   throw new FetchError(result.message || result.result, result.code);
+        // }
+        return result;
       });
   }
   async requestWithOutHeader({
@@ -141,7 +147,6 @@ class Client {
       },
     })
       .then(response => {
-        console.log('resp', response);
         if (response.status == 401) {
           removeAuthToken();
         } else {
@@ -149,11 +154,10 @@ class Client {
         }
       })
       .then(result => {
-        console.log('resu1', result);
-        if (result.code != 200) {
-          throw new FetchError(result.message || result.result, result.code);
-        }
-        return result.result;
+        // if (result.code != 200) {
+        //   throw new FetchError(result.message || result.result, result.code);
+        // }
+        return result;
       });
   }
 }
