@@ -17,6 +17,7 @@ import {
 } from '../../../service/club';
 import { useReactQuery } from '../../../config/react-query';
 import dayjs from 'dayjs';
+import { baseFormatTime } from '../../../utils';
 
 export type THandleType =
   | 'createClub'
@@ -39,7 +40,9 @@ export function CreateNotifyClub({
 }: TProps) {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
+  const [showStartPicker, setShowStartDatePicker] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
+  const [showEndPicker, setShowEndDatePicker] = useState(false);
   const [endDate, setEndDate] = useState(new Date());
   const { queryClient } = useReactQuery();
 
@@ -230,34 +233,56 @@ export function CreateNotifyClub({
                   flexDirection="row"
                   alignItems="center"
                   justifyContent="space-between">
-                  <FormControl.Label>{'开始时间'}</FormControl.Label>
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={startDate}
-                    mode={'date'}
-                    is24Hour={true}
-                    onChange={(_, selectedDate: any) => {
-                      const currentDate = selectedDate;
-                      setStartDate(currentDate);
-                    }}
-                  />
+                  <Button
+                    onPress={() => {
+                      setShowStartDatePicker(true);
+                    }}>
+                    选择开始时间
+                  </Button>
+                  <FormControl.Label>
+                    {baseFormatTime(startDate as any, false)}
+                  </FormControl.Label>
+                  {showStartPicker && (
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      value={startDate}
+                      mode={'date'}
+                      is24Hour={true}
+                      onChange={(_, selectedDate: any) => {
+                        const currentDate = selectedDate;
+                        setStartDate(currentDate);
+                        setShowStartDatePicker(false);
+                      }}
+                    />
+                  )}
                 </View>
                 <View
                   flexDirection="row"
                   alignItems="center"
                   mt="2"
                   justifyContent="space-between">
-                  <FormControl.Label>{'结束时间'}</FormControl.Label>
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={endDate}
-                    mode={'date'}
-                    is24Hour={true}
-                    onChange={(_, selectedDate: any) => {
-                      const currentDate = selectedDate;
-                      setEndDate(currentDate);
-                    }}
-                  />
+                  <Button
+                    onPress={() => {
+                      setShowEndDatePicker(true);
+                    }}>
+                    选择结束时间
+                  </Button>
+                  <FormControl.Label>
+                    {baseFormatTime(endDate as any, false)}
+                  </FormControl.Label>
+                  {showEndPicker && (
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      value={endDate}
+                      mode={'date'}
+                      is24Hour={true}
+                      onChange={(_, selectedDate: any) => {
+                        const currentDate = selectedDate;
+                        setEndDate(currentDate);
+                        setShowEndDatePicker(false);
+                      }}
+                    />
+                  )}
                 </View>
               </FormControl>
             </>
@@ -294,34 +319,56 @@ export function CreateNotifyClub({
                   flexDirection="row"
                   alignItems="center"
                   justifyContent="space-between">
-                  <FormControl.Label>{'开始时间'}</FormControl.Label>
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={startDate}
-                    mode={'date'}
-                    is24Hour={true}
-                    onChange={(_, selectedDate: any) => {
-                      const currentDate = selectedDate;
-                      setStartDate(currentDate);
-                    }}
-                  />
+                  <Button
+                    onPress={() => {
+                      setShowStartDatePicker(true);
+                    }}>
+                    选择开始时间
+                  </Button>
+                  <FormControl.Label>
+                    {baseFormatTime(startDate as any, false)}
+                  </FormControl.Label>
+                  {showStartPicker && (
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      value={startDate}
+                      mode={'date'}
+                      is24Hour={true}
+                      onChange={(_, selectedDate: any) => {
+                        const currentDate = selectedDate;
+                        setStartDate(currentDate);
+                        setShowStartDatePicker(false);
+                      }}
+                    />
+                  )}
                 </View>
                 <View
                   flexDirection="row"
                   alignItems="center"
                   mt="2"
                   justifyContent="space-between">
-                  <FormControl.Label>{'结束时间'}</FormControl.Label>
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={endDate}
-                    mode={'date'}
-                    is24Hour={true}
-                    onChange={(_, selectedDate: any) => {
-                      const currentDate = selectedDate;
-                      setEndDate(currentDate);
-                    }}
-                  />
+                  <Button
+                    onPress={() => {
+                      setShowEndDatePicker(true);
+                    }}>
+                    选择结束时间
+                  </Button>
+                  <FormControl.Label>
+                    {baseFormatTime(endDate as any, false)}
+                  </FormControl.Label>
+                  {showEndPicker && (
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      value={endDate}
+                      mode={'date'}
+                      is24Hour={true}
+                      onChange={(_, selectedDate: any) => {
+                        const currentDate = selectedDate;
+                        setEndDate(currentDate);
+                        setShowEndDatePicker(false);
+                      }}
+                    />
+                  )}
                 </View>
               </FormControl>
             </>

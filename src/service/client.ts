@@ -3,7 +3,8 @@ import { removeAuthToken } from '../utils';
 import { logoutEmitter } from './event';
 
 // const serverUrl = 'https://api.jimmyxuexue.top';
-const serverUrl = 'http://127.0.0.1:9999';
+const serverUrl = 'http://192.168.68.76:9999';
+// const serverUrl = 'http://10.251.1.1:9999';
 
 type CustomrHeader = {
   Authorization?: string | null;

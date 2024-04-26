@@ -4,6 +4,7 @@ import { Dimensions, SafeAreaView } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { AllClub } from './View/All';
 import { MineClub } from './View/Mine';
+import { adaptive } from '../../utils';
 
 const tabItemWidth = Dimensions.get('window').width / 2;
 const Tab = createMaterialTopTabNavigator();
@@ -15,7 +16,7 @@ export default memo(() => {
         h="full"
         w="full"
         style={{
-          paddingTop: 40,
+          paddingTop: adaptive(270),
         }}>
         <Tab.Navigator
           screenOptions={{

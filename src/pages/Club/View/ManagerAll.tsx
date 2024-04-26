@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import { CreateNotifyClub, THandleType } from '../components/CreateNotifyClub';
 import { useAllClub } from '../../../service/club';
 import { navigates } from '../../../navigation/navigate';
+import { adaptive, adaptivePx } from '../../../utils';
 
 export function ManagerAllClub() {
   const [showModal, setShowModal] = useState(false);
@@ -21,7 +22,7 @@ export function ManagerAllClub() {
         position="relative"
         pb="12"
         style={{
-          paddingTop: 40,
+          paddingTop: adaptive(270),
         }}>
         <ScrollView>
           {data?.map(club => (
