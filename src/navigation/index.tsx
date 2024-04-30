@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import Index from '../pages/Index';
 import Mine from '../pages/Mine';
-// import IDPhoto from '../pages/IDPhoto';
+import IDPhoto from '../pages/IDPhoto';
 import KnowledgePlanet from '../pages/KnowledgePlanet';
 import LuckDraw from '../pages/LuckDraw';
 import Watermelon from '../pages/Watermelon';
@@ -103,11 +103,11 @@ export default function StackScreen() {
         options={{ headerShown: true }}
         component={Mine}
       />
-      {/* // <Stack.Screen
+      <Stack.Screen
         name="IDPhoto"
         options={{ title: 'IDPhoto' }}
         component={IDPhoto}
-      /> */}
+      />
       <Stack.Screen
         name="KnowledgePlanet"
         options={{ title: 'KnowledgePlanet' }}

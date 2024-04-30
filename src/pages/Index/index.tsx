@@ -83,6 +83,14 @@ export default memo(() => {
         />
         <Button
           onPress={() => {
+            navigates('IDPhoto', undefined);
+          }}
+          title="navigate to IDPhoto"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
+        <Button
+          onPress={() => {
             navigates('Mine', {
               userId: 111,
             });

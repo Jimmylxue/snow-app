@@ -3,7 +3,6 @@ import { View, Text, Button } from 'native-base';
 import { SafeAreaView, ScrollView } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
-import Canvas from 'react-native-canvas';
 
 const TCameraType = RNCamera.Constants.Type;
 
@@ -34,16 +33,6 @@ export default memo(() => {
     cameraType === TCameraType.back
       ? setCameraType(TCameraType.front)
       : setCameraType(TCameraType.back);
-  };
-
-  const handleCanvas = (canvas: any) => {
-    if (canvas) {
-      const ctx = canvas?.getContext('2d');
-      if (ctx) {
-        ctx.fillStyle = 'purple';
-        ctx.fillRect(0, 0, 100, 100);
-      }
-    }
   };
 
   return (
@@ -77,7 +66,6 @@ export default memo(() => {
             console.log('result~', result);
           }}
         />
-        <Canvas ref={handleCanvas} />
         <View
           style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
           <Button mr={1} onPress={takePicture}>
