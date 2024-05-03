@@ -20,6 +20,7 @@ export type TSmsItem = {
 
 export type RootStackParamList = {
   Mine: { userId: number };
+  MemberInfo: undefined;
   Main: undefined;
   IDPhoto: undefined;
   KnowledgePlanet: undefined;

@@ -59,6 +59,14 @@ export default memo(() => {
           <InfoLine
             right
             icon={require('../../images/entry-message.png')}
+            title="个人信息"
+            onPress={() => {
+              navigates('MemberInfo', undefined);
+            }}
+          />
+          <InfoLine
+            right
+            icon={require('../../images/entry-message.png')}
             title="消息中心"
             onPress={() => {
               navigates('Notice', undefined);

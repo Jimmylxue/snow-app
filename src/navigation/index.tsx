@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import Index from '../pages/Index';
 import Mine from '../pages/Mine';
+import MemberInfo from '../pages/Mine/MemberInfo';
 import IDPhoto from '../pages/IDPhoto';
 import KnowledgePlanet from '../pages/KnowledgePlanet';
 import LuckDraw from '../pages/LuckDraw';
@@ -102,6 +103,11 @@ export default function StackScreen() {
         name="Mine"
         options={{ headerShown: true }}
         component={Mine}
+      />
+      <Stack.Screen
+        name="MemberInfo"
+        options={{ headerShown: true, title: '个人信息' }}
+        component={MemberInfo}
       />
       <Stack.Screen
         name="IDPhoto"
