@@ -18,9 +18,15 @@ export type TSmsItem = {
   body: string;
 };
 
+enum ERole {
+  托运人,
+  承运人,
+}
+
 export type RootStackParamList = {
   Mine: { userId: number };
   MemberInfo: undefined;
+  Choose: undefined;
   Main: undefined;
   IDPhoto: undefined;
   KnowledgePlanet: undefined;
@@ -30,7 +36,7 @@ export type RootStackParamList = {
   NativeModule: undefined;
   Index: undefined;
   Login: undefined;
-  MainStack: undefined;
+  MainStack: { role: any };
   Splash: undefined;
   Notice: undefined;
   ClubDetail: { clubId: number; clubName: string; isManager?: boolean };

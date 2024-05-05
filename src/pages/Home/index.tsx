@@ -1,18 +1,24 @@
 import { Image } from 'native-base';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Index from '../Index';
 import Mine from '../Mine';
-import Club from '../Club';
-import { ManagerAllClub } from '../Club/View/ManagerAll';
 import { useAppState } from '../../hooks/useAppState';
 import { ERoleType } from '../../service';
+import Order from '../Order';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { RootStackParamList } from '../../navigation/navigation';
+import { ERole } from '../Choose';
+import ChengYun from '../Luggage/ChengYun';
 
 const Tab = createBottomTabNavigator();
+type RouterParams = RouteProp<RootStackParamList, 'MainStack'>;
 
 export function MainStack() {
-  const { state } = useAppState();
+  const { params } = useRoute<RouterParams>();
 
-  const isManager = state.userInfo?.role === ERoleType.管理员;
+  /** 是否是承运人 */
+  const isChenYun = params.role === ERole.承运人;
+
+  console.log('ppp', params, isChenYun);
 
   return (
     <Tab.Navigator
@@ -21,10 +27,10 @@ export function MainStack() {
         tabBarActiveTintColor: '#3498db',
       }}>
       <Tab.Screen
-        name="Home"
+        name="ChengYun"
         options={{
           headerTransparent: true,
-          tabBarLabel: '首页',
+          tabBarLabel: '承运',
           tabBarIcon: ({ focused }) => (
             <Image
               source={
@@ -38,24 +44,19 @@ export function MainStack() {
             />
           ),
         }}
-        component={Index}
+        component={ChengYun}
       />
       <Tab.Screen
-        name="ManagerIndex"
+        name="Order"
         options={{
           headerTransparent: true,
-          tabBarLabel: isManager ? '管理' : '社团',
-          title: isManager ? '管理' : '社团',
-          headerShown: true,
-          headerBackgroundContainerStyle: {
-            backgroundColor: '#fff',
-          },
+          tabBarLabel: '订单',
           tabBarIcon: ({ focused }) => (
             <Image
               source={
                 focused
-                  ? require('../../images/pic-selected.png')
-                  : require('../../images/pic-default.png')
+                  ? require('../../images/home-selected.png')
+                  : require('../../images/home-default.png')
               }
               w="25px"
               h="25px"
@@ -63,7 +64,7 @@ export function MainStack() {
             />
           ),
         }}
-        component={isManager ? ManagerAllClub : Club}
+        component={Order}
       />
       <Tab.Screen
         name="Mine"

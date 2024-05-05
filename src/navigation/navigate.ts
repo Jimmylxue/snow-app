@@ -21,7 +21,10 @@ export function resetNavigate({
   routes,
 }: {
   index: number;
-  routes: { name: keyof RootStackParamList }[];
+  routes: {
+    name: keyof RootStackParamList;
+    params?: RootStackParamList[keyof RootStackParamList];
+  }[];
 }) {
   return navigationRef.current?.reset({
     index,

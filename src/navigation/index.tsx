@@ -27,6 +27,7 @@ import feedbackRecord from '../pages/Club/feedbackRecord';
 import NoticeDetail from '../pages/Notice/detail';
 import Sms from '../pages/Sms';
 import SmsDetail from '../pages/Sms/detail';
+import Choose from '../pages/Choose';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
@@ -39,7 +40,8 @@ export default function StackScreen() {
     if (state?.token) {
       resetNavigate({
         index: 0,
-        routes: [{ name: 'MainStack' }],
+        // routes: [{ name: 'MainStack' }],
+        routes: [{ name: 'Choose' }],
       });
       return;
     }
@@ -88,6 +90,11 @@ export default function StackScreen() {
         name="Login"
         options={{ headerShown: false }}
         component={Login}
+      />
+      <Stack.Screen
+        name="Choose"
+        options={{ title: '选择角色' }}
+        component={Choose}
       />
       <Stack.Screen
         name="MainStack"
