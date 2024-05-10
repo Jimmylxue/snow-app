@@ -5,6 +5,7 @@ import { useAppState } from '../../hooks/useAppState';
 import {
   TChangeUserPassword,
   useLogin,
+  useUser,
   useUserChangePassword,
   useUserRegister,
 } from '../../service';
@@ -14,15 +15,24 @@ import { encode as btoa } from 'base-64';
 type TFormStatus = 'LOGIN' | 'REGISTER' | 'FORGET';
 
 export const Login = () => {
-  const { signIn } = useAppState();
+  const { signIn, signToken } = useAppState();
   const [formStatus, setFormStatus] = useState<TFormStatus>('LOGIN');
-  const [phone, setPhone] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const { mutateAsync } = useLogin({
     onSuccess: async res => {
-      await signIn?.(res.token, res.user);
+      await signToken?.(res);
+      const user = await getUser({ username });
+      console.log('user~~', user);
+      await signIn?.(res, user);
+    },
+  });
+
+  const { mutateAsync: getUser } = useUser({
+    onSuccess: async res => {
+      console.log('dddd', res);
     },
   });
 
@@ -43,22 +53,13 @@ export const Login = () => {
   });
 
   const handleAuthAction = async () => {
-    if (
-      !/^1(3[0-9]|4[01456879]|5[0-3,5-9]|6[2567]|7[0-8]|8[0-9]|9[0-3,5-9])\d{8}$/.test(
-        phone,
-      )
-    ) {
-      Toast.show({ title: '请输入正确的手机号' });
-      return;
-    }
-    const params = { phone, password };
+    const params = { username, password };
     if (formStatus === 'LOGIN') {
       // 登录
-      params.password = await encrypt(params.password);
       await mutateAsync(params);
     } else if (formStatus === 'REGISTER') {
       // 注册
-      if (!phone || !password) {
+      if (!username || !password) {
         Toast.show({ title: '请输入注册信息' });
         return;
       }
@@ -66,14 +67,12 @@ export const Login = () => {
         Toast.show({ title: '两次密码不一致，请确认' });
         return;
       }
-      params.password = btoa(params.password + 'snow-todoList');
       await register({
         ...params,
-        username: '游客' + Date.now().toString().slice(0, -4),
       });
     } else {
       // 找回
-      if (!phone || !password) {
+      if (!username || !password) {
         Toast.show({ title: '请输入账号' });
         return;
       }
@@ -82,7 +81,7 @@ export const Login = () => {
         return;
       }
       const forgetParams: TChangeUserPassword = {
-        phone,
+        username,
         originPassword: await encrypt(password),
         newPassword: btoa(confirmPassword + 'snow-todoList'),
       };
@@ -105,9 +104,9 @@ export const Login = () => {
       </Text>
       <TextInput
         style={styles.input}
-        placeholder="请输入手机号"
-        value={phone}
-        onChangeText={setPhone}
+        placeholder="请输入用户名"
+        value={username}
+        onChangeText={setUsername}
       />
       <TextInput
         style={styles.input}
@@ -133,9 +132,9 @@ export const Login = () => {
       <View flexDir="row" justifyContent="space-between" w="full" px="10">
         <TouchableOpacity
           onPress={() => setFormStatus(isForget ? 'LOGIN' : 'FORGET')}>
-          <Text style={styles.switchText}>
+          {/* <Text style={styles.switchText}>
             {isForget ? '返回' : '忘记密码'}
-          </Text>
+          </Text> */}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>

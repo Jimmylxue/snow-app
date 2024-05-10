@@ -1,13 +1,12 @@
 import { Image } from 'native-base';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Mine from '../Mine';
-import { useAppState } from '../../hooks/useAppState';
-import { ERoleType } from '../../service';
 import Order from '../Order';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/navigation';
 import { ERole } from '../Choose';
 import ChengYun from '../Luggage/ChengYun';
+import TuoYun from '../Luggage/TuoYun';
 
 const Tab = createBottomTabNavigator();
 type RouterParams = RouteProp<RootStackParamList, 'MainStack'>;
@@ -27,16 +26,16 @@ export function MainStack() {
         tabBarActiveTintColor: '#3498db',
       }}>
       <Tab.Screen
-        name="ChengYun"
+        name={isChenYun ? 'ChengYun' : 'TuoYun'}
         options={{
           headerTransparent: true,
-          tabBarLabel: '承运',
+          tabBarLabel: isChenYun ? '承运' : '托运',
           tabBarIcon: ({ focused }) => (
             <Image
               source={
                 focused
-                  ? require('../../images/home-selected.png')
-                  : require('../../images/home-default.png')
+                  ? require('../../images/pic-selected.png')
+                  : require('../../images/pic-default.png')
               }
               w="25px"
               h="25px"
@@ -44,7 +43,7 @@ export function MainStack() {
             />
           ),
         }}
-        component={ChengYun}
+        component={isChenYun ? ChengYun : TuoYun}
       />
       <Tab.Screen
         name="Order"

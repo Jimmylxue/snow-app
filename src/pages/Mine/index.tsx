@@ -4,11 +4,11 @@ import { InfoLine } from '../../components/InfoLine';
 import { useAppState } from '../../hooks/useAppState';
 import { TouchableOpacity } from 'react-native';
 import { navigates } from '../../navigation/navigate';
-import { ERoleType } from '../../service';
+// import { ERoleType } from '../../service';
 
 export default memo(() => {
   const { state, signOut } = useAppState();
-  const isManager = state.userInfo?.role === ERoleType.管理员;
+  // const isManager = state.userInfo?.role === ERoleType.管理员;
   return (
     <Box h="full" w="full">
       <View
@@ -45,11 +45,11 @@ export default memo(() => {
               <Text fontSize="lg" ml="2">
                 {state.userInfo?.username}
               </Text>
-              {isManager && (
+              {/* {isManager && (
                 <Text ml="2" fontSize="xs" color="#f1c40f">
                   管理员
                 </Text>
-              )}
+              )} */}
             </View>
           </View>
         </View>

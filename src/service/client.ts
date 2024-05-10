@@ -2,7 +2,8 @@ import { Toast } from 'native-base';
 import { removeAuthToken } from '../utils';
 import { logoutEmitter } from './event';
 
-const serverUrl = 'https://api.jimmyxuexue.top';
+// const serverUrl = 'https://api.jimmyxuexue.top';
+const serverUrl = 'http://175.178.248.238:9900/api';
 // const serverUrl = 'http://127.0.0.1:9999';
 
 type CustomrHeader = {
@@ -15,7 +16,7 @@ class AuthHeader {
   setToken(token: string) {
     this.header = {
       ...this.header,
-      Authorization: 'Bearer ' + token,
+      Authorization: token,
     };
   }
 
@@ -88,6 +89,8 @@ class Client {
       params = search ? '?' + search : '';
     } else if (method == 'POST' && data) {
       body = Object.keys(data).length > 0 ? JSON.stringify(data) : null;
+    } else if (method == 'PUT' && data) {
+      body = Object.keys(data).length > 0 ? JSON.stringify(data) : null;
     }
 
     return fetch(getRequestUrl(url) + params, {
@@ -108,9 +111,12 @@ class Client {
       })
       .then(result => {
         if (result.code != 200) {
-          throw new FetchError(result.message || result.result, result.code);
+          throw new FetchError(
+            result.message || result.result || result.msg,
+            result.code,
+          );
         }
-        return result.result;
+        return result.data;
       });
   }
   async requestWithOutHeader({
@@ -151,9 +157,12 @@ class Client {
       .then(result => {
         console.log('resu1', result);
         if (result.code != 200) {
-          throw new FetchError(result.message || result.result, result.code);
+          throw new FetchError(
+            result.message || result.result || result.msg,
+            result.code,
+          );
         }
-        return result.result;
+        return result.data;
       });
   }
 }
@@ -172,6 +181,14 @@ export function post(url: string, data?: any) {
     url,
     data,
     method: 'POST',
+  });
+}
+
+export function put(url: string, data?: any) {
+  return client.request({
+    url,
+    data,
+    method: 'PUT',
   });
 }
 

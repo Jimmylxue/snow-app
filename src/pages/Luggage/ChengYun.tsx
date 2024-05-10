@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import {
   Box,
   Stack,
@@ -8,46 +8,63 @@ import {
   Button,
   View,
   Text,
+  Modal,
 } from 'native-base';
 import { SafeAreaView } from 'react-native';
 
 export default memo(() => {
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const hasBind = false;
   return (
     <SafeAreaView>
-      <View px={2} mt={2}>
-        <View flexDir="row" justifyContent="space-between" alignItems="center">
-          <Text>车牌号</Text>
-          <Text>12345</Text>
+      {hasBind && (
+        <View px={2} mt={2}>
+          <View
+            flexDir="row"
+            justifyContent="space-between"
+            alignItems="center">
+            <Text>车牌号</Text>
+            <Text>12345</Text>
+          </View>
+          <View
+            flexDir="row"
+            justifyContent="space-between"
+            alignItems="center">
+            <Text>车辆信息</Text>
+            <Text>12345</Text>
+          </View>
+          <View
+            flexDir="row"
+            justifyContent="space-between"
+            alignItems="center">
+            <Text>车辆载重/体积量</Text>
+            <Text>12345</Text>
+          </View>
+          <View
+            flexDir="row"
+            justifyContent="space-between"
+            alignItems="center">
+            <Text>车辆特性</Text>
+            <Text>12345</Text>
+          </View>
+          <View
+            flexDir="row"
+            justifyContent="space-between"
+            alignItems="center">
+            <Text>车辆位置</Text>
+            <Text>12345</Text>
+          </View>
         </View>
-        <View flexDir="row" justifyContent="space-between" alignItems="center">
-          <Text>车辆信息</Text>
-          <Text>12345</Text>
-        </View>
-        <View flexDir="row" justifyContent="space-between" alignItems="center">
-          <Text>车辆载重/体积量</Text>
-          <Text>12345</Text>
-        </View>
-        <View flexDir="row" justifyContent="space-between" alignItems="center">
-          <Text>车辆特性</Text>
-          <Text>12345</Text>
-        </View>
-        <View flexDir="row" justifyContent="space-between" alignItems="center">
-          <Text>车辆位置</Text>
-          <Text>12345</Text>
-        </View>
-        <Stack
-          bg="#FFF"
-          h="full"
-          space={2.5}
-          alignSelf="center"
-          px="4"
-          safeArea
-          pt={4}
-          w={{
-            base: '100%',
-            md: '25%',
-          }}>
-          <Box>
+      )}
+
+      {hasBind ? <Button>修改车辆信息</Button> : <Button>绑定车辆信息</Button>}
+      <Button>立即接单</Button>
+
+      <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
+        <Modal.Content>
+          <Modal.CloseButton />
+          <Modal.Header>输入车辆信息</Modal.Header>
+          <Modal.Body>
             <FormControl mb="5">
               <FormControl.Label>车牌号</FormControl.Label>
               <Input />
@@ -68,11 +85,27 @@ export default memo(() => {
               <FormControl.Label>车辆位置</FormControl.Label>
               <Input />
             </FormControl>
-            <Divider />
-            <Button mt={5}>保存信息</Button>
-          </Box>
-        </Stack>
-      </View>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button.Group space={2}>
+              <Button
+                variant="ghost"
+                colorScheme="blueGray"
+                onPress={() => {
+                  setModalVisible(false);
+                }}>
+                取消
+              </Button>
+              <Button
+                onPress={() => {
+                  setModalVisible(false);
+                }}>
+                确定
+              </Button>
+            </Button.Group>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
     </SafeAreaView>
   );
 });

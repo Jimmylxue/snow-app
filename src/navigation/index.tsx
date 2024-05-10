@@ -37,7 +37,7 @@ export default function StackScreen() {
     if (state.isLoading) {
       return;
     }
-    if (state?.token) {
+    if (state?.token && state.userInfo) {
       resetNavigate({
         index: 0,
         // routes: [{ name: 'MainStack' }],

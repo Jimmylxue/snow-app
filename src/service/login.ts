@@ -1,6 +1,7 @@
 import { UseMutationOptions, useMutation } from 'react-query';
 import { ClientError } from '../config/react-query';
-import { post } from './client';
+import { get, post, put } from './client';
+import { ERole } from '../pages/Choose';
 
 enum ESex {
   男,
@@ -8,7 +9,7 @@ enum ESex {
 }
 
 export type TUserLoginParams = {
-  phone: string;
+  phone?: string;
   password: string;
 };
 
@@ -17,15 +18,15 @@ export type TUserRegisterParams = TUserLoginParams & {
 };
 
 export type TChangeUserPassword = {
-  phone: string;
+  username: string;
   originPassword: string;
   newPassword: string;
 };
 
-export enum ERoleType {
-  普通用户,
-  管理员,
-}
+// export enum ERoleType {
+//   托运人,
+//   承运人,
+// }
 
 export type TUser = {
   avatar: string;
@@ -35,21 +36,25 @@ export type TUser = {
   phone?: string;
   sex: ESex;
   username: string;
-  role: ERoleType;
+  role: ERole;
 };
 
 export function useLogin(
-  options?: UseMutationOptions<
-    { token: string; user: TUser },
-    ClientError,
-    TUserLoginParams
-  >,
+  options?: UseMutationOptions<string, ClientError, TUserLoginParams>,
 ) {
-  return useMutation<
-    { token: string; user: TUser },
-    ClientError,
-    TUserLoginParams
-  >(data => post('/user/login', data), options);
+  return useMutation<string, ClientError, TUserLoginParams>(
+    data => get('/login', data),
+    options,
+  );
+}
+
+export function useUser(
+  options?: UseMutationOptions<TUser, ClientError, { username: string }>,
+) {
+  return useMutation<TUser, ClientError, { username: string }>(
+    data => get(`/loginuser/${data.username}`, data),
+    options,
+  );
 }
 
 export function useUpdateUser(
@@ -83,7 +88,7 @@ export function useUserRegister(
     },
     ClientError,
     TUserRegisterParams
-  >(data => post('/user/register', data), options);
+  >(data => post('/enroll', data), options);
 }
 
 export function useUserChangePassword(
@@ -93,7 +98,9 @@ export function useUserChangePassword(
       result: string;
     },
     ClientError,
-    TChangeUserPassword
+    {
+      password: string;
+    }
   >,
 ) {
   return useMutation<
@@ -102,6 +109,36 @@ export function useUserChangePassword(
       result: string;
     },
     ClientError,
-    TChangeUserPassword
-  >(data => post('/user/changePassword', data), options);
+    {
+      password: string;
+    }
+  >(data => put('/editPassword', data), options);
+}
+
+type TChooseRole = {
+  userId: number;
+  role: ERole;
+};
+
+/**
+ * 选择角色
+ */
+export function useChooseRole(
+  options?: UseMutationOptions<
+    {
+      code: number;
+      result: string;
+    },
+    ClientError,
+    TChooseRole
+  >,
+) {
+  return useMutation<
+    {
+      code: number;
+      result: string;
+    },
+    ClientError,
+    TChooseRole
+  >(data => get('/setRole', data), options);
 }

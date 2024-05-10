@@ -21,6 +21,8 @@ type TAppContext = {
   state: TState;
   signIn?: (token: string, userInfo: TState['userInfo']) => void;
   signOut?: () => void;
+  signToken?: (token: string) => void;
+  signUserInfo?: (userInfo: TState['userInfo']) => void;
 };
 
 export const APPContext = createContext<TAppContext>({
@@ -28,6 +30,8 @@ export const APPContext = createContext<TAppContext>({
   isLoading: true,
   signIn: () => {},
   signOut: () => {},
+  signToken: () => {},
+  signUserInfo: () => {},
 } as TAppContext);
 
 export const AppContextProvider: FC<{ children: ReactNode }> = ({
@@ -71,6 +75,15 @@ export function useInitApp() {
 
   const appContext = useMemo(() => {
     return {
+      signToken: async (token: string) => {
+        authHeader.setToken(token);
+        await setAuthToken(token);
+        setState(cur => ({ ...cur, token, isLoading: false }));
+      },
+      signUserInfo: async (userInfo: TState['userInfo']) => {
+        await setAuthUser(JSON.stringify(userInfo));
+        setState(cur => ({ ...cur, userInfo, isLoading: false }));
+      },
       signIn: async (token: string, userInfo: TState['userInfo']) => {
         authHeader.setToken(token);
         await setAuthToken(token);

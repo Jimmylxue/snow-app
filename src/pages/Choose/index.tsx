@@ -1,7 +1,9 @@
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { Box, Pressable, HStack, Badge, Spacer, Text, View } from 'native-base';
 import { SafeAreaView } from 'react-native';
 import { resetNavigate } from '../../navigation/navigate';
+import { useAppState } from '../../hooks/useAppState';
+import { useChooseRole } from '../../service';
 
 export enum ERole {
   托运人,
@@ -9,15 +11,34 @@ export enum ERole {
 }
 
 export default memo(() => {
+  const { state, signUserInfo } = useAppState();
+
+  const { mutateAsync } = useChooseRole();
+
+  useEffect(() => {
+    if (state.userInfo?.role !== null) {
+      resetNavigate({
+        index: 0,
+        routes: [{ name: 'MainStack', params: { role: state.userInfo?.role } }],
+      });
+    }
+  }, [state]);
+
   return (
     <SafeAreaView>
       <View h="full" px="2" mt={2}>
         <Pressable
           mb={4}
-          onPress={() => {
-            resetNavigate({
+          onPress={async () => {
+            await mutateAsync({
+              userId: state.userInfo?.id!,
+              role: ERole.托运人,
+            });
+            if (state.userInfo) {
+              await signUserInfo?.({ ...state.userInfo, role: ERole.托运人 });
+            }
+            await resetNavigate({
               index: 0,
-              // routes: [{ name: 'MainStack' }],
               routes: [{ name: 'MainStack', params: { role: ERole.托运人 } }],
             });
           }}>
@@ -70,11 +91,13 @@ export default memo(() => {
           }}
         </Pressable>
         <Pressable
-          onPress={() => {
-            console.log('check');
+          onPress={async () => {
+            await mutateAsync({
+              userId: state.userInfo?.id!,
+              role: ERole.托运人,
+            });
             resetNavigate({
               index: 0,
-              // routes: [{ name: 'MainStack' }],
               routes: [{ name: 'MainStack', params: { role: ERole.承运人 } }],
             });
           }}>
