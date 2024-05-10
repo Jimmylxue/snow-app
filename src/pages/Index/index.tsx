@@ -58,6 +58,14 @@ export default memo(() => {
         />
         <Button
           onPress={() => {
+            navigates('Video', undefined);
+          }}
+          title="视频功能"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
+        <Button
+          onPress={() => {
             clearWatch?.();
           }}
           title="结束定位"
