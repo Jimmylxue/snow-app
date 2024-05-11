@@ -90,7 +90,8 @@ class Client {
     } else if (method == 'POST' && data) {
       body = Object.keys(data).length > 0 ? JSON.stringify(data) : null;
     } else if (method == 'PUT' && data) {
-      body = Object.keys(data).length > 0 ? JSON.stringify(data) : null;
+      body = Object.keys(data).length > 0 ? data : null;
+      console.log('body', body);
     }
 
     return fetch(getRequestUrl(url) + params, {

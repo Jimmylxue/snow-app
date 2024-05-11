@@ -49,9 +49,7 @@ export default memo(() => {
                 Toast.show({ title: '请输入新密码' });
                 return;
               }
-              await mutateAsync({
-                password,
-              });
+              await mutateAsync(password);
               Toast.show({ title: '修改成功' });
             }}>
             修改密码

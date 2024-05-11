@@ -69,6 +69,7 @@ export function useSubmitOrder(
       order: {
         addr: string;
         consignee: string;
+        logisticsInformation: string;
         // logistics_information: string;
         phone: string;
       };
@@ -90,6 +91,7 @@ export function useSubmitOrder(
       order: {
         addr: string;
         consignee: string;
+        logisticsInformation: string;
         // logistics_information: string;
         phone: string;
       };

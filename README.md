@@ -21,3 +21,11 @@
 `./gradlew clean`
 
 `npx react-native config` 检查是否有配置错误
+
+## IOS 相关
+
+### 每次 pod install
+
+In iOS Folder go to Pods/Pods.xcodeproj/xcuserdata/project.pbxproj
+
+Change all the 'IPHONEOS_DEPLOYMENT_TARGET = 11.0' to 'IPHONEOS_DEPLOYMENT_TARGET = 12.4'. save and run.

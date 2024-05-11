@@ -22,6 +22,7 @@ export default memo(() => {
   const [weight, setWeight] = useState<string>('');
   const [consignee, setConsignee] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
+  const [logisticsInformation, setLogisticsInformation] = useState<string>('');
 
   const { mutateAsync } = useSubmitOrder();
 
@@ -35,7 +36,7 @@ export default memo(() => {
               selectedValue={type}
               minWidth="200"
               accessibilityLabel="Choose Service"
-              placeholder="Choose Service"
+              placeholder="请选择货物种类"
               _selectedItem={{
                 bg: 'teal.600',
                 endIcon: <CheckIcon size="5" />,
@@ -68,7 +69,7 @@ export default memo(() => {
               selectedValue={startAddr}
               minWidth="200"
               accessibilityLabel="Choose Service"
-              placeholder="Choose Service"
+              placeholder="请选择起运地"
               _selectedItem={{
                 bg: 'teal.600',
                 endIcon: <CheckIcon size="5" />,
@@ -86,7 +87,7 @@ export default memo(() => {
               selectedValue={endAddr}
               minWidth="200"
               accessibilityLabel="Choose Service"
-              placeholder="Choose Service"
+              placeholder="请选择目的地"
               _selectedItem={{
                 bg: 'teal.600',
                 endIcon: <CheckIcon size="5" />,
@@ -101,6 +102,13 @@ export default memo(() => {
           <FormControl mb="5">
             <FormControl.Label>时效要求</FormControl.Label>
             <Input value={timeValid} onChangeText={val => setTimeValid(val)} />
+          </FormControl>
+          <FormControl mb="5">
+            <FormControl.Label>物流信息</FormControl.Label>
+            <Input
+              value={logisticsInformation}
+              onChangeText={val => setLogisticsInformation(val)}
+            />
           </FormControl>
           <FormControl mb="5">
             <FormControl.Label>收货人</FormControl.Label>
@@ -126,6 +134,7 @@ export default memo(() => {
                 addr: endAddr,
                 consignee,
                 phone,
+                logisticsInformation,
               },
             });
             Toast.show({ title: '发布成功' });
