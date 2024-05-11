@@ -54,6 +54,7 @@ export const Login = () => {
     const params = { phone, password };
     if (formStatus === 'LOGIN') {
       // 登录
+      console.log('ccc');
       params.password = await encrypt(params.password);
       await mutateAsync(params);
     } else if (formStatus === 'REGISTER') {

@@ -6,6 +6,7 @@ import Club from '../Club';
 import { ManagerAllClub } from '../Club/View/ManagerAll';
 import { useAppState } from '../../hooks/useAppState';
 import { ERoleType } from '../../service';
+import VideoSite from '../VideoSite';
 
 const Tab = createBottomTabNavigator();
 
@@ -38,7 +39,7 @@ export function MainStack() {
             />
           ),
         }}
-        component={Index}
+        component={VideoSite}
       />
       <Tab.Screen
         name="ManagerIndex"
