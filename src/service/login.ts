@@ -117,7 +117,7 @@ export function useUserChangePassword(
 
 type TChooseRole = {
   userId: number;
-  role: ERole;
+  roleType: ERole;
 };
 
 /**

@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import {
   Text,
   Box,
@@ -8,6 +8,7 @@ import {
   Divider,
   WarningOutlineIcon,
   Button,
+  Toast,
 } from 'native-base';
 import { useAppState } from '../../hooks/useAppState';
 import { SafeAreaView } from 'react-native';
@@ -16,6 +17,7 @@ import { useUserChangePassword } from '../../service';
 export default memo(() => {
   const { state, signOut } = useAppState();
   const { mutateAsync } = useUserChangePassword();
+  const [password, setPassword] = useState<string>('');
   return (
     <SafeAreaView>
       <Stack
@@ -32,46 +34,25 @@ export default memo(() => {
         }}>
         <Box>
           <FormControl mb="5">
-            <FormControl.Label>用户名</FormControl.Label>
-            <Input />
-            <FormControl.HelperText>你的姓名</FormControl.HelperText>
-          </FormControl>
-          <FormControl mb="5">
-            <FormControl.Label>手机号</FormControl.Label>
-            <Input />
-            <FormControl.HelperText>你的联系方式</FormControl.HelperText>
-          </FormControl>
-          <FormControl mb="5">
-            <FormControl.Label>收货地址</FormControl.Label>
-            <Input />
-            <FormControl.HelperText>
-              告诉我们你的收货地址
-            </FormControl.HelperText>
-          </FormControl>
-          <Divider />
-          <Button mt={5} mb={3}>
-            保存信息
-          </Button>
-          <FormControl mb="5">
-            <FormControl.Label>密码</FormControl.Label>
-            <Input />
-            <FormControl.HelperText>
-              告诉我们你的收货地址
-            </FormControl.HelperText>
-          </FormControl>
-          <FormControl mb="5">
             <FormControl.Label>新密码</FormControl.Label>
-            <Input />
-            <FormControl.HelperText>
-              告诉我们你的收货地址
-            </FormControl.HelperText>
+            <Input
+              type="password"
+              value={password}
+              onChangeText={val => setPassword(val)}
+            />
+            <FormControl.HelperText>请输入您的新密码</FormControl.HelperText>
           </FormControl>
           <Button
             mt={5}
             onPress={async () => {
+              if (!password) {
+                Toast.show({ title: '请输入新密码' });
+                return;
+              }
               await mutateAsync({
-                password: '2222',
+                password,
               });
+              Toast.show({ title: '修改成功' });
             }}>
             修改密码
           </Button>

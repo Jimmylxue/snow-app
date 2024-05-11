@@ -1,14 +1,11 @@
 import { memo } from 'react';
-import { Text, Box, View, Avatar, Button, Image } from 'native-base';
+import { Text, Box, View, Avatar, Button } from 'native-base';
 import { InfoLine } from '../../components/InfoLine';
 import { useAppState } from '../../hooks/useAppState';
-import { TouchableOpacity } from 'react-native';
 import { navigates } from '../../navigation/navigate';
-// import { ERoleType } from '../../service';
 
 export default memo(() => {
   const { state, signOut } = useAppState();
-  // const isManager = state.userInfo?.role === ERoleType.管理员;
   return (
     <Box h="full" w="full">
       <View
@@ -20,20 +17,6 @@ export default memo(() => {
         px="2"
         position="relative"
         alignItems="center">
-        <View position="absolute" right={2} top={12}>
-          <TouchableOpacity
-            onPress={() => {
-              navigates('Notice', undefined);
-            }}>
-            <Image
-              source={require('../../images/entry-message.png')}
-              alt="Alternate Text"
-              width={7}
-              height={7}
-            />
-          </TouchableOpacity>
-        </View>
-
         <View>
           <View flexDir="row" alignItems="center">
             <Avatar
@@ -45,11 +28,6 @@ export default memo(() => {
               <Text fontSize="lg" ml="2">
                 {state.userInfo?.username}
               </Text>
-              {/* {isManager && (
-                <Text ml="2" fontSize="xs" color="#f1c40f">
-                  管理员
-                </Text>
-              )} */}
             </View>
           </View>
         </View>
@@ -62,14 +40,6 @@ export default memo(() => {
             title="个人信息"
             onPress={() => {
               navigates('MemberInfo', undefined);
-            }}
-          />
-          <InfoLine
-            right
-            icon={require('../../images/entry-message.png')}
-            title="消息中心"
-            onPress={() => {
-              navigates('Notice', undefined);
             }}
           />
         </View>

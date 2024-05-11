@@ -17,6 +17,7 @@ export default memo(() => {
 
   useEffect(() => {
     if (state.userInfo?.role !== null) {
+      console.log('state.userInfo.role', state.userInfo?.role);
       resetNavigate({
         index: 0,
         routes: [{ name: 'MainStack', params: { role: state.userInfo?.role } }],
@@ -32,7 +33,7 @@ export default memo(() => {
           onPress={async () => {
             await mutateAsync({
               userId: state.userInfo?.id!,
-              role: ERole.托运人,
+              roleType: ERole.托运人,
             });
             if (state.userInfo) {
               await signUserInfo?.({ ...state.userInfo, role: ERole.托运人 });
@@ -94,8 +95,11 @@ export default memo(() => {
           onPress={async () => {
             await mutateAsync({
               userId: state.userInfo?.id!,
-              role: ERole.托运人,
+              roleType: ERole.承运人,
             });
+            if (state.userInfo) {
+              await signUserInfo?.({ ...state.userInfo, role: ERole.承运人 });
+            }
             resetNavigate({
               index: 0,
               routes: [{ name: 'MainStack', params: { role: ERole.承运人 } }],

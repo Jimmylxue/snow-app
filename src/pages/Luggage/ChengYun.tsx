@@ -1,19 +1,33 @@
 import { memo, useState } from 'react';
 import {
-  Box,
-  Stack,
   FormControl,
   Input,
-  Divider,
   Button,
   View,
   Text,
   Modal,
+  Select,
+  CheckIcon,
 } from 'native-base';
 import { SafeAreaView } from 'react-native';
+import { useBindCar } from '../../service/car';
+import { province } from './const';
 
 export default memo(() => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  /** 车牌号 */
+  const [carNumber, setCarNumber] = useState<string>('');
+  /** 车辆型号 */
+  const [carType, setCarType] = useState<string>('');
+  /** 车辆载重 */
+  const [carWeight, setCarWeight] = useState<string>('');
+  /** 车辆特征 */
+  const [carCharacter, setCarCharacter] = useState<string>('');
+  /** 车辆地址 */
+  const [carAddr, setCarAddr] = useState<string>('');
+
+  const { mutateAsync } = useBindCar();
+
   const hasBind = false;
   return (
     <SafeAreaView>
@@ -57,7 +71,12 @@ export default memo(() => {
         </View>
       )}
 
-      {hasBind ? <Button>修改车辆信息</Button> : <Button>绑定车辆信息</Button>}
+      <Button
+        onPress={() => {
+          setModalVisible(true);
+        }}>
+        绑定车辆信息
+      </Button>
       <Button>立即接单</Button>
 
       <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
@@ -67,23 +86,47 @@ export default memo(() => {
           <Modal.Body>
             <FormControl mb="5">
               <FormControl.Label>车牌号</FormControl.Label>
-              <Input />
+              <Input
+                value={carNumber}
+                onChangeText={val => setCarNumber(val)}
+              />
             </FormControl>
             <FormControl mb="5">
-              <FormControl.Label>车辆信息</FormControl.Label>
-              <Input />
+              <FormControl.Label>车辆类型</FormControl.Label>
+              <Input value={carType} onChangeText={val => setCarType(val)} />
             </FormControl>
             <FormControl mb="5">
               <FormControl.Label>车辆载重</FormControl.Label>
-              <Input />
+              <Input
+                value={carWeight}
+                onChangeText={val => setCarWeight(val)}
+              />
             </FormControl>
             <FormControl mb="5">
               <FormControl.Label>车辆特性</FormControl.Label>
-              <Input />
+              <Input
+                value={carCharacter}
+                onChangeText={val => setCarCharacter(val)}
+              />
             </FormControl>
             <FormControl mb="5">
               <FormControl.Label>车辆位置</FormControl.Label>
-              <Input />
+              {/* <Input value={carAddr} onChangeText={val => setCarAddr(val)} /> */}
+              <Select
+                selectedValue={carAddr}
+                minWidth="200"
+                accessibilityLabel="Choose Service"
+                placeholder="Choose Service"
+                _selectedItem={{
+                  bg: 'teal.600',
+                  endIcon: <CheckIcon size="5" />,
+                }}
+                mt={1}
+                onValueChange={itemValue => setCarAddr(itemValue)}>
+                {province.map((item, index) => (
+                  <Select.Item key={index} label={item} value={item} />
+                ))}
+              </Select>
             </FormControl>
           </Modal.Body>
           <Modal.Footer>
@@ -97,7 +140,14 @@ export default memo(() => {
                 取消
               </Button>
               <Button
-                onPress={() => {
+                onPress={async () => {
+                  await mutateAsync({
+                    carNumber,
+                    carType,
+                    carCharacter,
+                    carWeight,
+                    carAddr,
+                  });
                   setModalVisible(false);
                 }}>
                 确定

@@ -15,7 +15,7 @@ export function MainStack() {
   const { params } = useRoute<RouterParams>();
 
   /** 是否是承运人 */
-  const isChenYun = params.role === ERole.承运人;
+  const isChenYun = Number(params.role) === ERole.承运人;
 
   console.log('ppp', params, isChenYun);
 
