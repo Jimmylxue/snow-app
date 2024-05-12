@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import {
   FormControl,
   Input,
@@ -8,10 +8,12 @@ import {
   Modal,
   Select,
   CheckIcon,
+  Toast,
 } from 'native-base';
 import { SafeAreaView } from 'react-native';
-import { useBindCar } from '../../service/car';
+import { useBindCar, useCarMessage, useUpdateCar } from '../../service/car';
 import { province } from './const';
+import { adaptive } from '../../utils';
 
 export default memo(() => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -26,63 +28,84 @@ export default memo(() => {
   /** 车辆地址 */
   const [carAddr, setCarAddr] = useState<string>('');
 
-  const { mutateAsync } = useBindCar();
+  const { data, refetch } = useCarMessage(['carMessage'], {}, {});
 
-  const hasBind = false;
+  const successCallBack = () => {
+    Toast.show({ title: '操作成功' });
+    refetch();
+  };
+
+  const { mutateAsync } = useBindCar({ onSuccess: successCallBack });
+  const { mutateAsync: updateCar } = useUpdateCar({
+    onSuccess: successCallBack,
+  });
+
+  const bindCar = data?.[0];
+
   return (
     <SafeAreaView>
-      {hasBind && (
-        <View px={2} mt={2}>
-          <View
-            flexDir="row"
-            justifyContent="space-between"
-            alignItems="center">
-            <Text>车牌号</Text>
-            <Text>12345</Text>
+      <View paddingTop={adaptive(200)}>
+        {bindCar && (
+          <View px={2} mt={2}>
+            <View
+              flexDir="row"
+              justifyContent="space-between"
+              alignItems="center">
+              <Text>车牌号</Text>
+              <Text>{bindCar.carNumber}</Text>
+            </View>
+            <View
+              flexDir="row"
+              justifyContent="space-between"
+              alignItems="center">
+              <Text>车辆类型</Text>
+              <Text>{bindCar.carType}</Text>
+            </View>
+            <View
+              flexDir="row"
+              justifyContent="space-between"
+              alignItems="center">
+              <Text>车辆载重/体积量</Text>
+              <Text>{bindCar.carWeight}</Text>
+            </View>
+            <View
+              flexDir="row"
+              justifyContent="space-between"
+              alignItems="center">
+              <Text>车辆特性</Text>
+              <Text>{bindCar.carCharacter}</Text>
+            </View>
+            <View
+              flexDir="row"
+              justifyContent="space-between"
+              alignItems="center">
+              <Text>车辆位置</Text>
+              <Text>{bindCar.carAddr}</Text>
+            </View>
           </View>
-          <View
-            flexDir="row"
-            justifyContent="space-between"
-            alignItems="center">
-            <Text>车辆信息</Text>
-            <Text>12345</Text>
-          </View>
-          <View
-            flexDir="row"
-            justifyContent="space-between"
-            alignItems="center">
-            <Text>车辆载重/体积量</Text>
-            <Text>12345</Text>
-          </View>
-          <View
-            flexDir="row"
-            justifyContent="space-between"
-            alignItems="center">
-            <Text>车辆特性</Text>
-            <Text>12345</Text>
-          </View>
-          <View
-            flexDir="row"
-            justifyContent="space-between"
-            alignItems="center">
-            <Text>车辆位置</Text>
-            <Text>12345</Text>
-          </View>
-        </View>
-      )}
+        )}
 
-      <Button
-        onPress={() => {
-          setModalVisible(true);
-        }}>
-        绑定车辆信息
-      </Button>
-      <Button>立即接单</Button>
+        <Button
+          onPress={() => {
+            if (bindCar) {
+              setCarNumber(bindCar.carNumber);
+              setCarAddr(bindCar.carAddr);
+              setCarCharacter(bindCar.carCharacter);
+              setCarType(bindCar.carType);
+              setCarWeight(String(bindCar.carWeight));
+            }
+            setModalVisible(true);
+          }}>
+          {bindCar ? '修改车辆信息' : '绑定车辆信息'}
+        </Button>
+      </View>
+
+      {/* <Button>立即接单</Button> */}
 
       <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
         <Modal.Content>
           <Modal.CloseButton />
-          <Modal.Header>输入车辆信息</Modal.Header>
+          <Modal.Header>车辆信息</Modal.Header>
           <Modal.Body>
             <FormControl mb="5">
               <FormControl.Label>车牌号</FormControl.Label>
@@ -141,13 +164,25 @@ export default memo(() => {
               </Button>
               <Button
                 onPress={async () => {
-                  await mutateAsync({
-                    carNumber,
-                    carType,
-                    carCharacter,
-                    carWeight,
-                    carAddr,
-                  });
+                  if (bindCar) {
+                    await updateCar({
+                      carNumber,
+                      carType,
+                      carCharacter,
+                      carWeight,
+                      carAddr,
+                      id: bindCar.id,
+                    });
+                  } else {
+                    await mutateAsync({
+                      carNumber,
+                      carType,
+                      carCharacter,
+                      carWeight,
+                      carAddr,
+                    });
+                  }
+
                   setModalVisible(false);
                 }}>
                 确定

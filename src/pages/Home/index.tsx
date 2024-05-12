@@ -28,6 +28,11 @@ export function MainStack() {
       <Tab.Screen
         name={isChenYun ? 'ChengYun' : 'TuoYun'}
         options={{
+          headerShown: true,
+          headerBackgroundContainerStyle: {
+            backgroundColor: '#FFF',
+          },
+          title: isChenYun ? '车辆信息' : '托运',
           headerTransparent: true,
           tabBarLabel: isChenYun ? '承运' : '托运',
           tabBarIcon: ({ focused }) => (
@@ -48,6 +53,11 @@ export function MainStack() {
       <Tab.Screen
         name="Order"
         options={{
+          headerShown: true,
+          headerBackgroundContainerStyle: {
+            backgroundColor: '#FFF',
+          },
+          title: '订单中心',
           headerTransparent: true,
           tabBarLabel: '订单',
           tabBarIcon: ({ focused }) => (

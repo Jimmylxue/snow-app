@@ -60,4 +60,5 @@ export type RootStackParamList = {
   NoticeDetail: { letter: TUserLetter };
   SmsList: undefined;
   SmsDetail: { message: TSmsItem };
+  OrderDetail: { orderId: number };
 };

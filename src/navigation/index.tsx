@@ -28,6 +28,7 @@ import NoticeDetail from '../pages/Notice/detail';
 import Sms from '../pages/Sms';
 import SmsDetail from '../pages/Sms/detail';
 import Choose from '../pages/Choose';
+import OrderDetail from '../pages/Order/detail';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
@@ -205,6 +206,11 @@ export default function StackScreen() {
         name="SmsDetail"
         options={{ title: '短信详情' }}
         component={SmsDetail}
+      />
+      <Stack.Screen
+        name="OrderDetail"
+        options={{ title: '订单详情' }}
+        component={OrderDetail}
       />
     </Stack.Navigator>
   );
