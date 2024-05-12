@@ -1,25 +1,23 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { View, Text, Button } from 'native-base';
+import { StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  Menu,
+  Pressable,
+  HamburgerIcon,
+} from 'native-base';
 import { navigates } from '../../../navigation/navigate';
-import { baseFormatTime } from '../../../utils';
 type TProps = {
   name: string;
   desc: string;
-  isMine?: boolean;
-  joinTime?: string;
   clubId: number;
-  onJoinClub?: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
 };
 
-const ClubCard = ({
-  name,
-  desc,
-  isMine = false,
-  joinTime,
-  clubId,
-  onJoinClub,
-}: TProps) => {
+const CourseTypeCard = ({ name, desc, clubId, onEdit, onDelete }: TProps) => {
   return (
     <View style={styles.card} mx={3} mt={3}>
       <View
@@ -27,18 +25,35 @@ const ClubCard = ({
         justifyContent="space-between"
         alignItems="center">
         <Text style={styles.name}>{name}</Text>
-        {/* <TouchableOpacity>
-          <Text fontSize="sm">查看历史活动</Text>
-        </TouchableOpacity> */}
+        <Menu
+          w="190"
+          trigger={triggerProps => {
+            return (
+              <Pressable
+                accessibilityLabel="More options menu"
+                {...triggerProps}>
+                <HamburgerIcon />
+              </Pressable>
+            );
+          }}>
+          <Menu.Item onPress={onEdit}>编辑</Menu.Item>
+          <Menu.Item onPress={onDelete}>删除</Menu.Item>
+        </Menu>
       </View>
 
       <Text style={styles.description}>{desc}</Text>
-      {joinTime && (
-        <Text style={styles.description} color="gray.500">
-          {baseFormatTime(joinTime)} 加入社团
-        </Text>
-      )}
-      {isMine ? (
+
+      <Button
+        mt="2"
+        onPress={() => {
+          navigates('CourseTypeDetail', {
+            id: clubId,
+            typeName: name,
+          });
+        }}>
+        进入分类
+      </Button>
+      {/* {isMine ? (
         <Button
           mt="2"
           onPress={() => {
@@ -53,7 +68,7 @@ const ClubCard = ({
         <Button mt="2" onPress={onJoinClub}>
           立即加入
         </Button>
-      )}
+      )} */}
     </View>
   );
 };
@@ -73,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ClubCard;
+export default CourseTypeCard;

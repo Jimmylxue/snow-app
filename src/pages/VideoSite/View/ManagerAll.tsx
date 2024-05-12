@@ -6,7 +6,7 @@ import { CreateNotifyClub, THandleType } from '../components/CreateNotifyClub';
 import { useAllClub } from '../../../service/club';
 import { navigates } from '../../../navigation/navigate';
 
-export function ManagerAllClub() {
+export function ManagerAllCourse() {
   const [showModal, setShowModal] = useState(false);
   const modalType = useRef<THandleType>('createClub');
   const clubId = useRef<number>();
@@ -51,7 +51,7 @@ export function ManagerAllClub() {
               modalType.current = 'createClub';
               setShowModal(true);
             }}>
-            创建社团
+            创建视频分类
           </Button>
         </View>
       </View>

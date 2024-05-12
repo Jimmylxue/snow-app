@@ -1,5 +1,5 @@
 import { ScrollView } from 'native-base';
-import ClubCard from '../components/ClubCard';
+import ClubCard from '../components/CourseTypeCard';
 import { useUserClub } from '../../../service/club';
 
 export function MineClub() {

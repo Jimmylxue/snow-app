@@ -134,7 +134,7 @@ export function CreateNotifyClub({
         <Modal.CloseButton />
         <Modal.Header>
           {isCreateClub
-            ? '创建社团'
+            ? '创建视频分类'
             : isCreateActivity
             ? '发布活动'
             : '发布通知'}{' '}
@@ -143,21 +143,21 @@ export function CreateNotifyClub({
           {isCreateClub && (
             <>
               <FormControl>
-                <FormControl.Label>{'社团名称'}</FormControl.Label>
+                <FormControl.Label>{'分类名称'}</FormControl.Label>
                 <Input
-                  placeholder={'请输入社团名称'}
+                  placeholder={'请输入分类名称'}
                   w="100%"
                   value={title}
                   onChangeText={val => setTitle(val)}
                 />
               </FormControl>
               <FormControl>
-                <FormControl.Label>{'社团描述'}</FormControl.Label>
+                <FormControl.Label>{'分类描述'}</FormControl.Label>
                 {/* @ts-ignore */}
                 <TextArea
                   aria-label="t1"
                   numberOfLines={4}
-                  placeholder={'请输入社团描述'}
+                  placeholder={'请输入分类描述'}
                   // isInvalid
                   _dark={{
                     placeholderTextColor: 'gray.300',

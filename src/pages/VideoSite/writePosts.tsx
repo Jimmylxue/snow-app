@@ -68,6 +68,7 @@ export default memo(() => {
           </Box>
           <Button
             onPress={async () => {
+              console.log('<>>>');
               await mutateAsync({
                 title,
                 content,

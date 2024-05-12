@@ -54,5 +54,7 @@ export type RootStackParamList = {
   NoticeDetail: { letter: TUserLetter };
   SmsList: undefined;
   SmsDetail: { message: TSmsItem };
-  Video: undefined;
+  Video: { name: string; desc: string; source: string };
+  CourseTypeDetail: { id: number; typeName: string; isManager?: boolean };
+  CourseDetail: { id: number; typeName: string; isManager?: boolean };
 };

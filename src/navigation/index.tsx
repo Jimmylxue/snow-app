@@ -28,6 +28,9 @@ import NoticeDetail from '../pages/Notice/detail';
 import Sms from '../pages/Sms';
 import SmsDetail from '../pages/Sms/detail';
 import PVideo from '../pages/PVideo';
+import CourseTypeDetail from '../pages/VideoSite/detail';
+import CourseDetail from '../pages/VideoSite/CourseDetail';
+
 // import Video from '../pages/Videos/index';
 
 export default function StackScreen() {
@@ -205,6 +208,16 @@ export default function StackScreen() {
         name="Video"
         options={{ title: '视频详情' }}
         component={PVideo}
+      />
+      <Stack.Screen
+        name="CourseTypeDetail"
+        options={{ title: '视频分类详情' }}
+        component={CourseTypeDetail}
+      />
+      <Stack.Screen
+        name="CourseDetail"
+        options={{ title: '视频详情' }}
+        component={CourseDetail}
       />
     </Stack.Navigator>
   );

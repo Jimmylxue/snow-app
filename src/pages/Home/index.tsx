@@ -7,6 +7,9 @@ import { ManagerAllClub } from '../Club/View/ManagerAll';
 import { useAppState } from '../../hooks/useAppState';
 import { ERoleType } from '../../service';
 import VideoSite from '../VideoSite';
+import { ManagerAllCourse } from '../VideoSite/View/ManagerAll';
+import PostPage from '../VideoSite/posts';
+import { UploadVideo } from '../VideoSite/View/UploadVideo';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,6 +29,11 @@ export function MainStack() {
         options={{
           headerTransparent: true,
           tabBarLabel: '首页',
+          title: '首页',
+          headerShown: true,
+          headerBackgroundContainerStyle: {
+            backgroundColor: '#fff',
+          },
           tabBarIcon: ({ focused }) => (
             <Image
               source={
@@ -42,11 +50,11 @@ export function MainStack() {
         component={VideoSite}
       />
       <Tab.Screen
-        name="ManagerIndex"
+        name="Chat"
         options={{
           headerTransparent: true,
-          tabBarLabel: isManager ? '管理' : '社团',
-          title: isManager ? '管理' : '社团',
+          tabBarLabel: '交流',
+          title: '交流',
           headerShown: true,
           headerBackgroundContainerStyle: {
             backgroundColor: '#fff',
@@ -64,7 +72,32 @@ export function MainStack() {
             />
           ),
         }}
-        component={isManager ? ManagerAllClub : Club}
+        component={PostPage}
+      />
+      <Tab.Screen
+        name="UploadVideo"
+        options={{
+          headerTransparent: true,
+          tabBarLabel: '上传',
+          title: '上传',
+          headerShown: true,
+          headerBackgroundContainerStyle: {
+            backgroundColor: '#fff',
+          },
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={
+                focused
+                  ? require('../../images/pic-selected.png')
+                  : require('../../images/pic-default.png')
+              }
+              w="25px"
+              h="25px"
+              alt="图片"
+            />
+          ),
+        }}
+        component={UploadVideo}
       />
       <Tab.Screen
         name="Mine"
