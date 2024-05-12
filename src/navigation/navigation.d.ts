@@ -57,4 +57,5 @@ export type RootStackParamList = {
   Video: { name: string; desc: string; source: string };
   CourseTypeDetail: { id: number; typeName: string; isManager?: boolean };
   CourseDetail: { id: number; typeName: string; isManager?: boolean };
+  ExamQuestionList: { id: number; typeName: string; isManager?: boolean };
 };

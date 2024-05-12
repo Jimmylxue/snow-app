@@ -19,10 +19,10 @@ export function UploadVideo() {
   const [name, setName] = useState<string>('');
   const [desc, setDesc] = useState<string>('');
   const [cover, setCover] = useState<string>(
-    'https://wallpaperaccess.com/full/317501.jpg',
+    'http://127.0.0.1:9999/1715326475586WechatIMG524 2.jpeg',
   );
   const [source, setSource] = useState<string>(
-    'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+    'http://127.0.0.1:9999/17153987143851000016617.mp4',
   );
 
   const { data } = useCourseType(['course'], {}, {});

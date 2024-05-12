@@ -21,6 +21,7 @@ type TAppContext = {
   state: TState;
   signIn?: (token: string, userInfo: TState['userInfo']) => void;
   signOut?: () => void;
+  updateUser?: (userInfo: TState['userInfo']) => void;
 };
 
 export const APPContext = createContext<TAppContext>({
@@ -28,6 +29,7 @@ export const APPContext = createContext<TAppContext>({
   isLoading: true,
   signIn: () => {},
   signOut: () => {},
+  updateUser: () => {},
 } as TAppContext);
 
 export const AppContextProvider: FC<{ children: ReactNode }> = ({
@@ -88,6 +90,14 @@ export function useInitApp() {
         });
         await setAuthToken('');
         await setAuthUser(JSON.stringify(''));
+      },
+      updateUser: async (userInfo: TState['userInfo']) => {
+        await setAuthUser(JSON.stringify(userInfo));
+        setState(state => ({
+          ...state,
+          isLoading: false,
+          userInfo: userInfo!,
+        }));
       },
     };
   }, []);

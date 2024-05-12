@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Text, Box, View, Avatar, Button, Image } from 'native-base';
+import { Text, Box, View, Avatar, Button } from 'native-base';
 import { InfoLine } from '../../components/InfoLine';
 import { useAppState } from '../../hooks/useAppState';
 import { TouchableOpacity } from 'react-native';
@@ -20,7 +20,7 @@ export default memo(() => {
         px="2"
         position="relative"
         alignItems="center">
-        <View position="absolute" right={2} top={12}>
+        {/* <View position="absolute" right={2} top={12}>
           <TouchableOpacity
             onPress={() => {
               navigates('Notice', undefined);
@@ -32,7 +32,7 @@ export default memo(() => {
               height={7}
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <View>
           <View flexDir="row" alignItems="center">
@@ -64,14 +64,14 @@ export default memo(() => {
               navigates('MemberInfo', undefined);
             }}
           />
-          <InfoLine
+          {/* <InfoLine
             right
             icon={require('../../images/entry-message.png')}
             title="消息中心"
             onPress={() => {
               navigates('Notice', undefined);
             }}
-          />
+          /> */}
         </View>
 
         <Button

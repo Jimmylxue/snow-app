@@ -3,21 +3,25 @@ import { ScrollView, Toast, View } from 'native-base';
 import { SafeAreaView } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/navigation';
-import { TCourseItem, useDelCourse, useTypeCourse } from '../../service/course';
-import CourseCard from './components/CourseCard';
-import { navigates } from '../../navigation/navigate';
-import { CourseModal } from './components/CourseModal';
+import { TExamItem, useDelExamQuestion, useTypeExam } from '../../service/exam';
+import { ExamQuestionItem } from './components/ExamQuestionItem';
+import { ExamQuestionModal } from './components/ExamQuestionModal';
+import { ExamItem } from './Exam';
+import { useAppState } from '../../hooks/useAppState';
+import { ERoleType } from '../../service';
 
 type RouterParams = RouteProp<RootStackParamList, 'CourseTypeDetail'>;
 
 /**
- * 某个分类下的视频列表
+ * 某个类型下的考题页面
  */
 export default memo(() => {
+  const { state } = useAppState();
+  const isManager = state.userInfo?.role === ERoleType.管理员;
   const { params } = useRoute<RouterParams>();
   const navigation = useNavigation();
-  const { data, refetch } = useTypeCourse(
-    ['course'],
+  const { data, refetch } = useTypeExam(
+    ['examList'],
     {
       typeId: params.id,
     },
@@ -25,13 +29,12 @@ export default memo(() => {
       enabled: !!params.id,
     },
   );
-
   const [visible, setVisible] = useState<boolean>(false);
-  const chooseCourse = useRef<TCourseItem>();
+  const chooseQuestion = useRef<TExamItem>();
 
-  const { mutateAsync } = useDelCourse({
-    onSuccess: () => {
-      Toast.show({ title: '操作成功' });
+  const { mutateAsync } = useDelExamQuestion({
+    onSuccess() {
+      Toast.show({ title: '删除成功' });
       refetch();
     },
   });
@@ -45,33 +48,27 @@ export default memo(() => {
   return (
     <SafeAreaView>
       <View flexDirection="column" position="relative" h="full">
-        <ScrollView>
-          {data?.map(course => (
-            <CourseCard
-              course={course}
-              key={course.id}
-              showMenu={!!params.isManager}
-              onClick={() =>
-                navigates('Video', {
-                  name: course.name,
-                  desc: course.desc,
-                  source: course.source,
-                })
-              }
+        <ScrollView px={2} pt={2}>
+          {data?.map(question => (
+            <ExamQuestionItem
+              question={question as ExamItem}
+              key={question.id}
+              showAnswer
+              onDelete={async () => {
+                await mutateAsync({ id: question.id });
+              }}
               onEdit={() => {
-                chooseCourse.current = course;
+                chooseQuestion.current = question;
                 setVisible(true);
               }}
-              onDelete={async () => {
-                await mutateAsync({ id: course.id });
-              }}
+              showMenu={!!isManager}
             />
           ))}
         </ScrollView>
       </View>
-      <CourseModal
+      <ExamQuestionModal
         type="edit"
-        course={chooseCourse.current!}
+        examQuestion={chooseQuestion.current!}
         showModal={visible}
         onClose={() => {
           setVisible(false);

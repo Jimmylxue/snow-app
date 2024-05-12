@@ -27,12 +27,10 @@ import feedbackRecord from '../pages/Club/feedbackRecord';
 import NoticeDetail from '../pages/Notice/detail';
 import Sms from '../pages/Sms';
 import SmsDetail from '../pages/Sms/detail';
-import PVideo from '../pages/PVideo';
+import PVideo from '../pages/VideoSite/videoPage';
 import CourseTypeDetail from '../pages/VideoSite/detail';
 import CourseDetail from '../pages/VideoSite/CourseDetail';
-
-// import Video from '../pages/Videos/index';
-
+import ExamQuestionList from '../pages/Exam/ExamQuestionList';
 export default function StackScreen() {
   const Stack = createStackNavigator();
   const { state, signOut } = useAppState();
@@ -56,7 +54,7 @@ export default function StackScreen() {
       });
       return;
     }
-  }, [state]);
+  }, [state.isLoading, state.token]);
 
   useEffect(() => {
     logoutEmitter.on('app-logout', () => {
@@ -184,11 +182,11 @@ export default function StackScreen() {
         options={{ title: '发布帖子' }}
         component={ClubWritePosts}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Notice"
         options={{ title: '消息中心' }}
         component={Notice}
-      />
+      /> */}
       <Stack.Screen
         name="NoticeDetail"
         options={{ title: '消息详情' }}
@@ -218,6 +216,11 @@ export default function StackScreen() {
         name="CourseDetail"
         options={{ title: '视频详情' }}
         component={CourseDetail}
+      />
+      <Stack.Screen
+        name="ExamQuestionList"
+        options={{ title: '考试分类详情' }}
+        component={ExamQuestionList}
       />
     </Stack.Navigator>
   );

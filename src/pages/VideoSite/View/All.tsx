@@ -6,10 +6,16 @@ import {
   useDelCourseType,
 } from '../../../service/course';
 import { CourseTypeModal } from '../components/CourseTypeModal';
-import { useRef, useState } from 'react';
-import { Divider, Text, Toast, View } from 'native-base';
+import { useEffect, useRef, useState } from 'react';
+import { AddIcon, Toast, View } from 'native-base';
+import { useNavigation } from '@react-navigation/native';
+import { useAppState } from '../../../hooks/useAppState';
+import { ERoleType } from '../../../service';
 
 export function AllVideo() {
+  const { state } = useAppState();
+  const isManager = state.userInfo?.role === ERoleType.管理员;
+  const navigation = useNavigation();
   const { data, refetch } = useCourseType(['courseType'], {});
   const [visible, setVisible] = useState<boolean>(false);
   const chooseCourseType = useRef<TCourseType>();
@@ -21,6 +27,24 @@ export function AllVideo() {
       refetch();
     },
   });
+
+  useEffect(() => {
+    if (isManager) {
+      navigation.setOptions({
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={() => {
+              type.current = 'add';
+              setVisible(true);
+            }}>
+            <View pr={2}>
+              <AddIcon size="md" />
+            </View>
+          </TouchableOpacity>
+        ),
+      });
+    }
+  }, [navigation, isManager]);
 
   return (
     <>
@@ -41,29 +65,10 @@ export function AllVideo() {
                 id: courseType.id,
               });
             }}
+            isManager={isManager}
           />
         ))}
       </ScrollView>
-      <View position="absolute" bottom="0" h="12">
-        <Divider />
-        <View flexDir="row" bg="white" h="full">
-          <View w="full" h="full" justifyContent="center" alignItems="center">
-            <TouchableOpacity
-              onPress={() => {
-                type.current = 'add';
-                setVisible(true);
-              }}>
-              <View
-                w="full"
-                h="full"
-                justifyContent="center"
-                alignItems="center">
-                <Text>新建分类</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
       <CourseTypeModal
         type={type.current}
         courseType={chooseCourseType.current!}

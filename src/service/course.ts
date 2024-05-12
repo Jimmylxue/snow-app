@@ -115,3 +115,43 @@ export function useTypeCourse(
     config,
   );
 }
+
+export function useDelCourse(
+  options?: UseMutationOptions<boolean, ClientError, { id: number }>,
+) {
+  return useMutation<boolean, ClientError, { id: number }>(
+    data => post('/course/delCourse', data),
+    options,
+  );
+}
+
+export function useEditCourse(
+  options?: UseMutationOptions<
+    boolean,
+    ClientError,
+    { id: number; name: string; desc: string; cover: string; source: string }
+  >,
+) {
+  return useMutation<
+    boolean,
+    ClientError,
+    { id: number; name: string; desc: string; cover: string; source: string }
+  >(data => post('/course/editCourse', data), options);
+}
+
+/**
+ * 获取随机视频
+ */
+export function useRandomCourse(
+  queryKey: QueryKey,
+  variable: {
+    typeId?: number;
+  },
+  config?: UseQueryOptions<TCourseItem[], ClientError>,
+) {
+  return useQuery<TCourseItem[], ClientError>(
+    queryKey,
+    () => post('/course/randomCourse', variable),
+    config,
+  );
+}

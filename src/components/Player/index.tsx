@@ -4,11 +4,11 @@ import { useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import Video from 'react-native-video';
 
-// Within your render function, assuming you have a file called
-// "background.mp4" in your project. You can include multiple videos
-// on a single screen if you like.
+type TProps = {
+  videoLink: string;
+};
 
-export const Player = () => {
+export const Player = ({ videoLink }: TProps) => {
   const videoRef = useRef<any>(null);
   // const background = require('./background.mp4');
 
@@ -18,7 +18,7 @@ export const Player = () => {
         controls={true}
         // Can be a URL or a local file.
         source={{
-          uri: 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+          uri: videoLink,
         }}
         // Store reference
         ref={videoRef}

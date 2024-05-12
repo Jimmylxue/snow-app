@@ -15,17 +15,9 @@ type TProps = {
   clubId: number;
   onEdit: () => void;
   onDelete: () => void;
-  isManager: boolean;
 };
 
-const CourseTypeCard = ({
-  name,
-  desc,
-  clubId,
-  onEdit,
-  onDelete,
-  isManager,
-}: TProps) => {
+const ExamTypeCard = ({ name, desc, clubId, onEdit, onDelete }: TProps) => {
   return (
     <View style={styles.card} mx={3} mt={3}>
       <View
@@ -33,22 +25,20 @@ const CourseTypeCard = ({
         justifyContent="space-between"
         alignItems="center">
         <Text style={styles.name}>{name}</Text>
-        {isManager && (
-          <Menu
-            w="190"
-            trigger={triggerProps => {
-              return (
-                <Pressable
-                  accessibilityLabel="More options menu"
-                  {...triggerProps}>
-                  <HamburgerIcon />
-                </Pressable>
-              );
-            }}>
-            <Menu.Item onPress={onEdit}>编辑</Menu.Item>
-            <Menu.Item onPress={onDelete}>删除</Menu.Item>
-          </Menu>
-        )}
+        <Menu
+          w="190"
+          trigger={triggerProps => {
+            return (
+              <Pressable
+                accessibilityLabel="More options menu"
+                {...triggerProps}>
+                <HamburgerIcon />
+              </Pressable>
+            );
+          }}>
+          <Menu.Item onPress={onEdit}>编辑</Menu.Item>
+          <Menu.Item onPress={onDelete}>删除</Menu.Item>
+        </Menu>
       </View>
 
       <Text style={styles.description}>{desc}</Text>
@@ -56,14 +46,29 @@ const CourseTypeCard = ({
       <Button
         mt="2"
         onPress={() => {
-          navigates('CourseTypeDetail', {
+          navigates('ExamQuestionList', {
             id: clubId,
             typeName: name,
-            isManager: isManager,
           });
         }}>
         进入分类
       </Button>
+      {/* {isMine ? (
+        <Button
+          mt="2"
+          onPress={() => {
+            navigates('ClubDetail', {
+              clubId,
+              clubName: name,
+            });
+          }}>
+          进入社团
+        </Button>
+      ) : (
+        <Button mt="2" onPress={onJoinClub}>
+          立即加入
+        </Button>
+      )} */}
     </View>
   );
 };
@@ -83,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CourseTypeCard;
+export default ExamTypeCard;
