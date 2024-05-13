@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native';
 import { goodsType, province } from './const';
 import { useSubmitOrder } from '../../service/car';
+import { adaptive } from '../../utils';
 
 export default memo(() => {
   const [handlingRequirement, setHandlingRequirement] = useState<string>('');
@@ -29,7 +30,7 @@ export default memo(() => {
   return (
     <SafeAreaView>
       <ScrollView>
-        <Box px={2} py={2}>
+        <Box px={2} style={{ paddingTop: adaptive(220) }}>
           <FormControl mb="5">
             <FormControl.Label>货物种类</FormControl.Label>
             <Select

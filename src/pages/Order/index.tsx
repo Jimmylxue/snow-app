@@ -1,211 +1,59 @@
 import { memo } from 'react';
 import { Text, Stack, View, ScrollView } from 'native-base';
 import { useAppState } from '../../hooks/useAppState';
-import { SafeAreaView, TouchableOpacity } from 'react-native';
+import {
+  FlatList,
+  RefreshControl,
+  SafeAreaView,
+  TouchableOpacity,
+} from 'react-native';
 import { useOrderList } from '../../service/car';
 import { navigates } from '../../navigation/navigate';
+import { OrderItem } from './components/OrderItem';
+import { adaptive } from '../../utils';
 
 export default memo(() => {
-  const { data } = useOrderList(
-    ['orderList'],
-    {
-      current: 1,
-      size: 1,
-    },
-    {},
-  );
+  const { data, hasNextPage, isFetching, fetchNextPage, refetch } =
+    useOrderList(
+      ['orderList'],
+      {
+        current: 1,
+        size: 5,
+      },
+      {},
+    );
 
-  console.log('data~', data);
+  const orderList = data?.pages.reduce((arr, page) => {
+    if (page) {
+      // @ts-ignore
+      return arr.concat(page.records || []);
+    }
+    return arr;
+  }, []);
+
+  console.log('orderList~', orderList);
 
   return (
     <SafeAreaView>
-      <ScrollView>
-        <Stack
-          h="full"
-          space={2}
-          alignSelf="center"
-          px="2"
-          safeArea
-          pt={2}
-          w={{
-            base: '100%',
-            md: '25%',
-          }}>
-          <TouchableOpacity
-            onPress={() => {
-              navigates('OrderDetail', { orderId: 1 });
-            }}>
-            <View bg="#fff" px={2} py={2}>
-              <View flexDirection="row" justifyContent="space-between">
-                <Text>订单号：2637812392173891273</Text>
-                <Text>¥：100</Text>
-              </View>
-              <View>
-                <View flexDirection="row" justifyContent="space-between">
-                  <Text>托运人</Text>
-                  <Text>吉米</Text>
-                </View>
-                <View flexDirection="row" justifyContent="space-between">
-                  <Text>承运人</Text>
-                  <Text>吉米2</Text>
-                </View>
-                <View>
-                  <Text>货物地址：</Text>
-                  <Text>福建省福州市闽侯县高新区华建大厦</Text>
-                </View>
-                <View>
-                  <Text>托运地址：</Text>
-                  <Text>福建省福州市闽侯县高新区万福中心</Text>
-                </View>
-                <View>
-                  <Text>当前物流：</Text>
-                  <Text>福建省福州市闽侯县高新区厚庭地铁站</Text>
-                </View>
-              </View>
-            </View>
-          </TouchableOpacity>
-          <View bg="#fff" px={2} py={2}>
-            <View flexDirection="row" justifyContent="space-between">
-              <Text>订单号：2637812392173891273</Text>
-              <Text>¥：100</Text>
-            </View>
-            <View>
-              <View flexDirection="row" justifyContent="space-between">
-                <Text>托运人</Text>
-                <Text>吉米</Text>
-              </View>
-              <View flexDirection="row" justifyContent="space-between">
-                <Text>承运人</Text>
-                <Text>吉米2</Text>
-              </View>
-              <View>
-                <Text>货物地址：</Text>
-                <Text>福建省福州市闽侯县高新区华建大厦</Text>
-              </View>
-              <View>
-                <Text>托运地址：</Text>
-                <Text>福建省福州市闽侯县高新区万福中心</Text>
-              </View>
-              <View>
-                <Text>当前物流：</Text>
-                <Text>福建省福州市闽侯县高新区厚庭地铁站</Text>
-              </View>
-            </View>
-          </View>
-          <View bg="#fff" px={2} py={2}>
-            <View flexDirection="row" justifyContent="space-between">
-              <Text>订单号：2637812392173891273</Text>
-              <Text>¥：100</Text>
-            </View>
-            <View>
-              <View flexDirection="row" justifyContent="space-between">
-                <Text>托运人</Text>
-                <Text>吉米</Text>
-              </View>
-              <View flexDirection="row" justifyContent="space-between">
-                <Text>承运人</Text>
-                <Text>吉米2</Text>
-              </View>
-              <View>
-                <Text>货物地址：</Text>
-                <Text>福建省福州市闽侯县高新区华建大厦</Text>
-              </View>
-              <View>
-                <Text>托运地址：</Text>
-                <Text>福建省福州市闽侯县高新区万福中心</Text>
-              </View>
-              <View>
-                <Text>当前物流：</Text>
-                <Text>福建省福州市闽侯县高新区厚庭地铁站</Text>
-              </View>
-            </View>
-          </View>
-          <View bg="#fff" px={2} py={2}>
-            <View flexDirection="row" justifyContent="space-between">
-              <Text>订单号：2637812392173891273</Text>
-              <Text>¥：100</Text>
-            </View>
-            <View>
-              <View flexDirection="row" justifyContent="space-between">
-                <Text>托运人</Text>
-                <Text>吉米</Text>
-              </View>
-              <View flexDirection="row" justifyContent="space-between">
-                <Text>承运人</Text>
-                <Text>吉米2</Text>
-              </View>
-              <View>
-                <Text>货物地址：</Text>
-                <Text>福建省福州市闽侯县高新区华建大厦</Text>
-              </View>
-              <View>
-                <Text>托运地址：</Text>
-                <Text>福建省福州市闽侯县高新区万福中心</Text>
-              </View>
-              <View>
-                <Text>当前物流：</Text>
-                <Text>福建省福州市闽侯县高新区厚庭地铁站</Text>
-              </View>
-            </View>
-          </View>
-          <View bg="#fff" px={2} py={2}>
-            <View flexDirection="row" justifyContent="space-between">
-              <Text>订单号：2637812392173891273</Text>
-              <Text>¥：100</Text>
-            </View>
-            <View>
-              <View flexDirection="row" justifyContent="space-between">
-                <Text>托运人</Text>
-                <Text>吉米</Text>
-              </View>
-              <View flexDirection="row" justifyContent="space-between">
-                <Text>承运人</Text>
-                <Text>吉米2</Text>
-              </View>
-              <View>
-                <Text>货物地址：</Text>
-                <Text>福建省福州市闽侯县高新区华建大厦</Text>
-              </View>
-              <View>
-                <Text>托运地址：</Text>
-                <Text>福建省福州市闽侯县高新区万福中心</Text>
-              </View>
-              <View>
-                <Text>当前物流：</Text>
-                <Text>福建省福州市闽侯县高新区厚庭地铁站</Text>
-              </View>
-            </View>
-          </View>
-          <View bg="#fff" px={2} py={2}>
-            <View flexDirection="row" justifyContent="space-between">
-              <Text>订单号：2637812392173891273</Text>
-              <Text>¥：100</Text>
-            </View>
-            <View>
-              <View flexDirection="row" justifyContent="space-between">
-                <Text>托运人</Text>
-                <Text>吉米</Text>
-              </View>
-              <View flexDirection="row" justifyContent="space-between">
-                <Text>承运人</Text>
-                <Text>吉米2</Text>
-              </View>
-              <View>
-                <Text>货物地址：</Text>
-                <Text>福建省福州市闽侯县高新区华建大厦</Text>
-              </View>
-              <View>
-                <Text>托运地址：</Text>
-                <Text>福建省福州市闽侯县高新区万福中心</Text>
-              </View>
-              <View>
-                <Text>当前物流：</Text>
-                <Text>福建省福州市闽侯县高新区厚庭地铁站</Text>
-              </View>
-            </View>
-          </View>
-        </Stack>
-      </ScrollView>
+      <FlatList
+        style={{
+          paddingTop: adaptive(250),
+        }}
+        data={orderList}
+        keyExtractor={(_, index) => String(index)}
+        numColumns={1}
+        renderItem={({ item }) => <OrderItem orderInfo={item} />}
+        onEndReached={() => {
+          console.log('触底了', { hasNextPage, isFetching });
+          if (!isFetching && hasNextPage) {
+            console.log('ftechl ');
+            fetchNextPage();
+          }
+        }}
+        refreshControl={
+          <RefreshControl refreshing={isFetching} onRefresh={refetch} />
+        }
+      />
     </SafeAreaView>
   );
 });

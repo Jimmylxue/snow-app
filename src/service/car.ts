@@ -121,7 +121,16 @@ export function useSubmitOrder(
 }
 
 export type TBaseOrder = {
-  result: {};
+  addr: string;
+  id: number;
+  consignee: string;
+  logisticsInformation: string;
+  phone: string;
+  userId: string;
+};
+
+type TBaseOrderResult = {
+  records: TBaseOrder[];
   total: number;
 };
 
@@ -131,9 +140,9 @@ export function useOrderList(
     current: number;
     size: number;
   },
-  queryConfig?: UseInfiniteQueryOptions<TBaseOrder, ClientError>,
+  queryConfig?: UseInfiniteQueryOptions<TBaseOrderResult, ClientError>,
 ) {
-  return useInfiniteQuery<TBaseOrder, ClientError>(
+  return useInfiniteQuery<TBaseOrderResult, ClientError>(
     queryKey,
     async ({ pageParam = 1 }) =>
       get('/order/page', {
@@ -143,11 +152,13 @@ export function useOrderList(
     {
       ...queryConfig,
       getNextPageParam: (last, all) => {
-        const hasNext = variables.size * all.length < last.total;
+        const lastLength = last?.records?.length || 0;
+        const hasNext = lastLength !== 0;
         if (hasNext) {
+          console.log('dddd', all.length + 1);
           return all.length + 1;
         }
-        return false;
+        return;
       },
     },
   );
