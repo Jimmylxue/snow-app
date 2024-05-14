@@ -4,7 +4,7 @@ import { View, Text } from 'native-base';
 import { TSmsItem } from '../../../navigation/navigation';
 type TProps = {
   info: TSmsItem;
-  onSeeDetail: () => void;
+  onSeeDetail?: () => void;
 };
 
 const MessageCard = ({ info, onSeeDetail }: TProps) => {

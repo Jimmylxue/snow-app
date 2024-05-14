@@ -83,6 +83,7 @@ export default memo(() => {
             onSeeDetail={async () => {
               navigates('SmsDetail', {
                 message: item,
+                showAddBlack: true,
               });
             }}
           />
@@ -131,6 +132,7 @@ export default memo(() => {
                   setModalShow(false);
                   navigates('SmsDetail', {
                     message: { body: inputValue, address: 'local_input' },
+                    showAddBlack: true,
                   });
                 }}>
                 确定

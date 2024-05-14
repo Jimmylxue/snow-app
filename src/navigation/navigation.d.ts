@@ -52,5 +52,6 @@ export type RootStackParamList = {
   };
   NoticeDetail: { letter: TUserLetter };
   SmsList: undefined;
-  SmsDetail: { message: TSmsItem };
+  SmsDetail: { message: TSmsItem; showAddBlack: boolean };
+  BlackList: undefined;
 };

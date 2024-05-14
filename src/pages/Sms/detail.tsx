@@ -1,13 +1,13 @@
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { View, Text } from 'native-base';
+import { View, Text, Button, Toast } from 'native-base';
 import { memo } from 'react';
 import { RootStackParamList } from '../../navigation/navigation';
-import { useSmsCheck } from '../../service/useSms';
+import { useBlackList, useSmsCheck } from '../../service/useSms';
 type RouterParams = RouteProp<RootStackParamList, 'SmsDetail'>;
 
 export default memo(() => {
   const { params } = useRoute<RouterParams>();
-
+  const { addBlack } = useBlackList();
   const { data } = useSmsCheck(
     ['smsCheck', params],
     {
@@ -40,6 +40,21 @@ export default memo(() => {
         <Text mt="4" fontWeight="semibold">
           该短信不是垃圾短信！
         </Text>
+      )}
+
+      {params.showAddBlack && (
+        <Button
+          mt={2}
+          onPress={async () => {
+            const res = await addBlack(params.message);
+            if (res) {
+              Toast.show({
+                title: '加入成功',
+              });
+            }
+          }}>
+          加入黑名单
+        </Button>
       )}
     </View>
   );

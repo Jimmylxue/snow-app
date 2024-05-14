@@ -1,21 +1,23 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import Sms from '../pages/Sms';
 import SmsDetail from '../pages/Sms/detail';
+import BlackList from '../pages/Sms/blackList';
 import {
   Button,
   FormControl,
   HamburgerIcon,
   Input,
+  Menu,
   Modal,
+  Pressable,
   View,
 } from 'native-base';
 import { useEffect, useState } from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { serverUrl, setServerUrl } from '../service/client';
 import Splash from '../pages/Splash';
 import { Login } from '../pages/Login';
 import { useAppState } from '../hooks/useAppState';
-import { resetNavigate } from './navigate';
+import { navigates, resetNavigate } from './navigate';
 function Setting() {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
@@ -27,12 +29,29 @@ function Setting() {
 
   return (
     <View mr={2}>
-      <TouchableOpacity
-        onPress={() => {
-          setModalVisible(true);
+      <Menu
+        w="190"
+        trigger={triggerProps => {
+          return (
+            <Pressable accessibilityLabel="More options menu" {...triggerProps}>
+              <HamburgerIcon size="lg" />
+            </Pressable>
+          );
         }}>
-        <HamburgerIcon size="lg" />
-      </TouchableOpacity>
+        <Menu.Item
+          onPress={() => {
+            navigates('BlackList', undefined);
+          }}>
+          查看黑名单
+        </Menu.Item>
+        <Menu.Item
+          onPress={() => {
+            setModalVisible(true);
+          }}>
+          修改Url
+        </Menu.Item>
+      </Menu>
+
       <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
         <Modal.Content>
           <Modal.CloseButton />
@@ -132,6 +151,11 @@ export default function StackScreen() {
         name="SmsDetail"
         options={{ title: '短信详情' }}
         component={SmsDetail}
+      />
+      <Stack.Screen
+        name="BlackList"
+        options={{ title: '黑名单' }}
+        component={BlackList}
       />
     </Stack.Navigator>
   );
