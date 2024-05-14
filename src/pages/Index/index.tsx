@@ -38,10 +38,11 @@ export default memo(() => {
         <Button
           onPress={() => {
             watchPosition?.({
-              // enableHighAccuracy: true,
+              enableHighAccuracy: true,
               // timeout: 20000,
               // maximumAge: 1000,
-              // distanceFilter: 0,
+              interval: 5000,
+              distanceFilter: 1,
             });
           }}
           title="开始记录定位"
