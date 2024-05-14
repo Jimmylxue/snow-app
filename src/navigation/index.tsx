@@ -12,7 +12,10 @@ import {
 import { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { serverUrl, setServerUrl } from '../service/client';
-
+import Splash from '../pages/Splash';
+import { Login } from '../pages/Login';
+import { useAppState } from '../hooks/useAppState';
+import { resetNavigate } from './navigate';
 function Setting() {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
@@ -72,6 +75,27 @@ function Setting() {
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
+  const { state } = useAppState();
+  useEffect(() => {
+    if (state.isLoading) {
+      return;
+    }
+    if (state?.token) {
+      resetNavigate({
+        index: 0,
+        routes: [{ name: 'SmsList' }],
+      });
+      return;
+    }
+
+    if (!state?.token) {
+      resetNavigate({
+        index: 0,
+        routes: [{ name: 'Login' }],
+      });
+      return;
+    }
+  }, [state]);
 
   return (
     <Stack.Navigator
@@ -89,6 +113,16 @@ export default function StackScreen() {
           elevation: 0.5,
         },
       }}>
+      <Stack.Screen
+        name="Splash"
+        options={{ headerShown: false }}
+        component={Splash}
+      />
+      <Stack.Screen
+        name="Login"
+        options={{ headerShown: false }}
+        component={Login}
+      />
       <Stack.Screen
         name="SmsList"
         options={{ title: '短信列表', headerRight: Setting }}
