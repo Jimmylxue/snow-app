@@ -2,9 +2,9 @@ import { Toast } from 'native-base';
 import { removeAuthToken } from '../utils';
 import { logoutEmitter } from './event';
 
-// const serverUrl = 'https://api.jimmyxuexue.top';
+export const serverUrl = 'https://api.jimmyxuexue.top';
 // const serverUrl = 'http://10.6.0.29:9999';
-export const serverUrl = 'http://127.0.0.1:9999';
+// export const serverUrl = 'http://localhost:9999';
 // export const serverUrl = 'http://192.168.2.241:9999';
 
 type CustomrHeader = {

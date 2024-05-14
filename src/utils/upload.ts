@@ -6,7 +6,9 @@ import DocumentPicker, {
   types,
 } from 'react-native-document-picker';
 
-export async function handleUpload(file: DocumentPickerResponse) {
+export async function handleUpload(
+  file: DocumentPickerResponse,
+): Promise<string> {
   const formData = new FormData();
   formData.append('file', {
     uri: file.uri,
@@ -24,6 +26,7 @@ export async function handleUpload(file: DocumentPickerResponse) {
     return res.data.result;
   } catch (error) {
     Toast.show({ title: '上传失败' });
+    return '';
   }
 }
 

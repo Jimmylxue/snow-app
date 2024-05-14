@@ -37,17 +37,6 @@ export function UploadVideo() {
     },
   });
 
-  const chooseFile = async () => {
-    try {
-      const file = await chooseSystemFile('video');
-      if (file) {
-        handleUpload(file);
-      }
-    } catch (err) {
-      console.error('打开文件选择界面失败:', err);
-    }
-  };
-
   return (
     <SafeAreaView>
       <View
@@ -111,7 +100,20 @@ export function UploadVideo() {
               alt="Alternate Text"
               size="xl"
             />
-            <Button>上传封面</Button>
+            <Button
+              onPress={async () => {
+                try {
+                  const file = await chooseSystemFile('images');
+                  if (file) {
+                    const uri = await handleUpload(file);
+                    setCover(uri);
+                  }
+                } catch (err) {
+                  // console.error('打开文件选择界面失败:', err);
+                }
+              }}>
+              上传封面
+            </Button>
           </View>
         </FormControl>
         <FormControl>
@@ -123,14 +125,27 @@ export function UploadVideo() {
             onChangeText={val => setSource(val)}
           />
           <View flexDirection="row" mt={2}>
-            <Image
+            {/* <Image
               source={{
                 uri: 'https://wallpaperaccess.com/full/317501.jpg',
               }}
               alt="Alternate Text"
               size="xl"
-            />
-            <Button>上传视频</Button>
+            /> */}
+            <Button
+              onPress={async () => {
+                try {
+                  const file = await chooseSystemFile('video');
+                  if (file) {
+                    const uri = await handleUpload(file);
+                    setSource(uri);
+                  }
+                } catch (err) {
+                  // console.error('打开文件选择界面失败:', err);
+                }
+              }}>
+              上传视频
+            </Button>
           </View>
         </FormControl>
 
