@@ -25,7 +25,7 @@ export function UploadVideo() {
     'http://127.0.0.1:9999/17153987143851000016617.mp4',
   );
 
-  const { data } = useCourseType(['course'], {}, {});
+  const { data } = useCourseType(['courseType'], {}, {});
 
   const { mutateAsync } = useAddCourse({
     onSuccess: () => {
