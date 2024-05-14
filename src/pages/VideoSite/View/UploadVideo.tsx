@@ -42,7 +42,7 @@ export function UploadVideo() {
       <View
         px={2}
         style={{
-          paddingTop: adaptive(220),
+          paddingTop: adaptive(280),
         }}>
         <FormControl>
           <FormControl.Label>{'课程名称'}</FormControl.Label>

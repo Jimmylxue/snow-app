@@ -41,7 +41,7 @@ export function UploadExam() {
       <View
         px={2}
         style={{
-          paddingTop: adaptive(220),
+          paddingTop: adaptive(280),
         }}>
         <FormControl>
           <FormControl.Label>{'题目名称'}</FormControl.Label>

@@ -43,7 +43,7 @@ export function ExamTypeList() {
       <ScrollView>
         <View
           style={{
-            paddingTop: adaptive(450),
+            paddingTop: adaptive(280),
           }}>
           {data?.map(examType => (
             <ExamTypeCard

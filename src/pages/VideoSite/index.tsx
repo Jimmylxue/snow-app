@@ -20,7 +20,7 @@ export default memo(() => {
         h="full"
         w="full"
         style={{
-          paddingTop: adaptive(200),
+          paddingTop: adaptive(280),
         }}>
         <AllVideo />
       </Box>

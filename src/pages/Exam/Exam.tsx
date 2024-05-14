@@ -1,10 +1,12 @@
-import { Button, ScrollView, Toast, View } from 'native-base';
-import { SafeAreaView } from 'react-native';
+import { Button, ScrollView, Text, Toast, View } from 'native-base';
+import { SafeAreaView, TouchableOpacity } from 'react-native';
 import { TExamItem, useRandomQuestion } from '../../service/exam';
 import { ExamQuestionItem } from './components/ExamQuestionItem';
 import { adaptive } from '../../utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { OtherExamMap } from './map';
+import { RefreshControl } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 export type ExamItem = TExamItem & { choose: string };
 
@@ -12,6 +14,7 @@ export type ExamItem = TExamItem & { choose: string };
  * 考试页面
  */
 export function ExamPage() {
+  const navigation = useNavigation();
   const [questionList, setQuestionList] = useState<ExamItem[]>([]);
   const { refetch } = useRandomQuestion(
     ['exam'],
@@ -30,12 +33,27 @@ export function ExamPage() {
 
   const [isOver, setIsOver] = useState<boolean>(false);
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            refetch();
+          }}>
+          <View pr={2}>
+            <Text>刷新</Text>
+          </View>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   return (
     <SafeAreaView>
       <View
         h="full"
         style={{
-          paddingTop: adaptive(250),
+          paddingTop: adaptive(320),
         }}
         px={2}
         pb="12">
