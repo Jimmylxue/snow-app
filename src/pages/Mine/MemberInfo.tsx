@@ -27,12 +27,29 @@ export default memo(() => {
         alignSelf="center"
         px="4"
         safeArea
-        pt={4}
         w={{
           base: '100%',
           md: '25%',
         }}>
         <Box>
+          <FormControl mb="5">
+            <FormControl.Label>用户名</FormControl.Label>
+            <Input
+            // type="password"
+            // value={password}
+            // onChangeText={val => setPassword(val)}
+            />
+            <FormControl.HelperText>请输入您的用户名</FormControl.HelperText>
+          </FormControl>
+          <FormControl mb="5">
+            <FormControl.Label>手机号</FormControl.Label>
+            <Input
+            // type="password"
+            // value={password}
+            // onChangeText={val => setPassword(val)}
+            />
+            <FormControl.HelperText>请输入您的手机号</FormControl.HelperText>
+          </FormControl>
           <FormControl mb="5">
             <FormControl.Label>新密码</FormControl.Label>
             <Input
@@ -52,7 +69,7 @@ export default memo(() => {
               await mutateAsync(password);
               Toast.show({ title: '修改成功' });
             }}>
-            修改密码
+            保存修改
           </Button>
         </Box>
       </Stack>
