@@ -63,6 +63,9 @@ export const Login = () => {
       backgroundColor="#3498db"
       h="full">
       <Text fontSize="2xl" fontWeight="bold" color="#FFF" mb="2">
+        垃圾短信识别
+      </Text>
+      <Text fontSize="2xl" fontWeight="bold" color="#FFF" mb="2">
         {isLogin ? '欢迎登录' : '欢迎注册'}
       </Text>
       <TextInput
