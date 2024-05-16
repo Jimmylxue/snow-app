@@ -179,3 +179,49 @@ export function useOrderDetail(
     config,
   );
 }
+
+/**
+ * 查看可匹配的车子
+ */
+export function useMatchCarList(
+  queryKey: QueryKey,
+  variable: {
+    orderId: number;
+  },
+  config?: UseQueryOptions<TUserLetter[], ClientError>,
+) {
+  return useQuery<TUserLetter[], ClientError>(
+    queryKey,
+    () => get('/match', variable),
+    config,
+  );
+}
+
+/**
+ * 提交匹配的车子
+ */
+export function useSubmitMatch(
+  options?: UseMutationOptions<boolean, ClientError, TUpdateCar>,
+) {
+  return useMutation<boolean, ClientError, TUpdateCar>(
+    data => get('/car/submit', data),
+    options,
+  );
+}
+
+/**
+ * 查看匹配上的订单
+ */
+export function useMatchOrderList(
+  queryKey: QueryKey,
+  variable: {
+    orderId: number;
+  },
+  config?: UseQueryOptions<TUserLetter[], ClientError>,
+) {
+  return useQuery<TUserLetter[], ClientError>(
+    queryKey,
+    () => get('/car/list', variable),
+    config,
+  );
+}
