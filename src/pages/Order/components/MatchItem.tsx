@@ -1,12 +1,12 @@
-import { Button, Text, View } from 'native-base';
-import { TBaseOrder } from '../../../service/car';
+import { Text, View } from 'native-base';
+import { TMatchOrderItem } from '../../../service/car';
 
 type TProps = {
-  orderInfo: TBaseOrder;
+  orderInfo: TMatchOrderItem;
   onMatch?: () => void;
 };
 
-export function OrderItem({ orderInfo, onMatch }: TProps) {
+export function MatchOrderItem({ orderInfo, onMatch }: TProps) {
   return (
     <View bg="#fff" px={2} py={2} mb={2}>
       <View flexDirection="row" justifyContent="space-between">
@@ -15,16 +15,16 @@ export function OrderItem({ orderInfo, onMatch }: TProps) {
       </View>
       <View>
         <View flexDirection="row" justifyContent="space-between">
-          <Text>联系方式：</Text>
-          <Text>{orderInfo.phone}</Text>
+          <Text>托运人：</Text>
+          <Text>{orderInfo.consumerUsername}</Text>
         </View>
         <View flexDirection="row" justifyContent="space-between">
-          <Text>收货地址：</Text>
-          <Text>{orderInfo.addr}</Text>
+          <Text>承运人：</Text>
+          <Text>{orderInfo.driverUsername}</Text>
         </View>
         <View flexDirection="row" justifyContent="space-between">
-          <Text>当前物流：</Text>
-          <Text>{orderInfo.logisticsInformation}</Text>
+          <Text>本单花费：</Text>
+          <Text>{orderInfo.money}</Text>
         </View>
         <View flexDirection="row" justifyContent="space-between">
           <Text>匹配状态：</Text>
@@ -33,11 +33,6 @@ export function OrderItem({ orderInfo, onMatch }: TProps) {
           </Text>
         </View>
       </View>
-      {Number(orderInfo.orderStatus) !== 1 && (
-        <Button mt={2} onPress={onMatch}>
-          匹配
-        </Button>
-      )}
     </View>
   );
 }

@@ -65,7 +65,7 @@ export default memo(() => {
         onClose={() => {
           setOpen(false);
         }}
-        orderId={chooseOrder.current?.id}
+        orderId={chooseOrder.current?.orderId}
       />
     </SafeAreaView>
   );

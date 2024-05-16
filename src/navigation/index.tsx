@@ -29,6 +29,7 @@ import Sms from '../pages/Sms';
 import SmsDetail from '../pages/Sms/detail';
 import Choose from '../pages/Choose';
 import OrderDetail from '../pages/Order/detail';
+import MatchedOrder from '../pages/Order/MatchedOrder';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
@@ -211,6 +212,11 @@ export default function StackScreen() {
         name="OrderDetail"
         options={{ title: '订单详情' }}
         component={OrderDetail}
+      />
+      <Stack.Screen
+        name="MatchedOrder"
+        options={{ title: '已匹配订单' }}
+        component={MatchedOrder}
       />
     </Stack.Navigator>
   );

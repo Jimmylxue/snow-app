@@ -1,9 +1,17 @@
-import { Button, CheckIcon, FormControl, Modal, Select } from 'native-base';
-import { useMatchCarList } from '../../../service/car';
+import {
+  Button,
+  CheckIcon,
+  FormControl,
+  Modal,
+  Select,
+  Toast,
+} from 'native-base';
+import { useMatchCarList, useSubmitMatch } from '../../../service/car';
 import { useState } from 'react';
+import { useReactQuery } from '../../../config/react-query';
 
 type TProps = {
-  orderId?: number;
+  orderId?: string;
   open: boolean;
   onClose: () => void;
 };
@@ -16,6 +24,15 @@ export function MatchModal({ open, onClose, orderId }: TProps) {
     },
     { refetchOnWindowFocus: false, enabled: !!orderId },
   );
+  const { queryClient } = useReactQuery();
+
+  const { mutateAsync } = useSubmitMatch({
+    onSuccess: () => {
+      Toast.show({
+        title: '匹配成功',
+      });
+    },
+  });
 
   const [select, setSelect] = useState<string>();
 
@@ -23,38 +40,57 @@ export function MatchModal({ open, onClose, orderId }: TProps) {
     <Modal isOpen={open} onClose={onClose}>
       <Modal.Content>
         <Modal.CloseButton />
-        <Modal.Header>Contact Us</Modal.Header>
+        <Modal.Header>选择车辆</Modal.Header>
         <Modal.Body>
           <FormControl>
-            <FormControl.Label>Name</FormControl.Label>
+            <FormControl.Label>车牌号</FormControl.Label>
             <Select
               minWidth="200"
-              accessibilityLabel="Choose Service"
-              placeholder="Choose Service"
+              accessibilityLabel="请选择车牌号"
+              placeholder="请选择车牌号"
               _selectedItem={{
                 bg: 'teal.600',
                 endIcon: <CheckIcon size="5" />,
               }}
               mt={1}
               onValueChange={itemValue => setSelect(itemValue)}>
-              <Select.Item label="UX Research" value="ux" />
-              <Select.Item label="Web Development" value="web" />
-              <Select.Item label="Cross Platform Development" value="cross" />
-              <Select.Item label="UI Designing" value="ui" />
-              <Select.Item label="Backend Development" value="backend" />
+              {data?.map((item, index) => (
+                <Select.Item
+                  key={index}
+                  label={`车牌号：${item.carNumber}`}
+                  value={String(item.id)}
+                />
+              ))}
             </Select>
           </FormControl>
         </Modal.Body>
         <Modal.Footer>
           <Button.Group space={2}>
             <Button variant="ghost" colorScheme="blueGray" onPress={onClose}>
-              Cancel
+              取消
             </Button>
             <Button
-              onPress={() => {
+              onPress={async () => {
+                const selectItem = data?.find(
+                  item => item.id === Number(select),
+                );
+                if (!selectItem) {
+                  Toast.show({
+                    title: '没有匹配车辆',
+                  });
+                  return;
+                }
+
+                await mutateAsync({
+                  carId: selectItem.id,
+                  carUserId: selectItem.userId,
+                  orderId: orderId!,
+                });
+
+                queryClient.invalidateQueries('orderList');
                 onClose();
               }}>
-              Save
+              确定
             </Button>
           </Button.Group>
         </Modal.Footer>

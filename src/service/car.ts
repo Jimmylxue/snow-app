@@ -127,6 +127,9 @@ export type TBaseOrder = {
   logisticsInformation: string;
   phone: string;
   userId: string;
+  orderId: string;
+  /** 1表示已匹配 */
+  orderStatus: number;
 };
 
 type TBaseOrderResult = {
@@ -180,46 +183,72 @@ export function useOrderDetail(
   );
 }
 
+type TMatchItem = {
+  carAddr: string;
+  carCharacter: string;
+  carNumber: string;
+  carType: string;
+  carWeight: number;
+  id: number;
+  score: number;
+  userId: number;
+};
+
 /**
  * 查看可匹配的车子
  */
 export function useMatchCarList(
   queryKey: QueryKey,
   variable: {
-    orderId: number;
+    orderId: string;
   },
-  config?: UseQueryOptions<TUserLetter[], ClientError>,
+  config?: UseQueryOptions<TMatchItem[], ClientError>,
 ) {
-  return useQuery<TUserLetter[], ClientError>(
+  return useQuery<TMatchItem[], ClientError>(
     queryKey,
     () => get('/match', variable),
     config,
   );
 }
 
+type TSubmitParams = {
+  carId: number;
+  carUserId: number;
+  orderId: string;
+};
+
 /**
  * 提交匹配的车子
  */
 export function useSubmitMatch(
-  options?: UseMutationOptions<boolean, ClientError, TUpdateCar>,
+  options?: UseMutationOptions<boolean, ClientError, TSubmitParams>,
 ) {
-  return useMutation<boolean, ClientError, TUpdateCar>(
+  return useMutation<boolean, ClientError, TSubmitParams>(
     data => get('/car/submit', data),
     options,
   );
 }
+
+export type TMatchOrderItem = {
+  consumerUserId: number;
+  consumerUsername: string;
+  driverUserId: number;
+  driverUsername: string;
+  id: number;
+  money: number;
+  orderId: number;
+  orderStatus: number;
+};
 
 /**
  * 查看匹配上的订单
  */
 export function useMatchOrderList(
   queryKey: QueryKey,
-  variable: {
-    orderId: number;
-  },
-  config?: UseQueryOptions<TUserLetter[], ClientError>,
+  variable: any,
+  config?: UseQueryOptions<TMatchOrderItem[], ClientError>,
 ) {
-  return useQuery<TUserLetter[], ClientError>(
+  return useQuery<TMatchOrderItem[], ClientError>(
     queryKey,
     () => get('/car/list', variable),
     config,

@@ -42,6 +42,12 @@ export default memo(() => {
 
   const bindCar = data?.[0];
 
+  const carTypeMap = {
+    '1': '小卡车',
+    '2': '中卡车',
+    '3': '大卡车',
+  };
+
   return (
     <SafeAreaView>
       <View paddingTop={adaptive(200)}>
@@ -59,7 +65,8 @@ export default memo(() => {
               justifyContent="space-between"
               alignItems="center">
               <Text>车辆类型</Text>
-              <Text>{bindCar.carType}</Text>
+              {/* @ts-ignore */}
+              <Text>{carTypeMap[bindCar.carType]}</Text>
             </View>
             <View
               flexDir="row"
@@ -116,11 +123,26 @@ export default memo(() => {
             </FormControl>
             <FormControl mb="5">
               <FormControl.Label>车辆类型</FormControl.Label>
-              <Input value={carType} onChangeText={val => setCarType(val)} />
+              <Select
+                selectedValue={carType}
+                minWidth="200"
+                accessibilityLabel="Choose Service"
+                placeholder="Choose Service"
+                _selectedItem={{
+                  bg: 'teal.600',
+                  endIcon: <CheckIcon size="5" />,
+                }}
+                mt={1}
+                onValueChange={itemValue => setCarType(itemValue)}>
+                <Select.Item label={'小卡车'} value={'1'} />
+                <Select.Item label={'中卡车'} value={'2'} />
+                <Select.Item label={'大卡车'} value={'3'} />
+              </Select>
             </FormControl>
             <FormControl mb="5">
               <FormControl.Label>车辆载重</FormControl.Label>
               <Input
+                keyboardType="numeric"
                 value={carWeight}
                 onChangeText={val => setCarWeight(val)}
               />

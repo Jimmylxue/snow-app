@@ -1,4 +1,4 @@
-import { Image } from 'native-base';
+import { Image, Text } from 'native-base';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Mine from '../Mine';
 import Order from '../Order';
@@ -7,6 +7,8 @@ import { RootStackParamList } from '../../navigation/navigation';
 import { ERole } from '../Choose';
 import ChengYun from '../Luggage/ChengYun';
 import TuoYun from '../Luggage/TuoYun';
+import { TouchableOpacity } from 'react-native';
+import { navigates } from '../../navigation/navigate';
 
 const Tab = createBottomTabNavigator();
 type RouterParams = RouteProp<RootStackParamList, 'MainStack'>;
@@ -71,6 +73,14 @@ export function MainStack() {
               h="25px"
               alt="图片"
             />
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigates('MatchedOrder', undefined);
+              }}>
+              <Text>已匹配订单</Text>
+            </TouchableOpacity>
           ),
         }}
         component={Order}
