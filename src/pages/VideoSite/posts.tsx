@@ -61,7 +61,7 @@ export default memo(() => {
           ))}
         </ScrollView>
 
-        {isManager && (
+        {!isManager && (
           <View position="absolute" bottom="0" h="12" w="full" px="3">
             <Divider />
             <Button
