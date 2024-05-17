@@ -15,7 +15,6 @@ import { SafeAreaView } from 'react-native';
 import { useUserChangePassword } from '../../service';
 
 export default memo(() => {
-  const { state, signOut } = useAppState();
   const { mutateAsync } = useUserChangePassword();
   const [password, setPassword] = useState<string>('');
   return (
