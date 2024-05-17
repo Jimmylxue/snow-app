@@ -61,20 +61,18 @@ export default memo(() => {
           ))}
         </ScrollView>
 
-        {!isManager && (
-          <View position="absolute" bottom="0" h="12" w="full" px="3">
-            <Divider />
-            <Button
-              onPress={() => {
-                navigates('ClubWritePosts', {
-                  clubId: 9999,
-                  clubName: '帖子',
-                });
-              }}>
-              我也说说
-            </Button>
-          </View>
-        )}
+        <View position="absolute" bottom="0" h="12" w="full" px="3">
+          <Divider />
+          <Button
+            onPress={() => {
+              navigates('ClubWritePosts', {
+                clubId: 9999,
+                clubName: '帖子',
+              });
+            }}>
+            我也说说
+          </Button>
+        </View>
       </View>
     </SafeAreaView>
   );
