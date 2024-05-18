@@ -62,7 +62,7 @@ export function useUpdateUser(
   return useMutation<
     TUser,
     ClientError,
-    Pick<TUser, 'id' | 'avatar' | 'username' | 'phone'>
+    Pick<TUser, 'id' | 'avatar' | 'username'>
   >(data => post('/user/update', data), options);
 }
 
@@ -104,13 +104,4 @@ export function useUserChangePassword(
     ClientError,
     TChangeUserPassword
   >(data => post('/user/changePassword', data), options);
-}
-
-export function useUserDetail(
-  options?: UseMutationOptions<TUser, ClientError, {}>,
-) {
-  return useMutation<TUser, ClientError, {}>(
-    data => post('/user/detail', data),
-    options,
-  );
 }

@@ -54,7 +54,6 @@ export const Login = () => {
     const params = { phone, password };
     if (formStatus === 'LOGIN') {
       // 登录
-      console.log('ccc');
       params.password = await encrypt(params.password);
       await mutateAsync(params);
     } else if (formStatus === 'REGISTER') {
@@ -131,13 +130,13 @@ export const Login = () => {
           {isLogin ? '登录' : isRegister ? '注册' : '确定更改'}
         </Text>
       </TouchableOpacity>
-      <View flexDir="row" justifyContent="flex-end" w="full" px="10">
-        {/* <TouchableOpacity
+      <View flexDir="row" justifyContent="space-between" w="full" px="10">
+        <TouchableOpacity
           onPress={() => setFormStatus(isForget ? 'LOGIN' : 'FORGET')}>
           <Text style={styles.switchText}>
             {isForget ? '返回' : '忘记密码'}
           </Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
             setFormStatus(state => (state === 'LOGIN' ? 'REGISTER' : 'LOGIN'))

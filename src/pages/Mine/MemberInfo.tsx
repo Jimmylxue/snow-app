@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 import {
   Text,
   Box,
@@ -8,37 +8,12 @@ import {
   Divider,
   WarningOutlineIcon,
   Button,
-  Toast,
 } from 'native-base';
 import { useAppState } from '../../hooks/useAppState';
 import { SafeAreaView } from 'react-native';
-import { useUpdateUser, useUserDetail } from '../../service';
 
 export default memo(() => {
-  const { state, updateUser } = useAppState();
-  const [username, setUserName] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
-
-  const { mutateAsync: getUser } = useUserDetail({
-    onSuccess: data => {
-      updateUser?.(data);
-    },
-  });
-
-  const { mutateAsync } = useUpdateUser({
-    onSuccess: async () => {
-      Toast.show({ title: '更新成功' });
-      await getUser({});
-    },
-  });
-
-  useEffect(() => {
-    if (state.userInfo) {
-      setUserName(state.userInfo.username);
-      setPhone(state.userInfo.phone || '');
-    }
-  }, [state.userInfo]);
-
+  const { state, signOut } = useAppState();
   return (
     <SafeAreaView>
       <Stack
@@ -48,6 +23,7 @@ export default memo(() => {
         alignSelf="center"
         px="4"
         safeArea
+        pt={4}
         w={{
           base: '100%',
           md: '25%',
@@ -55,30 +31,23 @@ export default memo(() => {
         <Box>
           <FormControl mb="5">
             <FormControl.Label>用户名</FormControl.Label>
-            <Input value={username} onChangeText={val => setUserName(val)} />
+            <Input />
             <FormControl.HelperText>你的姓名</FormControl.HelperText>
           </FormControl>
           <FormControl mb="5">
             <FormControl.Label>手机号</FormControl.Label>
-            <Input value={phone} onChangeText={val => setPhone(val)} />
+            <Input />
             <FormControl.HelperText>你的联系方式</FormControl.HelperText>
           </FormControl>
+          <FormControl mb="5">
+            <FormControl.Label>收货地址</FormControl.Label>
+            <Input />
+            <FormControl.HelperText>
+              告诉我们你的收货地址
+            </FormControl.HelperText>
+          </FormControl>
           <Divider />
-          <Button
-            mt={5}
-            onPress={() => {
-              // @ts-ignore
-              mutateAsync({
-                // @ts-ignore
-                username,
-                // @ts-ignore
-                phone: String(phone),
-                // @ts-ignore
-                id: state.userInfo?.id!,
-              });
-            }}>
-            保存信息
-          </Button>
+          <Button mt={5}>保存信息</Button>
         </Box>
       </Stack>
     </SafeAreaView>
