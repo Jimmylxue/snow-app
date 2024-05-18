@@ -1,14 +1,11 @@
 import { Image } from 'native-base';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Index from '../Index';
 import Mine from '../Mine';
+import Club from '../Club';
+import { ManagerAllClub } from '../Club/View/ManagerAll';
 import { useAppState } from '../../hooks/useAppState';
 import { ERoleType } from '../../service';
-import VideoSite from '../VideoSite';
-import PostPage from '../VideoSite/posts';
-import { UploadVideo } from '../VideoSite/View/UploadVideo';
-import { UploadExam } from '../Exam/UploadQuestion';
-import { ExamTypeList } from '../Exam/ExamTypeList';
-import { ExamPage } from '../Exam/Exam';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,11 +25,6 @@ export function MainStack() {
         options={{
           headerTransparent: true,
           tabBarLabel: '首页',
-          title: '首页',
-          headerShown: true,
-          headerBackgroundContainerStyle: {
-            backgroundColor: '#fff',
-          },
           tabBarIcon: ({ focused }) => (
             <Image
               source={
@@ -46,70 +38,14 @@ export function MainStack() {
             />
           ),
         }}
-        component={VideoSite}
+        component={Index}
       />
-      {!isManager && (
-        <Tab.Screen
-          name="Chat"
-          options={{
-            headerTransparent: true,
-            tabBarLabel: '交流',
-            title: '交流',
-            headerShown: true,
-            headerBackgroundContainerStyle: {
-              backgroundColor: '#fff',
-            },
-            tabBarIcon: ({ focused }) => (
-              <Image
-                source={
-                  focused
-                    ? require('../../images/chat-selected.png')
-                    : require('../../images/chat-default.png')
-                }
-                w="25px"
-                h="25px"
-                alt="图片"
-              />
-            ),
-          }}
-          component={PostPage}
-        />
-      )}
-
-      {isManager && (
-        <Tab.Screen
-          name="UploadVideo"
-          options={{
-            headerTransparent: true,
-            tabBarLabel: '上传课程',
-            title: '上传课程',
-            headerShown: true,
-            headerBackgroundContainerStyle: {
-              backgroundColor: '#fff',
-            },
-            tabBarIcon: ({ focused }) => (
-              <Image
-                source={
-                  focused
-                    ? require('../../images/upload-selected.png')
-                    : require('../../images/upload-default.png')
-                }
-                w="25px"
-                h="25px"
-                alt="图片"
-              />
-            ),
-          }}
-          component={UploadVideo}
-        />
-      )}
-
       <Tab.Screen
-        name="ExamPage"
+        name="ManagerIndex"
         options={{
           headerTransparent: true,
-          tabBarLabel: '刷题',
-          title: '刷题',
+          tabBarLabel: isManager ? '管理' : '社团',
+          title: isManager ? '管理' : '社团',
           headerShown: true,
           headerBackgroundContainerStyle: {
             backgroundColor: '#fff',
@@ -118,8 +54,8 @@ export function MainStack() {
             <Image
               source={
                 focused
-                  ? require('../../images/exam-selected.png')
-                  : require('../../images/exam-default.png')
+                  ? require('../../images/pic-selected.png')
+                  : require('../../images/pic-default.png')
               }
               w="25px"
               h="25px"
@@ -127,65 +63,8 @@ export function MainStack() {
             />
           ),
         }}
-        component={ExamPage}
+        component={isManager ? ManagerAllClub : Club}
       />
-
-      {isManager && (
-        <Tab.Screen
-          name="ExamTypeList"
-          options={{
-            headerTransparent: true,
-            tabBarLabel: '题目分类',
-            title: '题目分类',
-            headerShown: true,
-            headerBackgroundContainerStyle: {
-              backgroundColor: '#fff',
-            },
-            tabBarIcon: ({ focused }) => (
-              <Image
-                source={
-                  focused
-                    ? require('../../images/classification-selected.png')
-                    : require('../../images/classification-default.png')
-                }
-                w="25px"
-                h="25px"
-                alt="图片"
-              />
-            ),
-          }}
-          component={ExamTypeList}
-        />
-      )}
-
-      {isManager && (
-        <Tab.Screen
-          name="UploadExam"
-          options={{
-            headerTransparent: true,
-            tabBarLabel: '上传题目',
-            title: '上传题目',
-            headerShown: true,
-            headerBackgroundContainerStyle: {
-              backgroundColor: '#fff',
-            },
-            tabBarIcon: ({ focused }) => (
-              <Image
-                source={
-                  focused
-                    ? require('../../images/upload-selected.png')
-                    : require('../../images/upload-default.png')
-                }
-                w="25px"
-                h="25px"
-                alt="图片"
-              />
-            ),
-          }}
-          component={UploadExam}
-        />
-      )}
-
       <Tab.Screen
         name="Mine"
         options={{
