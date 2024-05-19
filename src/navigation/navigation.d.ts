@@ -30,6 +30,7 @@ export type RootStackParamList = {
   NativeModule: undefined;
   Index: undefined;
   Login: undefined;
+  Choose: undefined;
   MainStack: undefined;
   Splash: undefined;
   Notice: undefined;
@@ -54,4 +55,5 @@ export type RootStackParamList = {
   NoticeDetail: { letter: TUserLetter };
   SmsList: undefined;
   SmsDetail: { message: TSmsItem };
+  PositionRecord: { userId: number };
 };

@@ -2,7 +2,8 @@ import { UseMutationOptions, useMutation } from 'react-query';
 import { ClientError } from '../config/react-query';
 import { post } from './client';
 
-enum ESex {
+export enum ESex {
+  未知,
   男,
   女,
 }
@@ -23,6 +24,7 @@ export type TChangeUserPassword = {
 };
 
 export enum ERoleType {
+  未定义,
   普通用户,
   管理员,
 }
@@ -56,13 +58,13 @@ export function useUpdateUser(
   options?: UseMutationOptions<
     TUser,
     ClientError,
-    Pick<TUser, 'id' | 'avatar' | 'username'>
+    { username?: string; phone?: string; sex?: ESex; role?: ERoleType }
   >,
 ) {
   return useMutation<
     TUser,
     ClientError,
-    Pick<TUser, 'id' | 'avatar' | 'username'>
+    { username?: string; phone?: string; sex?: ESex; role?: ERoleType }
   >(data => post('/user/update', data), options);
 }
 

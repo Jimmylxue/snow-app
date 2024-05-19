@@ -27,15 +27,27 @@ import feedbackRecord from '../pages/Club/feedbackRecord';
 import NoticeDetail from '../pages/Notice/detail';
 import Sms from '../pages/Sms';
 import SmsDetail from '../pages/Sms/detail';
+import { ERoleType } from '../service';
+import Choose from '../pages/Choose';
+import { PositionRecord } from '../pages/StudentManager/position';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
   const { state, signOut } = useAppState();
-
+  console.log('state', state.userInfo?.role);
   useEffect(() => {
     if (state.isLoading) {
       return;
     }
+
+    if (state.userInfo?.role === ERoleType.未定义) {
+      resetNavigate({
+        index: 0,
+        routes: [{ name: 'Choose' }],
+      });
+      return;
+    }
+
     if (state?.token) {
       resetNavigate({
         index: 0,
@@ -51,7 +63,7 @@ export default function StackScreen() {
       });
       return;
     }
-  }, [state]);
+  }, [state.isLoading, state.token]);
 
   useEffect(() => {
     logoutEmitter.on('app-logout', () => {
@@ -88,6 +100,11 @@ export default function StackScreen() {
         name="Login"
         options={{ headerShown: false }}
         component={Login}
+      />
+      <Stack.Screen
+        name="Choose"
+        options={{ headerShown: false }}
+        component={Choose}
       />
       <Stack.Screen
         name="MainStack"
@@ -198,6 +215,11 @@ export default function StackScreen() {
         name="SmsDetail"
         options={{ title: '短信详情' }}
         component={SmsDetail}
+      />
+      <Stack.Screen
+        name="PositionRecord"
+        options={{ title: '位置记录' }}
+        component={PositionRecord}
       />
     </Stack.Navigator>
   );

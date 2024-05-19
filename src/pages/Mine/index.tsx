@@ -20,7 +20,7 @@ export default memo(() => {
         px="2"
         position="relative"
         alignItems="center">
-        <View position="absolute" right={2} top={12}>
+        {/* <View position="absolute" right={2} top={12}>
           <TouchableOpacity
             onPress={() => {
               navigates('Notice', undefined);
@@ -32,7 +32,7 @@ export default memo(() => {
               height={7}
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <View>
           <View flexDir="row" alignItems="center">
@@ -45,11 +45,9 @@ export default memo(() => {
               <Text fontSize="lg" ml="2">
                 {state.userInfo?.username}
               </Text>
-              {isManager && (
-                <Text ml="2" fontSize="xs" color="#f1c40f">
-                  管理员
-                </Text>
-              )}
+              <Text ml="2" fontSize="xs" color="#f1c40f">
+                {isManager ? '管理员' : '普通用户'}
+              </Text>
             </View>
           </View>
         </View>
@@ -64,14 +62,14 @@ export default memo(() => {
               navigates('MemberInfo', undefined);
             }}
           />
-          <InfoLine
+          {/* <InfoLine
             right
             icon={require('../../images/entry-message.png')}
             title="消息中心"
             onPress={() => {
               navigates('Notice', undefined);
             }}
-          />
+          /> */}
         </View>
 
         <Button

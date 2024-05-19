@@ -1,14 +1,7 @@
 import Geolocation, {
   GeolocationOptions,
 } from '@react-native-community/geolocation';
-import {
-  FC,
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { FC, ReactNode, createContext, useContext, useState } from 'react';
 import { Alert } from 'react-native';
 
 type TInfo = {
@@ -60,13 +53,17 @@ export const LocationContextProvider: FC<{
     Geolocation.requestAuthorization(
       () => {
         console.log('权限请求成功');
-        Geolocation.getCurrentPosition(info => {
-          setLocation({
-            latitude: info.coords.latitude,
-            longitude: info.coords.longitude,
-            timeString: info.timestamp,
-          });
-        });
+        Geolocation.getCurrentPosition(
+          info => {
+            setLocation({
+              latitude: info.coords.latitude,
+              longitude: info.coords.longitude,
+              timeString: info.timestamp,
+            });
+          },
+          () => {},
+          { enableHighAccuracy: false, maximumAge: 0 },
+        );
       },
       () => {
         console.log('权限请求失败');
@@ -78,19 +75,29 @@ export const LocationContextProvider: FC<{
    * 监控位置
    */
   const watchPosition = (option?: GeolocationOptions) => {
-    try {
-      const watchID = Geolocation.watchPosition(
-        position => {
-          console.log('watchPosition', JSON.stringify(position));
-          setHistoryPosition(cur => [...(cur || []), JSON.stringify(position)]);
-        },
-        error => Alert.alert('WatchPosition Error', JSON.stringify(error)),
-        option,
-      );
-      setSubscriptionId(watchID);
-    } catch (error) {
-      Alert.alert('WatchPosition Error', JSON.stringify(error));
-    }
+    Geolocation.requestAuthorization(
+      () => {
+        try {
+          const watchID = Geolocation.watchPosition(
+            position => {
+              console.log('watchPosition', JSON.stringify(position));
+              setHistoryPosition(cur => [
+                ...(cur || []),
+                JSON.stringify(position),
+              ]);
+            },
+            error => Alert.alert('WatchPosition Error', JSON.stringify(error)),
+            option,
+          );
+          setSubscriptionId(watchID);
+        } catch (error) {
+          Alert.alert('WatchPosition Error', JSON.stringify(error));
+        }
+      },
+      () => {
+        console.log('历史权限请求失败');
+      },
+    );
   };
 
   /**
@@ -101,13 +108,6 @@ export const LocationContextProvider: FC<{
     setSubscriptionId(null);
     setHistoryPosition([]);
   };
-
-  useEffect(() => {
-    return () => {
-      clearWatch();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <LocationContext.Provider
