@@ -64,6 +64,14 @@ export default memo(() => {
               navigates('MemberInfo', undefined);
             }}
           />
+          <InfoLine
+            right
+            icon={require('../../images/entry-message.png')}
+            title="我的订单"
+            onPress={() => {
+              navigates('Order', undefined);
+            }}
+          />
           {/* <InfoLine
             right
             icon={require('../../images/entry-message.png')}

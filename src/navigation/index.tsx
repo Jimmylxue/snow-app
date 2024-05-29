@@ -14,6 +14,7 @@ import PVideo from '../pages/VideoSite/videoPage';
 import CourseTypeDetail from '../pages/VideoSite/detail';
 import CourseDetail from '../pages/VideoSite/CourseDetail';
 import ExamQuestionList from '../pages/Exam/ExamQuestionList';
+import Order from '../pages/VideoSite/order';
 export default function StackScreen() {
   const Stack = createStackNavigator();
   const { state, signOut } = useAppState();
@@ -119,6 +120,11 @@ export default function StackScreen() {
         name="ExamQuestionList"
         options={{ title: '考试分类详情' }}
         component={ExamQuestionList}
+      />
+      <Stack.Screen
+        name="Order"
+        options={{ title: '我的订单' }}
+        component={Order}
       />
     </Stack.Navigator>
   );

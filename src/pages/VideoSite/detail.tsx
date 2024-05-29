@@ -56,6 +56,7 @@ export default memo(() => {
                   name: course.name,
                   desc: course.desc,
                   source: course.source,
+                  courseId: course.id,
                 })
               }
               onEdit={() => {

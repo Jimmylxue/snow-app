@@ -155,3 +155,47 @@ export function useRandomCourse(
     config,
   );
 }
+
+type TCourseOrder = {
+  id: number;
+  course: TCourseItem;
+};
+
+/**
+ * 获取购买的课程
+ */
+export function useUserBuyCourse(
+  queryKey: QueryKey,
+  variable: {},
+  config?: UseQueryOptions<TCourseOrder[], ClientError>,
+) {
+  return useQuery<TCourseOrder[], ClientError>(
+    queryKey,
+    () => post('/course/courseOrder', variable),
+    config,
+  );
+}
+
+/**
+ * 查看是否购买该课程
+ */
+export function useCheckBuy(
+  queryKey: QueryKey,
+  variable: { courseId: number },
+  config?: UseQueryOptions<boolean, ClientError>,
+) {
+  return useQuery<boolean, ClientError>(
+    queryKey,
+    () => post('/course/checkBuy', variable),
+    config,
+  );
+}
+
+export function useBuyCourse(
+  options?: UseMutationOptions<boolean, ClientError, { courseId: number }>,
+) {
+  return useMutation<boolean, ClientError, { courseId: number }>(
+    data => post('/course/buyCourse', data),
+    options,
+  );
+}

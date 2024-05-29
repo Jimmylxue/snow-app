@@ -13,11 +13,11 @@ const App = () => {
     <NativeBaseProvider>
       <NavigationContainer ref={navigationRef}>
         <QueryClientProvider client={queryClient}>
-          <LocationContextProvider>
-            <AppContextProvider>
-              <StackScreen />
-            </AppContextProvider>
-          </LocationContextProvider>
+          {/* <LocationContextProvider> */}
+          <AppContextProvider>
+            <StackScreen />
+          </AppContextProvider>
+          {/* </LocationContextProvider> */}
         </QueryClientProvider>
       </NavigationContainer>
     </NativeBaseProvider>

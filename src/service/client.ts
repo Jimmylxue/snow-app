@@ -4,7 +4,7 @@ import { logoutEmitter } from './event';
 
 // export const serverUrl = 'https://api.jimmyxuexue.top';
 // const serverUrl = 'http://10.6.0.29:9999';
-export const serverUrl = 'http://localhost:9999';
+export const serverUrl = 'http://127.0.0.1:9999';
 // export const serverUrl = 'http://192.168.2.241:9999';
 
 type CustomrHeader = {
