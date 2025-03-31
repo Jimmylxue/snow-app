@@ -15,6 +15,7 @@ export type TUserLoginParams = {
 
 export type TUserRegisterParams = TUserLoginParams & {
   username: string;
+  exam_year: string;
 };
 
 export type TChangeUserPassword = {
@@ -24,8 +25,7 @@ export type TChangeUserPassword = {
 };
 
 export enum ERoleType {
-  未定义,
-  普通用户,
+  学生,
   管理员,
 }
 

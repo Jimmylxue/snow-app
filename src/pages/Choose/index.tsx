@@ -1,163 +1,192 @@
-import { memo, useEffect } from 'react';
-import { Box, Pressable, HStack, Badge, Spacer, Text, View } from 'native-base';
-import { SafeAreaView } from 'react-native';
-import { resetNavigate } from '../../navigation/navigate';
-import { useAppState } from '../../hooks/useAppState';
-import { ERoleType, useUpdateUser } from '../../service';
+import React from 'react';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  StatusBar,
+  Dimensions,
+} from 'react-native';
+import { Text, View } from 'native-base';
+import LinearGradient from 'react-native-linear-gradient';
+import { navigates } from '../../navigation/navigate';
 
-export enum ERole {
-  托运人,
-  承运人,
-}
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = (width - 48) / 2;
 
-export default memo(() => {
-  const { state, updateUserInfo } = useAppState();
+const subjects = [
+  {
+    name: '数学',
+    colors: ['#4facfe', '#00f2fe'],
+    icon: '📐',
+  },
+  {
+    name: '英语',
+    colors: ['#13547a', '#80d0c7'],
+    icon: '📚',
+  },
+  {
+    name: '政治',
+    colors: ['#ff6b6b', '#ffc6c6'],
+    icon: '📖',
+  },
+  {
+    name: '评论区',
+    colors: ['#667eea', '#764ba2'],
+    icon: '💬',
+  },
+];
 
-  const { mutateAsync } = useUpdateUser();
+const phases = [
+  {
+    title: '基础阶段',
+    description: '打好基础,稳步提升',
+    colors: ['#fff6e5', '#ffe0b2'],
+  },
+  {
+    title: '强化阶段',
+    description: '查漏补缺,重点突破',
+    colors: ['#e8f5e9', '#c8e6c9'],
+  },
+];
 
-  useEffect(() => {
-    if (state.userInfo?.role !== ERoleType.未定义) {
-      console.log('state.userInfo.role', state.userInfo?.role);
-      resetNavigate({
-        index: 0,
-        routes: [{ name: 'MainStack' }],
-      });
-    }
-  }, [state]);
+const Choose = ({ navigation }: { navigation: any }) => {
+  const renderSubjectCard = (
+    subject: typeof subjects[0],
+    _index: number,
+    index: number,
+  ) => (
+    <TouchableOpacity
+      onPress={() => {
+        if (subject.name === '评论区') {
+          console.log('index', _index);
+          navigates('ClubPosts', {
+            clubId: 1,
+            clubName: phases[_index].title + ' - 评论区',
+          });
+        } else {
+          if (_index === 0) {
+            navigates('ExamPage', {
+              typeId: index + 1,
+              title: phases[_index].title + ' - ' + subject.name,
+            });
+          } else {
+            navigates('ExamPage', {
+              typeId: 3 + index + 1,
+              title: phases[_index].title + ' - ' + subject.name,
+            });
+          }
+        }
+      }}
+      style={styles.cardContainer}>
+      <LinearGradient
+        colors={subject.colors}
+        style={styles.subjectCard}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}>
+        <Text fontSize="3xl" mb={2}>
+          {subject.icon}
+        </Text>
+        <Text color="white" fontSize="lg" fontWeight="bold">
+          {subject.name}
+        </Text>
+      </LinearGradient>
+    </TouchableOpacity>
+  );
+
+  const renderPhaseSection = (phase: typeof phases[0], _index: number) => (
+    <View style={styles.phaseContainer}>
+      <LinearGradient
+        colors={phase.colors}
+        style={styles.phaseBanner}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}>
+        <View>
+          <Text fontSize="xl" fontWeight="bold" color="#333">
+            {phase.title}
+          </Text>
+          <Text fontSize="sm" color="#666" mt={1}>
+            {phase.description}
+          </Text>
+        </View>
+      </LinearGradient>
+      <View style={styles.subjectsGrid}>
+        {subjects.map((subject, index) => (
+          <React.Fragment key={index}>
+            {renderSubjectCard(subject, _index, index)}
+          </React.Fragment>
+        ))}
+      </View>
+    </View>
+  );
 
   return (
-    <SafeAreaView>
-      <View h="full" px="2" mt={2}>
-        <Pressable
-          mb={4}
-          onPress={async () => {
-            await mutateAsync({
-              role: ERoleType.管理员,
-            });
-            if (state.userInfo) {
-              await updateUserInfo?.({
-                ...state.userInfo,
-                role: ERoleType.管理员,
-              });
-            }
-            await resetNavigate({
-              index: 0,
-              routes: [{ name: 'MainStack' }],
-            });
-          }}>
-          {({ isHovered, isFocused, isPressed }) => {
-            return (
-              <Box
-                borderWidth="1"
-                borderColor="coolGray.300"
-                shadow="3"
-                bg={
-                  isPressed
-                    ? 'coolGray.200'
-                    : isHovered
-                    ? 'coolGray.200'
-                    : 'coolGray.100'
-                }
-                p="5"
-                rounded="8"
-                style={{
-                  transform: [
-                    {
-                      scale: isPressed ? 0.96 : 1,
-                    },
-                  ],
-                }}>
-                <HStack alignItems="center">
-                  <Badge
-                    colorScheme="darkBlue"
-                    _text={{
-                      color: 'white',
-                    }}
-                    variant="solid"
-                    rounded="4">
-                    角色1
-                  </Badge>
-                  <Spacer />
-                </HStack>
-                <Text
-                  color="coolGray.800"
-                  mt="3"
-                  fontWeight="medium"
-                  fontSize="xl">
-                  管理员
-                </Text>
-                <Text mt="2" fontSize="sm" color="coolGray.700">
-                  发布自己的托运需求，系统将为您匹配合适的承运人为您进行行李托运
-                </Text>
-              </Box>
-            );
-          }}
-        </Pressable>
-        <Pressable
-          onPress={async () => {
-            await mutateAsync({
-              role: ERoleType.普通用户,
-            });
-            if (state.userInfo) {
-              await updateUserInfo?.({
-                ...state.userInfo,
-                role: ERoleType.普通用户,
-              });
-            }
-            resetNavigate({
-              index: 0,
-              routes: [{ name: 'MainStack' }],
-            });
-          }}>
-          {({ isHovered, isFocused, isPressed }) => {
-            return (
-              <Box
-                borderWidth="1"
-                borderColor="coolGray.300"
-                shadow="3"
-                bg={
-                  isPressed
-                    ? 'coolGray.200'
-                    : isHovered
-                    ? 'coolGray.200'
-                    : 'coolGray.100'
-                }
-                p="5"
-                rounded="8"
-                style={{
-                  transform: [
-                    {
-                      scale: isPressed ? 0.96 : 1,
-                    },
-                  ],
-                }}>
-                <HStack alignItems="center">
-                  <Badge
-                    colorScheme="darkBlue"
-                    _text={{
-                      color: 'white',
-                    }}
-                    variant="solid"
-                    rounded="4">
-                    角色2
-                  </Badge>
-                  <Spacer />
-                </HStack>
-                <Text
-                  color="coolGray.800"
-                  mt="3"
-                  fontWeight="medium"
-                  fontSize="xl">
-                  普通用户
-                </Text>
-                <Text mt="2" fontSize="sm" color="coolGray.700">
-                  输入您的车辆信息，系统将为您匹配合适的行李订单给您
-                </Text>
-              </Box>
-            );
-          }}
-        </Pressable>
-      </View>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
+      <LinearGradient colors={['#f6f7f8', '#ffffff']} style={styles.background}>
+        <View style={styles.header}>
+          <Text fontSize="3xl" fontWeight="bold" color="#333">
+            考研 2027
+          </Text>
+          <Text color="#666" fontSize="md" mt={2}>
+            今天也要努力学习哦～
+          </Text>
+        </View>
+
+        {phases.map((phase, index) => (
+          <React.Fragment key={index}>
+            {renderPhaseSection(phase, index)}
+          </React.Fragment>
+        ))}
+      </LinearGradient>
     </SafeAreaView>
   );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  background: {
+    flex: 1,
+    paddingTop: 20,
+  },
+  header: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  phaseContainer: {
+    marginHorizontal: 16,
+    marginBottom: 24,
+  },
+  phaseBanner: {
+    padding: 16,
+    borderRadius: 16,
+    marginBottom: 16,
+  },
+  subjectsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  cardContainer: {
+    width: CARD_WIDTH,
+    marginBottom: 16,
+  },
+  subjectCard: {
+    height: 140,
+    borderRadius: 16,
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
 });
+
+export default Choose;

@@ -1,8 +1,7 @@
-import { memo } from 'react';
-import { Text, Box, View, Avatar, Button, Image } from 'native-base';
+import React, { memo } from 'react';
+import { Text, Box, View, Avatar, Button } from 'native-base';
 import { InfoLine } from '../../components/InfoLine';
 import { useAppState } from '../../hooks/useAppState';
-import { TouchableOpacity } from 'react-native';
 import { navigates } from '../../navigation/navigate';
 import { ERoleType } from '../../service';
 
@@ -20,33 +19,18 @@ export default memo(() => {
         px="2"
         position="relative"
         alignItems="center">
-        {/* <View position="absolute" right={2} top={12}>
-          <TouchableOpacity
-            onPress={() => {
-              navigates('Notice', undefined);
-            }}>
-            <Image
-              source={require('../../images/entry-message.png')}
-              alt="Alternate Text"
-              width={7}
-              height={7}
-            />
-          </TouchableOpacity>
-        </View> */}
-
         <View>
           <View flexDir="row" alignItems="center">
             <Avatar
+              bg="white"
               size="lg"
-              source={{
-                uri: state.userInfo?.avatar,
-              }}></Avatar>
+              source={require('../../images/student.png')}></Avatar>
             <View>
               <Text fontSize="lg" ml="2">
                 {state.userInfo?.username}
               </Text>
               <Text ml="2" fontSize="xs" color="#f1c40f">
-                {isManager ? '管理员' : '普通用户'}
+                {isManager ? '管理员' : '学生'}
               </Text>
             </View>
           </View>
@@ -62,14 +46,6 @@ export default memo(() => {
               navigates('MemberInfo', undefined);
             }}
           />
-          {/* <InfoLine
-            right
-            icon={require('../../images/entry-message.png')}
-            title="消息中心"
-            onPress={() => {
-              navigates('Notice', undefined);
-            }}
-          /> */}
         </View>
 
         <Button

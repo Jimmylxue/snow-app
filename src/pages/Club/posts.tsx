@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react';
+import React, { memo, useEffect } from 'react';
 import { Button, Divider, ScrollView, View } from 'native-base';
 import { SafeAreaView, TouchableOpacity } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';

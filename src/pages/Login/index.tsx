@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import { View, Text, Toast } from 'native-base';
+import { View, Text, Toast, Select } from 'native-base';
 import { useAppState } from '../../hooks/useAppState';
 import {
   TChangeUserPassword,
@@ -19,6 +19,13 @@ export const Login = () => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
+
+  // 生成年份选项
+  const yearOptions = Array.from({ length: 5 }, (_, index) => {
+    const year = new Date().getFullYear() + index + 1;
+    return year.toString();
+  });
 
   const { mutateAsync } = useLogin({
     onSuccess: async res => {
@@ -70,6 +77,7 @@ export const Login = () => {
       await register({
         ...params,
         username: '游客' + Date.now().toString().slice(0, -4),
+        exam_year: selectedYear,
       });
     } else {
       // 找回
@@ -92,7 +100,6 @@ export const Login = () => {
 
   const isLogin = formStatus === 'LOGIN';
   const isRegister = formStatus === 'REGISTER';
-  const isForget = formStatus === 'FORGET';
 
   return (
     <View
@@ -117,26 +124,38 @@ export const Login = () => {
         onChangeText={setPassword}
       />
       {!isLogin && (
-        <TextInput
-          style={styles.input}
-          placeholder="再次确定密码"
-          secureTextEntry={true}
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-        />
+        <>
+          <TextInput
+            style={styles.input}
+            placeholder="再次确定密码"
+            secureTextEntry={true}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+          />
+          {isRegister && (
+            <Select
+              selectedValue={selectedYear}
+              minWidth="80%"
+              backgroundColor="#fff"
+              mb={3}
+              placeholder="选择目标年份"
+              onValueChange={value => setSelectedYear(value)}
+              _selectedItem={{
+                bg: 'teal.600',
+              }}>
+              {yearOptions.map(year => (
+                <Select.Item key={year} label={`${year}年`} value={year} />
+              ))}
+            </Select>
+          )}
+        </>
       )}
       <TouchableOpacity style={styles.authButton} onPress={handleAuthAction}>
         <Text style={styles.buttonText}>
           {isLogin ? '登录' : isRegister ? '注册' : '确定更改'}
         </Text>
       </TouchableOpacity>
-      <View flexDir="row" justifyContent="space-between" w="full" px="10">
-        <TouchableOpacity
-          onPress={() => setFormStatus(isForget ? 'LOGIN' : 'FORGET')}>
-          <Text style={styles.switchText}>
-            {isForget ? '返回' : '忘记密码'}
-          </Text>
-        </TouchableOpacity>
+      <View flexDir="row" justifyContent="center" w="full" px="10">
         <TouchableOpacity
           onPress={() =>
             setFormStatus(state => (state === 'LOGIN' ? 'REGISTER' : 'LOGIN'))

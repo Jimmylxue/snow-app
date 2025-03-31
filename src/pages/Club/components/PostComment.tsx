@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { View, Text, Button, FavouriteIcon, Avatar } from 'native-base';
-import { navigates } from '../../../navigation/navigate';
+import { StyleSheet } from 'react-native';
+import { View, Text, Avatar } from 'native-base';
 import { TPostComment } from '../../../service/club';
 import { baseFormatTime } from '../../../utils';
 type TProps = {
@@ -18,9 +17,8 @@ const PostComment = ({ comment, withOutMargin = false }: TProps) => {
       <View flexDir="row" alignItems="center">
         <Avatar
           size="sm"
-          source={{
-            uri: comment?.user?.avatar,
-          }}></Avatar>
+          bg="white"
+          source={require('../../../images/student.png')}></Avatar>
         <View>
           <Text fontSize="sm" ml="2">
             {comment?.user?.username} ：

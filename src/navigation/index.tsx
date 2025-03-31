@@ -1,10 +1,8 @@
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Index from '../pages/Index';
 import Mine from '../pages/Mine';
 import MemberInfo from '../pages/Mine/MemberInfo';
-import IDPhoto from '../pages/IDPhoto';
-import KnowledgePlanet from '../pages/KnowledgePlanet';
-import LuckDraw from '../pages/LuckDraw';
 import Watermelon from '../pages/Watermelon';
 import StaticWebview from '../pages/StaticWebview';
 import NativeModule from '../pages/NativeModule';
@@ -14,22 +12,15 @@ import { useEffect } from 'react';
 import { resetNavigate } from './navigate';
 import { useAppState } from '../hooks/useAppState';
 import Splash from '../pages/Splash';
-import ClubDetail from '../pages/Club/detail';
 import ClubPosts from '../pages/Club/posts';
-import ClubVote from '../pages/Club/vote';
 import ClubWritePosts from '../pages/Club/writePosts';
 import ClubPostsDetail from '../pages/Club/postDetail';
-import Notice from '../pages/Notice';
 import { logoutEmitter } from '../service/event';
-import ActivityDetail from '../pages/Club/ActivityDetail';
-import signInRecord from '../pages/Club/signInRecord';
-import feedbackRecord from '../pages/Club/feedbackRecord';
-import NoticeDetail from '../pages/Notice/detail';
-import Sms from '../pages/Sms';
-import SmsDetail from '../pages/Sms/detail';
-import { ERoleType } from '../service';
 import Choose from '../pages/Choose';
-import { PositionRecord } from '../pages/StudentManager/position';
+import StudyRoomList from '../pages/StudyRoomList';
+import Exam from '../pages/Exam/index';
+import { ExamPage } from '../pages/Question/Exam';
+import StudyRoom from '../pages/StudyRoom';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
@@ -37,14 +28,6 @@ export default function StackScreen() {
   console.log('state', state.userInfo?.role);
   useEffect(() => {
     if (state.isLoading) {
-      return;
-    }
-
-    if (state.userInfo?.role === ERoleType.未定义) {
-      resetNavigate({
-        index: 0,
-        routes: [{ name: 'Choose' }],
-      });
       return;
     }
 
@@ -127,21 +110,6 @@ export default function StackScreen() {
         component={MemberInfo}
       />
       <Stack.Screen
-        name="IDPhoto"
-        options={{ title: 'IDPhoto' }}
-        component={IDPhoto}
-      />
-      <Stack.Screen
-        name="KnowledgePlanet"
-        options={{ title: 'KnowledgePlanet' }}
-        component={KnowledgePlanet}
-      />
-      <Stack.Screen
-        name="LuckDraw"
-        options={{ title: '今天吃啥' }}
-        component={LuckDraw}
-      />
-      <Stack.Screen
         name="Watermelon"
         options={{ title: '西瓜成熟' }}
         component={Watermelon}
@@ -155,31 +123,6 @@ export default function StackScreen() {
         name="NativeModule"
         options={{ title: 'NativeModule' }}
         component={NativeModule}
-      />
-      <Stack.Screen
-        name="ClubDetail"
-        options={{ title: '社团详情' }}
-        component={ClubDetail}
-      />
-      <Stack.Screen
-        name="ClubActivityDetail"
-        options={{ title: '活动详情' }}
-        component={ActivityDetail}
-      />
-      <Stack.Screen
-        name="SignInRecord"
-        options={{ title: '签到记录' }}
-        component={signInRecord}
-      />
-      <Stack.Screen
-        name="FeedbackRecord"
-        options={{ title: '反馈记录' }}
-        component={feedbackRecord}
-      />
-      <Stack.Screen
-        name="ClubVote"
-        options={{ title: '社团投票' }}
-        component={ClubVote}
       />
       <Stack.Screen
         name="ClubPosts"
@@ -197,29 +140,25 @@ export default function StackScreen() {
         component={ClubWritePosts}
       />
       <Stack.Screen
-        name="Notice"
-        options={{ title: '消息中心' }}
-        component={Notice}
+        name="StudyRoomList"
+        component={StudyRoomList}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="NoticeDetail"
-        options={{ title: '消息详情' }}
-        component={NoticeDetail}
+        name="Exam"
+        options={{ headerShown: false }}
+        component={Exam}
+      />
+      {/* 老考试刷题 */}
+      <Stack.Screen
+        name="ExamPage"
+        options={{ headerShown: true }}
+        component={ExamPage}
       />
       <Stack.Screen
-        name="SmsList"
-        options={{ title: '短信列表' }}
-        component={Sms}
-      />
-      <Stack.Screen
-        name="SmsDetail"
-        options={{ title: '短信详情' }}
-        component={SmsDetail}
-      />
-      <Stack.Screen
-        name="PositionRecord"
-        options={{ title: '位置记录' }}
-        component={PositionRecord}
+        name="StudyRoom"
+        options={{ headerShown: true }}
+        component={StudyRoom}
       />
     </Stack.Navigator>
   );
