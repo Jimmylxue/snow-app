@@ -1,31 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { StyleSheet, TouchableOpacity, Alert, BackHandler } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import {
+  useRoute,
+  useNavigation,
+  useFocusEffect,
+} from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
-// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Text, View } from 'native-base';
+import {
+  EStudyRoomType,
+  useExitStudyRoom,
+  useStudyRoomDetail,
+} from '../../service/study';
 
 type StudyRoomParams = {
-  type: 'free' | 'unified';
-  endTime?: string; // 统一自习室的结束时间
+  studyRoomId: number;
 };
 
 const StudyRoom = () => {
   const [studyTime, setStudyTime] = useState(0); // 以秒为单位
+  const [isTimerRunning, setIsTimerRunning] = useState(true); // 添加计时器状态控制
   const navigation = useNavigation();
+  const { mutate: exitStudyRoom } = useExitStudyRoom();
   const route = useRoute<RouteProp<Record<string, StudyRoomParams>, string>>();
-  // const { type, endTime } = route.params;
-  const type = 'free';
-  const endTime = '2025-03-30 18:00:00';
+  const { studyRoomId } = route.params;
+  const { data: studyRoomDetail } = useStudyRoomDetail(
+    ['studyRoomDetail', studyRoomId],
+    { studyRoomId },
+  );
 
-  // 计时器效果
+  // 修改计时器效果
   useEffect(() => {
-    const timer = setInterval(() => {
-      setStudyTime(prev => prev + 1);
-    }, 1000);
-
+    let timer: ReturnType<typeof setInterval>;
+    if (isTimerRunning) {
+      timer = setInterval(() => {
+        setStudyTime(prev => prev + 1);
+      }, 1000);
+    }
     return () => clearInterval(timer);
-  }, []);
+  }, [isTimerRunning]);
 
   // 格式化时间
   const formatTime = (seconds: number) => {
@@ -37,44 +51,104 @@ const StudyRoom = () => {
       .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // 退出自习室
-  const handleExit = () => {
+  // 先定义 handleExitConfirmation
+  const handleExitConfirmation = useCallback(() => {
     Alert.alert(
       '确认退出',
       '确定要退出自习室吗？',
       [
         {
           text: '取消',
+          onPress: () => setIsTimerRunning(true),
           style: 'cancel',
         },
         {
           text: '确定',
-          onPress: () => navigation.goBack(),
+          onPress: async () => {
+            setIsTimerRunning(false);
+            await exitStudyRoom({ studyRoomId });
+            navigation.goBack();
+          },
         },
       ],
       { cancelable: false },
     );
-  };
+    return true;
+  }, [exitStudyRoom, studyRoomId, navigation]);
+
+  // 然后定义 handleExit
+  const handleExit = useCallback(() => {
+    setIsTimerRunning(false);
+    if (studyTime < 120) {
+      Alert.alert('提示', '不足两分钟不计入时长', [
+        {
+          text: '继续学习',
+          onPress: () => setIsTimerRunning(true),
+          style: 'cancel',
+        },
+        {
+          text: '确认退出',
+          onPress: () => {
+            setIsTimerRunning(false);
+            navigation.goBack();
+          },
+        },
+      ]);
+      return true;
+    }
+    return handleExitConfirmation();
+  }, [studyTime, navigation, handleExitConfirmation]);
+
+  // 添加返回按钮监听
+  useFocusEffect(
+    React.useCallback(() => {
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        handleExit,
+      );
+
+      return () => subscription.remove();
+    }, [handleExit]),
+  );
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity onPress={handleExit}>
+          <Text ml={2}>退出</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, handleExit]);
 
   return (
     <View style={styles.container}>
       <LinearGradient colors={['#FFFFFF', '#F5F5F5']} style={styles.background}>
-        <Text style={styles.header}>
-          {type === 'free' ? '自由自习室' : '统一自习室'}
-        </Text>
-
-        <View style={styles.timerContainer}>
-          <Text style={styles.timerLabel}>已学习时间</Text>
-          <Text style={styles.timerText}>{formatTime(studyTime)}</Text>
+        <View justifyContent="center" alignItems="center">
+          <Text fontSize="2xl" fontWeight="bold">
+            {studyRoomDetail?.studyRoomType === EStudyRoomType.自由自习室
+              ? '自由自习室'
+              : '统一自习室'}
+          </Text>
         </View>
 
-        {type === 'unified' && endTime && (
-          <View style={styles.endTimeContainer}>
-            <Text style={styles.endTimeLabel}>自习室开放至</Text>
-            <Text style={styles.endTimeText}>{endTime}</Text>
-            <Text style={styles.endTimeHint}>请在结束时间之前退出自习室</Text>
-          </View>
-        )}
+        <View justifyContent="center" alignItems="center" mt={4}>
+          <Text fontSize="sm">已学习时间</Text>
+          <Text fontSize="4xl" fontWeight="bold" color="#1565C0">
+            {formatTime(studyTime)}
+          </Text>
+        </View>
+
+        {studyRoomDetail?.studyRoomType === EStudyRoomType.统一自习室 &&
+          studyRoomDetail?.closeTime && (
+            <View style={styles.endTimeContainer}>
+              <Text style={styles.endTimeLabel}>自习室开放至</Text>
+              <Text style={styles.endTimeText}>
+                {studyRoomDetail.closeTime}
+              </Text>
+              <Text style={styles.endTimeHint}>请在结束时间之前退出自习室</Text>
+            </View>
+          )}
 
         <TouchableOpacity style={styles.exitButton} onPress={handleExit}>
           <Text style={styles.exitButtonText}>退出自习</Text>

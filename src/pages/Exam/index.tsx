@@ -11,51 +11,92 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
-
+import { useExamPaperDetail, useFinishExam } from '../../service/study';
+import { Input, Toast } from 'native-base';
 type ExamParams = {
-  subject: string;
+  subjectId: number;
 };
+
+const MAX_TIME = 3 * 60 * 60;
 
 const Exam = () => {
   const route = useRoute<RouteProp<Record<string, ExamParams>, string>>();
   const navigation = useNavigation();
-  const subject = route.params?.subject || '数学'; // 从路由参数获取科目
+  const subjectId = route.params?.subjectId; // 从路由参数获取科目
 
-  const [timeLeft, setTimeLeft] = useState(3 * 60 * 60); // 3小时的秒数
+  const [score, setScore] = useState<string>('');
+  const { data: examPaperDetail } = useExamPaperDetail(
+    ['examPaperDetail', subjectId],
+    { examProjectId: +subjectId },
+  );
+
+  const { mutate: finishExam } = useFinishExam();
+
+  /**
+   * 当这个倒计时编程0秒后 展示新的倒计时 表示 超时的时间
+   */
+
+  const [timeLeft, setTimeLeft] = useState(4);
+  const [isOvertime, setIsOvertime] = useState(false);
+  const [overtimeSeconds, setOvertimeSeconds] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [review, setReview] = useState('');
+  const [isRunning, setIsRunning] = useState(true);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(prevTime => {
-        if (prevTime <= 0) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prevTime - 1;
-      });
+      if (!isRunning) return;
+
+      if (!isOvertime) {
+        setTimeLeft(prevTime => {
+          if (prevTime <= 0) {
+            setIsOvertime(true);
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      } else {
+        setOvertimeSeconds(prev => prev + 1);
+      }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [isOvertime, isRunning]);
 
-  const formatTime = (seconds: number) => {
+  const formatTime = (seconds: number, overtime: boolean = false) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes
+    const timeString = `${hours.toString().padStart(2, '0')}:${minutes
       .toString()
       .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+    return overtime ? `超时 ${timeString}` : timeString;
   };
 
   const handleSubmit = () => {
+    setIsRunning(false);
     setModalVisible(true);
   };
 
-  const handleReviewSubmit = () => {
-    // 这里可以处理复盘内容的提交
-    console.log('复盘内容:', review);
+  const handleReviewSubmit = async () => {
+    const usedTime = MAX_TIME - timeLeft + overtimeSeconds;
+    await finishExam({
+      examProjectId: +subjectId,
+      desc: review,
+      useTime: usedTime,
+      overTime: overtimeSeconds,
+      remainTime: MAX_TIME - usedTime,
+      totalScore: +score,
+    });
     setModalVisible(false);
+    Toast.show({
+      title: '提交成功',
+      description: '您的考试成绩已提交',
+    });
+    setTimeout(() => {
+      navigation.goBack();
+    }, 1000);
   };
 
   const handleBack = () => {
@@ -76,6 +117,11 @@ const Exam = () => {
     );
   };
 
+  const handleModalClose = () => {
+    setIsRunning(true);
+    setModalVisible(false);
+  };
+
   return (
     <LinearGradient
       colors={['#4c669f', '#3b5998', '#192f6a']}
@@ -87,9 +133,13 @@ const Exam = () => {
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.subject}>{subject}考试</Text>
+        <Text style={styles.subject}>{examPaperDetail?.projectName}考试</Text>
         <View style={styles.timerContainer}>
-          <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
+          <Text style={[styles.timerText, isOvertime && { color: '#ff6b6b' }]}>
+            {isOvertime
+              ? formatTime(overtimeSeconds, true)
+              : formatTime(timeLeft)}
+          </Text>
         </View>
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.submitButtonText}>交卷</Text>
@@ -100,10 +150,17 @@ const Exam = () => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}>
+        onRequestClose={handleModalClose}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>考试复盘</Text>
+            <Input
+              mb={2}
+              placeholder="请输入此次考试的成绩..."
+              value={score}
+              onChangeText={(text: string) => setScore(text)}
+              multiline
+            />
             <TextInput
               style={styles.reviewInput}
               multiline
@@ -114,7 +171,7 @@ const Exam = () => {
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.cancelButton]}
-                onPress={() => setModalVisible(false)}>
+                onPress={handleModalClose}>
                 <Text style={styles.modalButtonText}>取消</Text>
               </TouchableOpacity>
               <TouchableOpacity

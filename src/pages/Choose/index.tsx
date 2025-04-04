@@ -6,7 +6,7 @@ import {
   StatusBar,
   Dimensions,
 } from 'react-native';
-import { Text, View } from 'native-base';
+import { ScrollView, Text, View } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import { navigates } from '../../navigation/navigate';
 
@@ -121,23 +121,27 @@ const Choose = ({ navigation }: { navigation: any }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      <LinearGradient colors={['#f6f7f8', '#ffffff']} style={styles.background}>
-        <View style={styles.header}>
-          <Text fontSize="3xl" fontWeight="bold" color="#333">
-            考研 2027
-          </Text>
-          <Text color="#666" fontSize="md" mt={2}>
-            今天也要努力学习哦～
-          </Text>
-        </View>
+      <ScrollView>
+        <StatusBar barStyle="dark-content" />
+        <LinearGradient
+          colors={['#f6f7f8', '#ffffff']}
+          style={styles.background}>
+          <View style={styles.header}>
+            <Text fontSize="3xl" fontWeight="bold" color="#333">
+              考研 2027
+            </Text>
+            <Text color="#666" fontSize="md" mt={2}>
+              今天也要努力学习哦～
+            </Text>
+          </View>
 
-        {phases.map((phase, index) => (
-          <React.Fragment key={index}>
-            {renderPhaseSection(phase, index)}
-          </React.Fragment>
-        ))}
-      </LinearGradient>
+          {phases.map((phase, index) => (
+            <React.Fragment key={index}>
+              {renderPhaseSection(phase, index)}
+            </React.Fragment>
+          ))}
+        </LinearGradient>
+      </ScrollView>
     </SafeAreaView>
   );
 };

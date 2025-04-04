@@ -20,7 +20,6 @@ export function UploadExam() {
   const [examType, setExamType] = useState<string>('');
   const [option, setOption] = useState<string>('');
   const [answer, setAnswer] = useState<string>('');
-
   const { data } = useExamType(['examType'], {}, {});
   // console.log('data', data);
 
@@ -141,7 +140,6 @@ export function UploadExam() {
         <Button
           onPress={async () => {
             const isXuanZe = Number(examType) === EExamType.选择题;
-            console.log('isXuanZe', isXuanZe, typeId);
             if (!isXuanZe) {
               // 判断题
               if (!['1', '2'].includes(answer)) {

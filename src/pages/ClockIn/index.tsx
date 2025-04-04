@@ -7,25 +7,51 @@ import {
   VStack,
   HStack,
   Modal,
+  Toast,
 } from 'native-base';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import { StyleSheet, TouchableOpacity } from 'react-native';
+import { useTodayExam, useTodayStudyStatus } from '../../service/study';
+import { useNavigation } from '@react-navigation/native';
+import { navigates } from '../../navigation/navigate';
 
 const MEMO_STORAGE_KEY = '@daily_memo';
 
 const ClockIn = () => {
+  const navigation = useNavigation();
   const [memo, setMemo] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [tempMemo, setTempMemo] = useState('');
-  const [studyClockIn, setStudyClockIn] = useState(false);
-  const [reviewClockIn, setReviewClockIn] = useState(false);
+
+  const { data: todayIsExam, refetch: refetchExam } = useTodayExam(
+    ['todayExam'],
+    {},
+  );
+
+  const { data: todayIsStudy, refetch: refetchStudy } = useTodayStudyStatus(
+    ['todayStudyStatus'],
+    {},
+  );
 
   useEffect(() => {
     loadMemo();
-    loadClockInStatus();
   }, []);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            refetchExam();
+            refetchStudy();
+          }}>
+          <Text mr={2}>刷新状态</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, refetchExam, refetchStudy]);
 
   const loadMemo = async () => {
     try {
@@ -47,29 +73,24 @@ const ClockIn = () => {
     }
   };
 
-  const loadClockInStatus = async () => {
-    const today = new Date().toDateString();
-    try {
-      const studyStatus = await AsyncStorage.getItem(`@study_${today}`);
-      const reviewStatus = await AsyncStorage.getItem(`@review_${today}`);
-      setStudyClockIn(!!studyStatus);
-      setReviewClockIn(!!reviewStatus);
-    } catch (error) {
-      console.error('加载打卡状态失败:', error);
-    }
-  };
-
-  const handleClockIn = async (type: 'study' | 'review') => {
-    const today = new Date().toDateString();
-    try {
-      await AsyncStorage.setItem(`@${type}_${today}`, 'done');
-      if (type === 'study') {
-        setStudyClockIn(true);
-      } else {
-        setReviewClockIn(true);
+  const handleClockIn = async (type: 'study' | 'exam') => {
+    if (type === 'study') {
+      console.log('study');
+      if (todayIsStudy) {
+        Toast.show({
+          title: '今日已打卡',
+        });
+        return;
       }
-    } catch (error) {
-      console.error('打卡失败:', error);
+      navigates('StudyRoomList', undefined);
+    } else {
+      if (todayIsExam) {
+        Toast.show({
+          title: '今日已打卡',
+        });
+        return;
+      }
+      navigates('ExamList', undefined);
     }
   };
 
@@ -83,8 +104,8 @@ const ClockIn = () => {
     setShowModal(false);
   };
 
-  const ClockInCard = ({ title, description, isClockIn, onPress }: any) => (
-    <TouchableOpacity onPress={onPress} disabled={isClockIn}>
+  const ClockInCard = ({ title, description, isClockIn, onPress }: any) => {
+    return (
       <LinearGradient
         colors={['#4c669f', '#3b5998', '#192f6a']}
         style={styles.gradientCard}>
@@ -96,13 +117,14 @@ const ClockIn = () => {
           <Button
             isDisabled={isClockIn}
             bg={isClockIn ? 'gray.400' : 'emerald.500'}
-            mt={2}>
+            mt={2}
+            onPress={onPress}>
             {isClockIn ? '已打卡' : '打卡'}
           </Button>
         </VStack>
       </LinearGradient>
-    </TouchableOpacity>
-  );
+    );
+  };
 
   return (
     <View flex={1} bg="white" p={4}>
@@ -111,16 +133,16 @@ const ClockIn = () => {
           <Box flex={1}>
             <ClockInCard
               title="错题复盘"
-              description="每日错题回顾与总结"
-              isClockIn={reviewClockIn}
-              onPress={() => handleClockIn('review')}
+              description="每日考试，查漏补缺"
+              isClockIn={todayIsExam}
+              onPress={() => handleClockIn('exam')}
             />
           </Box>
           <Box flex={1}>
             <ClockInCard
               title="每日自习"
               description="坚持每日学习计划"
-              isClockIn={studyClockIn}
+              isClockIn={todayIsStudy}
               onPress={() => handleClockIn('study')}
             />
           </Box>

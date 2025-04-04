@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image } from 'native-base';
+import { Image, Text } from 'native-base';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Mine from '../Mine';
 import Choose from '../Choose';
@@ -9,13 +9,15 @@ import ClockIn from '../ClockIn';
 import { UploadExam } from '../Question/UploadQuestion';
 import { useAppState } from '../../hooks/useAppState';
 import { ERoleType } from '../../service';
+import { TouchableOpacity } from 'react-native';
+import { navigates } from '../../navigation/navigate';
 const Tab = createBottomTabNavigator();
 
 export function MainStack() {
   const { state } = useAppState();
   const { userInfo } = state;
 
-  const isAdmin = userInfo?.role === ERoleType.管理员;
+  const isAdmin = userInfo?.role !== ERoleType.管理员;
 
   return (
     <Tab.Navigator
@@ -113,6 +115,12 @@ export function MainStack() {
                   h="25px"
                   alt="图片"
                 />
+              ),
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={() => navigates('CountRank', undefined)}>
+                  <Text mr={2}>次数排行榜</Text>
+                </TouchableOpacity>
               ),
             }}
             component={ExamList}

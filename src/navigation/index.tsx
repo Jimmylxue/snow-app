@@ -21,6 +21,9 @@ import StudyRoomList from '../pages/StudyRoomList';
 import Exam from '../pages/Exam/index';
 import { ExamPage } from '../pages/Question/Exam';
 import StudyRoom from '../pages/StudyRoom';
+import ExamRank from '../pages/Exam/Rank';
+import StudyRank from '../pages/StudyRoomList/StudyRank';
+import CountRank from '../pages/Exam/CountRank';
 
 export default function StackScreen() {
   const Stack = createStackNavigator();
@@ -159,6 +162,21 @@ export default function StackScreen() {
         name="StudyRoom"
         options={{ headerShown: true }}
         component={StudyRoom}
+      />
+      <Stack.Screen
+        name="ExamRank"
+        options={{ headerShown: true }}
+        component={ExamRank}
+      />
+      <Stack.Screen
+        name="StudyRank"
+        options={{ headerShown: true }}
+        component={StudyRank}
+      />
+      <Stack.Screen
+        name="CountRank"
+        options={{ headerShown: true }}
+        component={CountRank}
       />
     </Stack.Navigator>
   );

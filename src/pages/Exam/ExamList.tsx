@@ -1,47 +1,59 @@
 import React from 'react';
-import { Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { View } from 'native-base';
+import { StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import { navigates } from '../../navigation/navigate';
-
+import { useExamPaper } from '../../service/study';
 const { width } = Dimensions.get('window');
 
 const ExamList = () => {
+  const { data: examPaperList } = useExamPaper(['examPaperList'], {});
+
   const subjects = [
     { id: 1, name: '数学', colors: ['#FF9A9E', '#FAD0C4'] },
     { id: 2, name: '英语', colors: ['#A18CD1', '#FBC2EB'] },
     { id: 3, name: '政治', colors: ['#84FAB0', '#8FD3F4'] },
   ];
 
-  const handleSubjectPress = (subjectName: string) => {
+  const handleSubjectPress = (subjectId: number) => {
     // TODO: 处理科目选择逻辑
-    navigates('Exam', { subject: subjectName });
-    console.log('Selected subject:', subjectName);
+    navigates('Exam', { subjectId });
+    console.log('Selected subject:', subjectId);
   };
 
   return (
     <LinearGradient colors={['#fff', '#f7f7f7']} style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>请选择科目进行考试</Text>
+        <Text fontSize="xl" fontWeight="bold" mb="2">
+          请选择科目进行考试
+        </Text>
         <Text style={styles.subtitle}>每场考试三小时</Text>
       </View>
 
       <View style={styles.subjectsContainer}>
-        {subjects.map(subject => (
-          <TouchableOpacity
-            key={subject.id}
-            onPress={() => handleSubjectPress(subject.name)}>
-            <View mt={4}>
-              <LinearGradient
-                colors={subject.colors}
-                style={styles.subjectCard}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}>
-                <Text style={styles.subjectName}>{subject.name}</Text>
-              </LinearGradient>
+        {examPaperList?.map((subject, index) => {
+          return (
+            <View key={subject.id} mt={4}>
+              <TouchableOpacity onPress={() => handleSubjectPress(subject.id)}>
+                <LinearGradient
+                  colors={subjects[index]?.colors}
+                  style={styles.subjectCard}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}>
+                  <Text style={styles.subjectName}>{subject.projectName}</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigates('ExamRank', { subjectId: subject.id });
+                }}>
+                <View flexDirection="row" justifyContent="center" mt={2}>
+                  <Text>查看排行榜</Text>
+                </View>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
-        ))}
+          );
+        })}
       </View>
     </LinearGradient>
   );

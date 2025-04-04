@@ -56,8 +56,16 @@ export type RootStackParamList = {
   SmsList: undefined;
   SmsDetail: { message: TSmsItem };
   PositionRecord: { userId: number };
-  Exam: { subject: string };
+  Exam: { subjectId: number };
   ExamQuestionList: { id: number; typeName: string; isManager?: boolean };
   ExamPage: { typeId: number; title: string };
-  StudyRoom: { type: 'free' | 'unified'; endTime?: string };
+  StudyRoom: {
+    studyRoomId: number;
+  };
+  ExamRank: { subjectId: number };
+  ClockIn: undefined;
+  StudyRoomList: undefined;
+  ExamList: undefined;
+  StudyRank: undefined;
+  CountRank: undefined;
 };

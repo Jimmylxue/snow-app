@@ -2,7 +2,6 @@ import { Button, ScrollView, Text, Toast, View } from 'native-base';
 import React, { SafeAreaView, TouchableOpacity } from 'react-native';
 import { TExamItem, useRandomQuestion } from '../../service/exam';
 import { ExamQuestionItem } from './components/ExamQuestionItem';
-import { adaptive } from '../../utils';
 import { useEffect, useState } from 'react';
 import { OtherExamMap } from './map';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
