@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { View, Text, Button, FavouriteIcon } from 'native-base';
-import { navigates } from '../../../navigation/navigate';
+import { View, Text, FavouriteIcon } from 'native-base';
 import { baseFormatTime } from '../../../utils';
 type TProps = {
   name: string;

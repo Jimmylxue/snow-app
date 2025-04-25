@@ -5,7 +5,7 @@ import { logoutEmitter } from './event';
 // const serverUrl = 'https://www.baidu.com';
 // const serverUrl = 'http://127.0.0.1:9999';
 // const serverUrl = 'http://10.9.204.171:9999';
-const serverUrl = 'http://10.6.0.29:9999';
+const serverUrl = 'http://10.6.0.8:9999';
 
 type CustomrHeader = {
   Authorization?: string | null;

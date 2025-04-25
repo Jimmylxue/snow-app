@@ -9,6 +9,7 @@ import {
 import { ScrollView, Text, View } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import { navigates } from '../../navigation/navigate';
+import { useListComplete } from '../../service/study';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 48) / 2;
@@ -18,21 +19,25 @@ const subjects = [
     name: '数学',
     colors: ['#4facfe', '#00f2fe'],
     icon: '📐',
+    isCompleted: false,
   },
   {
     name: '英语',
     colors: ['#13547a', '#80d0c7'],
     icon: '📚',
+    isCompleted: true,
   },
   {
     name: '政治',
     colors: ['#ff6b6b', '#ffc6c6'],
     icon: '📖',
+    isCompleted: false,
   },
   {
     name: '评论区',
     colors: ['#667eea', '#764ba2'],
     icon: '💬',
+    isCompleted: false,
   },
 ];
 
@@ -49,49 +54,66 @@ const phases = [
   },
 ];
 
-const Choose = ({ navigation }: { navigation: any }) => {
+const Choose = () => {
+  const { data: listComplete } = useListComplete(['listComplete'], {});
+
   const renderSubjectCard = (
     subject: typeof subjects[0],
     _index: number,
     index: number,
-  ) => (
-    <TouchableOpacity
-      onPress={() => {
-        if (subject.name === '评论区') {
-          console.log('index', _index);
-          navigates('ClubPosts', {
-            clubId: 1,
-            clubName: phases[_index].title + ' - 评论区',
-          });
-        } else {
-          if (_index === 0) {
-            navigates('ExamPage', {
-              typeId: index + 1,
-              title: phases[_index].title + ' - ' + subject.name,
+  ) => {
+    const key = _index === 0 ? index + 1 : 3 + index + 1;
+    const hasCompletedRecord = listComplete?.some(
+      item => +item.questionTypeId === +key,
+    );
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          if (subject.name === '评论区') {
+            console.log('index', _index);
+            navigates('ClubPosts', {
+              clubId: 1,
+              clubName: phases[_index].title + ' - 评论区',
             });
           } else {
-            navigates('ExamPage', {
-              typeId: 3 + index + 1,
-              title: phases[_index].title + ' - ' + subject.name,
-            });
+            if (_index === 0) {
+              navigates('ExamPage', {
+                typeId: index + 1,
+                title: phases[_index].title + ' - ' + subject.name,
+              });
+            } else {
+              navigates('ExamPage', {
+                typeId: 3 + index + 1,
+                title: phases[_index].title + ' - ' + subject.name,
+              });
+            }
           }
-        }
-      }}
-      style={styles.cardContainer}>
-      <LinearGradient
-        colors={subject.colors}
-        style={styles.subjectCard}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}>
-        <Text fontSize="3xl" mb={2}>
-          {subject.icon}
-        </Text>
-        <Text color="white" fontSize="lg" fontWeight="bold">
-          {subject.name}
-        </Text>
-      </LinearGradient>
-    </TouchableOpacity>
-  );
+        }}
+        style={styles.cardContainer}>
+        <LinearGradient
+          colors={subject.colors}
+          style={styles.subjectCard}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}>
+          <Text fontSize="3xl" mb={2}>
+            {subject.icon}
+          </Text>
+          <Text color="white" fontSize="lg" fontWeight="bold">
+            {subject.name}
+          </Text>
+          <View
+            style={{
+              ...styles.completionStatus,
+              opacity: subject.name === '评论区' ? 0 : 1,
+            }}>
+            <Text color="white" fontSize="sm" mt={2}>
+              {hasCompletedRecord ? '✅ 已完成' : '⭕️ 未完成'}
+            </Text>
+          </View>
+        </LinearGradient>
+      </TouchableOpacity>
+    );
+  };
 
   const renderPhaseSection = (phase: typeof phases[0], _index: number) => (
     <View style={styles.phaseContainer}>
@@ -177,7 +199,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   subjectCard: {
-    height: 140,
+    height: 160,
     borderRadius: 16,
     padding: 16,
     alignItems: 'center',
@@ -190,6 +212,11 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+  },
+  completionStatus: {
+    position: 'absolute',
+    bottom: 12,
+    alignItems: 'center',
   },
 });
 

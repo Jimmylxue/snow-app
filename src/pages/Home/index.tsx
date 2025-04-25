@@ -17,7 +17,7 @@ export function MainStack() {
   const { state } = useAppState();
   const { userInfo } = state;
 
-  const isAdmin = userInfo?.role !== ERoleType.管理员;
+  const isAdmin = userInfo?.role === ERoleType.管理员;
 
   return (
     <Tab.Navigator

@@ -12,6 +12,7 @@ import {
   EStudyRoomType,
   useExitStudyRoom,
   useStudyRoomDetail,
+  useStudyRoomOnline,
 } from '../../service/study';
 
 type StudyRoomParams = {
@@ -28,6 +29,14 @@ const StudyRoom = () => {
   const { data: studyRoomDetail } = useStudyRoomDetail(
     ['studyRoomDetail', studyRoomId],
     { studyRoomId },
+  );
+
+  const { data: studyRoomOnline } = useStudyRoomOnline(
+    ['studyRoomOnline', studyRoomId],
+    { studyRoomId },
+    {
+      refetchInterval: 1000 * 5,
+    },
   );
 
   // 修改计时器效果
@@ -153,6 +162,15 @@ const StudyRoom = () => {
         <TouchableOpacity style={styles.exitButton} onPress={handleExit}>
           <Text style={styles.exitButtonText}>退出自习</Text>
         </TouchableOpacity>
+
+        <View justifyContent="center" w="100%" alignItems="center" mt={4}>
+          <Text fontWeight="semibold" alignItems="center">
+            当前在线人数：
+            <Text color="#1565C0" fontSize="lg" fontWeight="bold">
+              {studyRoomOnline || 0}
+            </Text>
+          </Text>
+        </View>
       </LinearGradient>
     </View>
   );

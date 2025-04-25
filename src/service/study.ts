@@ -6,6 +6,7 @@ import {
   UseQueryOptions,
 } from 'react-query';
 import { ClientError, post } from './client';
+import { TUser } from './login';
 
 export enum EStudyRoomType {
   自由自习室 = 1,
@@ -296,6 +297,113 @@ export function useExamScoreRank(
   return useQuery<TExamScoreRank, ClientError>(
     queryKey,
     () => post('/examRecord/examScoreRank', variable),
+    config,
+  );
+}
+
+type TListComplete = {
+  id: number;
+  questionTypeId: number;
+  useTime: number;
+  userId: number;
+  createdTime: string;
+  updateTime: string;
+};
+
+/**
+ * 获取已完成题目列表
+ */
+export function useListComplete(
+  queryKey: QueryKey,
+  variable: {},
+  config?: UseQueryOptions<TListComplete[], ClientError>,
+) {
+  return useQuery<TListComplete[], ClientError>(
+    queryKey,
+    () => post('/question/listComplete', variable),
+    config,
+  );
+}
+
+type TExamPre100Score = {
+  id: number;
+  examProjectId: number;
+  totalScore: number;
+  user: TUser;
+  createdTime: string;
+};
+
+/**
+ * 获取前100名考试成绩
+ */
+export function useExamPre100Score(
+  queryKey: QueryKey,
+  variable: {},
+  config?: UseQueryOptions<TExamPre100Score[], ClientError>,
+) {
+  return useQuery<TExamPre100Score[], ClientError>(
+    queryKey,
+    () => post('/examRecord/examPre100Score', variable),
+    config,
+  );
+}
+
+type TAddCompleteParams = {
+  questionTypeId: number;
+  useTime: number;
+};
+
+/**
+ * 上报完成考研项目
+ */
+export function useAddComplete(
+  options?: UseMutationOptions<boolean, ClientError, TAddCompleteParams>,
+) {
+  return useMutation<boolean, ClientError, TAddCompleteParams>(
+    data => post('/question/addComplete', data),
+    options,
+  );
+}
+
+type TCompleteRank = {
+  percentage: string;
+  firstComplete: {
+    useTime: number;
+    createdTime: string;
+    user: TUser;
+  };
+  totalUsers: number;
+  completedUsers: number;
+};
+
+/**
+ * 获取进度打卡的
+ */
+export function useCompleteRank(
+  queryKey: QueryKey,
+  variable: {},
+  config?: UseQueryOptions<TCompleteRank, ClientError>,
+) {
+  return useQuery<TCompleteRank, ClientError>(
+    queryKey,
+    () => post('/question/getCompleteRank', variable),
+    config,
+  );
+}
+
+/**
+ * 获取学习室的在线人数
+ */
+export function useStudyRoomOnline(
+  queryKey: QueryKey,
+  variable: {
+    studyRoomId: number;
+  },
+  config?: UseQueryOptions<number, ClientError>,
+) {
+  return useQuery<number, ClientError>(
+    queryKey,
+    () => post('/studyRoom/getStudyRoomUserCount', variable),
     config,
   );
 }

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View,
   Text,
   StyleSheet,
   TouchableOpacity,
@@ -12,7 +11,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import { useExamPaperDetail, useFinishExam } from '../../service/study';
-import { Input, Toast } from 'native-base';
+import { Input, Toast, View } from 'native-base';
 type ExamParams = {
   subjectId: number;
 };
@@ -36,7 +35,7 @@ const Exam = () => {
    * 当这个倒计时编程0秒后 展示新的倒计时 表示 超时的时间
    */
 
-  const [timeLeft, setTimeLeft] = useState(4);
+  const [timeLeft, setTimeLeft] = useState(MAX_TIME);
   const [isOvertime, setIsOvertime] = useState(false);
   const [overtimeSeconds, setOvertimeSeconds] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
@@ -80,6 +79,24 @@ const Exam = () => {
   };
 
   const handleReviewSubmit = async () => {
+    if (!score) {
+      Toast.show({
+        title: '请输入成绩',
+      });
+      return;
+    }
+    if (+score > 100) {
+      Toast.show({
+        title: '成绩不能大于100',
+      });
+      return;
+    }
+    if (!review) {
+      Toast.show({
+        title: '请输入考试心得',
+      });
+      return;
+    }
     const usedTime = MAX_TIME - timeLeft + overtimeSeconds;
     await finishExam({
       examProjectId: +subjectId,
@@ -153,13 +170,30 @@ const Exam = () => {
         onRequestClose={handleModalClose}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>考试复盘</Text>
+            <Text style={styles.modalTitle}>考试报告</Text>
+            <View>
+              <View flexDirection="row" justifyContent="space-between">
+                <Text>考试用时：</Text>
+                <Text>{formatTime(timeLeft)}</Text>
+              </View>
+              <View flexDirection="row" justifyContent="space-between">
+                <Text>是否超时：</Text>
+                <Text>{isOvertime ? '是' : '否'}</Text>
+              </View>
+              <View flexDirection="row" justifyContent="space-between">
+                <Text>超时时间：</Text>
+                <Text>{overtimeSeconds}</Text>
+              </View>
+            </View>
             <Input
               mb={2}
+              mt={2}
               placeholder="请输入此次考试的成绩..."
               value={score}
-              onChangeText={(text: string) => setScore(text)}
-              multiline
+              onChangeText={text => {
+                const filteredText = text.replace(/[^0-9,]/g, '');
+                setScore(filteredText);
+              }}
             />
             <TextInput
               style={styles.reviewInput}
@@ -168,6 +202,9 @@ const Exam = () => {
               value={review}
               onChangeText={setReview}
             />
+            <View flexDirection="row" justifyContent="center" mb={4}>
+              <Text>记得记录错题哦~</Text>
+            </View>
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.cancelButton]}
